@@ -1,0 +1,24 @@
+{
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-clean-order",
+    "stylelint-prettier/recommended"
+  ],
+  "plugins": [
+    "stylelint-order",
+    "stylelint-scss"
+  ],
+  "stylelint.validate":[ "css", "scss"],
+  "rules": {
+    "selector-class-pattern": null,
+    "font-family-no-duplicate-names": [
+      true,
+      {
+        "ignoreFontFamilyNames": [
+          "monospace"
+        ]
+      }
+    ],
+    "no-descending-specificity": null
+  }
+}
