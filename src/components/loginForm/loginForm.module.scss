@@ -1,0 +1,98 @@
+@import '../../styles/mixins';
+@import '../../styles/placeholders';
+
+.login {
+  @include font(1.8rem, 400, 1.2);
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  width: 35%;
+  min-width: 300px;
+  min-height: 600px;
+  padding: 40px;
+
+  background: rgb(255 255 255 / 30%);
+  backdrop-filter: blur(30px);
+  border-radius: 40px;
+  box-shadow: 0 4px 70px 0 rgb(0 0 0 / 10%);
+}
+
+.login-title {
+  @include font(3.8rem, 700, 1.2);
+
+  margin-bottom: 40px;
+  color: var(--color-font-dark);
+}
+
+.login-input {
+  @extend %transition;
+
+  @include media-hover {
+    &:hover {
+      box-shadow: 0 0 2px 1px rgb(0 0 0 / 40%);
+    }
+  }
+
+  width: 100%;
+  height: 50px;
+  padding: 10px 0 10px 20px;
+
+  color: #91300f;
+
+  background: rgb(255 255 255 / 70%);
+  border: 1px solid var(--color-background);
+  border-radius: 8px;
+
+  &:focus {
+    background: rgb(255 255 255 / 50%);
+    border: 1px solid var(--color-primary-bright);
+    box-shadow: none;
+  }
+}
+
+.login-label {
+  color: var(--color-font-dark);
+}
+
+.modal__error {
+  @include font(1.4rem, 700, normal, 0.03rem);
+
+  display: none;
+  margin-top: 5px;
+  color: red;
+
+  &_active {
+    display: block;
+  }
+}
+
+.login-button {
+  @extend %transition;
+
+  @include font(2rem, 700, normal);
+
+  @include media-hover {
+    &:not([disabled]):hover {
+      box-shadow: 0 1px 5px 1px rgb(0 0 0 / 70%);
+    }
+  }
+
+  height: 50px;
+  margin-top: 20px;
+
+  color: var(--color-white);
+
+  background-color: var(--color-primary-bright);
+  border-radius: 8px;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  &:not([disabled]):active {
+    box-shadow: inset 0 1px 2px var(--color-black);
+  }
+}

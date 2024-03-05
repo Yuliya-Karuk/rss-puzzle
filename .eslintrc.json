@@ -60,6 +60,7 @@
     "max-lines-per-function": ["error", 40],
     "@typescript-eslint/explicit-function-return-type": "error",
     "@typescript-eslint/no-non-null-assertion": "error",
-    "curly": ["error", "all"]
+    "curly": ["error", "all"],
+    "@typescript-eslint/lines-between-class-members": "off"
   }
 }

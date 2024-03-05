@@ -1,0 +1,13 @@
+@mixin font($font-size, $font-weight, $line-height, $letter-spacing: normal, $text-transform: none) {
+  font-size: $font-size;
+  font-weight: $font-weight;
+  line-height: $line-height;
+  text-transform: $text-transform;
+  letter-spacing: $letter-spacing;
+}
+
+@mixin media-hover {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}

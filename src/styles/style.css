@@ -1,0 +1,20 @@
+@import 'normalize.css';
+@import 'reset.css';
+@import 'constants.css';
+@import 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: Roboto, sans-serif;
+  font-size: 10px;
+}
+
+body {
+  background: linear-gradient(90deg, #fedcc5 0%, #feddc6 100%);
+}
