@@ -1,5 +1,27 @@
+import { DomElementAttribute } from '../../types/interfaces';
 import { createElementWithProperties } from '../../utils/utils';
 import styles from './loginForm.module.scss';
+
+type Inputs = 'name' | 'surname';
+
+const LoginInputs: Record<Inputs, DomElementAttribute> = {
+  name: {
+    id: 'name',
+    type: 'text',
+    name: 'first-name',
+    required: 'required',
+    minlength: '3',
+    pattern: '^[A-Z][a-zA-Z\\-]+$',
+  },
+  surname: {
+    id: 'surname',
+    type: 'text',
+    name: 'last-name',
+    required: 'required',
+    minlength: '4',
+    pattern: '^[A-Z][a-zA-Z\\-]+$',
+  },
+};
 
 export class LoginForm {
   public nameInput: HTMLInputElement;
@@ -15,22 +37,12 @@ export class LoginForm {
   }
 
   private createChildren(): void {
-    this.nameInput = createElementWithProperties('input', styles.loginInput, {
-      id: 'first-name',
-      type: 'text',
-      name: 'first-name',
-      required: 'required',
-    });
-    this.surnameInput = createElementWithProperties('input', styles.loginInput, {
-      id: 'last-name',
-      type: 'text',
-      name: 'last-name',
-      required: 'required',
-    });
-    const nameLabel = createElementWithProperties('label', styles.loginLabel, { for: 'first-name' }, [
+    this.nameInput = createElementWithProperties('input', styles.loginInput, LoginInputs.name);
+    this.surnameInput = createElementWithProperties('input', styles.loginInput, LoginInputs.surname);
+    const nameLabel = createElementWithProperties('label', styles.loginLabel, { for: 'name' }, [
       { innerText: `First name` },
     ]);
-    const surnameLabel = createElementWithProperties('label', styles.loginLabel, { for: 'last-name' }, [
+    const surnameLabel = createElementWithProperties('label', styles.loginLabel, { for: 'surname' }, [
       { innerText: `Last name` },
     ]);
     this.nameError = createElementWithProperties('span', styles.loginError);

@@ -1,7 +1,10 @@
 import { DomElementAttribute, DomElementProperties } from '../types/interfaces';
 
-export function isNotNullable<T>(value: T): value is NonNullable<T> {
-  return value != null;
+export function isNotNullable<T>(value: T): NonNullable<T> {
+  if (value === undefined || value === null) {
+    throw new Error(`Not expected value`);
+  }
+  return value;
 }
 
 export function createElementWithProperties<K extends keyof HTMLElementTagNameMap>(

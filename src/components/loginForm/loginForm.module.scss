@@ -2,7 +2,7 @@
 @import '../../styles/placeholders';
 
 .login {
-  @include font(1.8rem, 400, 1.2);
+  @include font(2rem, 400, 1.2);
 
   display: flex;
   flex-direction: column;
@@ -39,7 +39,7 @@
   height: 50px;
   padding: 10px 0 10px 20px;
 
-  color: #91300f;
+  color: var(--color-font-dark);
 
   background: rgb(255 255 255 / 70%);
   border: 1px solid var(--color-background);
@@ -50,22 +50,26 @@
     border: 1px solid var(--color-primary-bright);
     box-shadow: none;
   }
+
+  &:focus:invalid {
+    border: 2px solid #f22519;
+  }
+
+  &:valid {
+    border: 2px solid #90f219;
+  }
 }
 
 .login-label {
   color: var(--color-font-dark);
 }
 
-.modal__error {
-  @include font(1.4rem, 700, normal, 0.03rem);
+.login-error {
+  @include font(1.5rem, 700, normal, 0.05rem);
 
-  display: none;
-  margin-top: 5px;
-  color: red;
-
-  &_active {
-    display: block;
-  }
+  display: block;
+  margin-bottom: 5px;
+  color: #f22519;
 }
 
 .login-button {
