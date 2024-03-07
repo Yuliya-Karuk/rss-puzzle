@@ -12,6 +12,7 @@ const LoginInputs: Record<Inputs, DomElementAttribute> = {
     required: 'required',
     minlength: '3',
     pattern: '^[A-Z][a-zA-Z\\-]+$',
+    autocomplete: 'off',
   },
   surname: {
     id: 'surname',
@@ -20,6 +21,7 @@ const LoginInputs: Record<Inputs, DomElementAttribute> = {
     required: 'required',
     minlength: '4',
     pattern: '^[A-Z][a-zA-Z\\-]+$',
+    autocomplete: 'off',
   },
 };
 

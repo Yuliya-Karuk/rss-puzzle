@@ -11,4 +11,8 @@ export class StorageService {
     const data = localStorage.getItem(this.storageKey);
     return data ? JSON.parse(data) : null;
   }
+
+  public static removeData(): void {
+    localStorage.removeItem(this.storageKey);
+  }
 }

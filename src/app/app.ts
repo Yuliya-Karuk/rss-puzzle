@@ -21,11 +21,16 @@ export class App {
 
   public createStartPage(): void {
     const component = this.appController.getStartPage();
+    this.bindStartPageListeners();
     this.parentElement.append(this.appController.getHeader(), component, this.appController.getFooter());
   }
 
   private bindLoginPageListeners(): void {
     this.loginPageController.view.loginForm.element.addEventListener('submit', e => this.loginUser(e));
+  }
+
+  private bindStartPageListeners(): void {
+    this.appController.header.logoutButton.addEventListener('click', () => this.logoutUser());
   }
 
   private loginUser(e: Event): void {
@@ -37,7 +42,17 @@ export class App {
     this.createStartPage();
   }
 
+  private logoutUser(): void {
+    StorageService.removeData();
+    this.clearParentElement();
+    this.createLoginPage();
+  }
+
   private clearParentElement(): void {
     this.parentElement.replaceChildren();
+  }
+
+  public checkIsUserLogin(): boolean {
+    return !!StorageService.getData();
   }
 }

@@ -8,9 +8,10 @@ export class StartPageView {
 
   constructor() {
     this.element = createElementWithProperties('main', styles.start);
+    this.createChildren();
   }
 
-  public getStartPage(): HTMLElement {
+  private createChildren(): void {
     const rules = createElementWithProperties('div', styles.startRules);
     const descriptionText = createElementWithProperties('p', styles.startText, undefined, [
       { innerHTML: `${startPageText}` },
@@ -26,6 +27,9 @@ export class StartPageView {
     rules.append(descriptionText, rulesText);
     startImageContainer.append(startImage);
     this.element.append(startImageContainer, rules);
+  }
+
+  public getStartPage(): HTMLElement {
     return this.element;
   }
 }
