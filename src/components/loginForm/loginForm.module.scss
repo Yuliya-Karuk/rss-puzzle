@@ -52,11 +52,11 @@
   }
 
   &:focus:invalid {
-    border: 2px solid #f22519;
+    border: 2px solid var(--color-invalid);
   }
 
   &:valid {
-    border: 2px solid #90f219;
+    border: 2px solid var(--color-valid);
   }
 }
 
@@ -69,7 +69,7 @@
 
   display: block;
   margin-bottom: 5px;
-  color: #f22519;
+  color: var(--color-invalid);
 }
 
 .login-button {

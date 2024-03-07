@@ -26,13 +26,13 @@ const LoginInputs: Record<Inputs, DomElementAttribute> = {
 export class LoginForm {
   public nameInput: HTMLInputElement;
   public surnameInput: HTMLInputElement;
-  public loginForm: HTMLFormElement;
+  public element: HTMLFormElement;
   public nameError: HTMLSpanElement;
   public surnameError: HTMLSpanElement;
   public loginButton: HTMLButtonElement;
 
   constructor() {
-    this.loginForm = createElementWithProperties('form', styles.login, { novalidate: 'novalidate' });
+    this.element = createElementWithProperties('form', styles.login, { novalidate: 'novalidate', method: '' });
     this.createChildren();
   }
 
@@ -54,7 +54,7 @@ export class LoginForm {
       { type: 'submit', disabled: 'disabled' },
       [{ innerText: `Login` }]
     );
-    this.loginForm.append(
+    this.element.append(
       title,
       nameLabel,
       this.nameInput,
@@ -67,6 +67,6 @@ export class LoginForm {
   }
 
   public getComponent(): HTMLFormElement {
-    return this.loginForm;
+    return this.element;
   }
 }

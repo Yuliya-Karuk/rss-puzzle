@@ -1,5 +1,7 @@
 :root {
   --color-primary-bright: #c7625d;
+  --color-invalid: #e8725e;
+  --color-valid: #90f219;
   --color-white: #fff;
   --color-black: #000;
   --color-font-dark: #2a1e17;
