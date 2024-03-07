@@ -7,4 +7,5 @@
 *.woff2
 *.png
 *.ico
+*.jpg
 /node_modules

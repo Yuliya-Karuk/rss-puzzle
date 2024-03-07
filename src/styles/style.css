@@ -16,5 +16,9 @@ html {
 }
 
 body {
-  background: linear-gradient(90deg, #fedcc5 0%, #feddc6 100%);
+  background: center no-repeat url('./../img/5178019.jpg');
+
+  /* background: center no-repeat url('./../img/5208314.jpg');
+  background: center no-repeat url('./../img/v1053-020.jpg'); */
+  background-size: cover;
 }

@@ -1,0 +1,57 @@
+@import '../../../styles/placeholders';
+@import '../../../styles/mixins';
+
+.start {
+  @extend %container;
+
+  @include flex(center, center);
+
+  @include media-laptop {
+    flex-wrap: wrap;
+    height: calc(100% - 110px);
+  }
+
+  gap: 30px;
+  height: calc(100vh - 110px);
+  padding: 5% 3%;
+}
+
+.start-rules {
+  @include font(2rem, 400, 1.2);
+
+  @include flex(flex-start, center, column);
+
+  @include media-laptop {
+    width: 100%;
+  }
+
+  gap: 20px;
+
+  width: 40%;
+  min-width: 300px;
+  min-height: 300px;
+  padding: 40px;
+
+  background: rgb(255 255 255 / 30%);
+  backdrop-filter: blur(30px);
+  border-radius: 40px;
+  box-shadow: 0 4px 70px 0 rgb(0 0 0 / 10%);
+}
+
+.start-image-container {
+  @include flex(center, center);
+
+  width: 50%;
+  max-width: 800px;
+  height: auto;
+  max-height: 600px;
+
+  border-radius: 10px;
+}
+
+.start-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 30px;
+}

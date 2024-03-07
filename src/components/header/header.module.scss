@@ -1,0 +1,49 @@
+@import '../../styles/mixins';
+@import '../../styles/placeholders';
+
+.header {
+  width: 100%;
+  height: 60px;
+
+  color: var(--color-font-dark);
+
+  background: var(--color-background-black-transparent);
+  backdrop-filter: blur(12.5px);
+}
+
+.header-wrapper {
+  @extend %container;
+
+  @include flex(space-between, center);
+
+  gap: 20px;
+  height: 100%;
+  padding: 0 20px;
+}
+
+.header-logo {
+  @include flex(center, center);
+
+  column-gap: 10px;
+}
+
+.header-button {
+  @extend %transition;
+
+  @include font(2rem, 700, normal);
+
+  @include media-hover {
+    &:not([disabled]):hover {
+      box-shadow: 0 1px 5px 1px rgb(0 0 0 / 70%);
+    }
+  }
+
+  padding: 10px 20px;
+  color: var(--color-white);
+  background-color: var(--color-primary-bright);
+  border-radius: 8px;
+
+  &:not([disabled]):active {
+    box-shadow: inset 0 1px 2px var(--color-black);
+  }
+}

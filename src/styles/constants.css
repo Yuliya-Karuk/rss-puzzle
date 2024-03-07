@@ -1,7 +1,8 @@
 :root {
-  --color-background: #fedcc5;
-  --color-primary-bright: #f25019;
+  --color-primary-bright: #c7625d;
   --color-white: #fff;
   --color-black: #000;
   --color-font-dark: #2a1e17;
+  --color-background-black-transparent: rgb(0 0 0 / 5%);
+  --color-shadow-dark: rgb(0 0 0 / 40%);
 }
