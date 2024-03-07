@@ -1,4 +1,5 @@
 import { StorageService } from '../services/localStorage.service';
+import { isNotNullable } from '../utils/utils';
 import { AppController } from './controller/appController';
 import { LoginPageController } from './controller/loginPageController/loginPageController';
 
@@ -23,6 +24,8 @@ export class App {
     const component = this.appController.getStartPage();
     this.bindStartPageListeners();
     this.parentElement.append(this.appController.getHeader(), component, this.appController.getFooter());
+    const userData = isNotNullable(StorageService.getData());
+    this.appController.setGreetingUser(`Hi, ${userData.name} ${userData.surname}`);
   }
 
   private bindLoginPageListeners(): void {

@@ -24,4 +24,8 @@ export class AppController {
   public getFooter(): HTMLElement {
     return this.footer.getComponent();
   }
+
+  public setGreetingUser(value: string): void {
+    this.startPageController.setGreeting(value);
+  }
 }

@@ -1,10 +1,12 @@
 import { createElementWithProperties } from '../../../utils/utils';
 import styles from './startPageView.module.scss';
 import startImgPath from '../../../img/start_image.png';
+import greetingPath from '../../../img/greeting13.png';
 import { startGameRules, startPageText } from '../../../utils/constants';
 
 export class StartPageView {
   public element: HTMLElement;
+  public greetingText: HTMLSpanElement;
 
   constructor() {
     this.element = createElementWithProperties('main', styles.start);
@@ -13,6 +15,11 @@ export class StartPageView {
 
   private createChildren(): void {
     const rules = createElementWithProperties('div', styles.startRules);
+    const greeting = createElementWithProperties('img', styles.startGreeting, {
+      alt: 'login image',
+      src: `${greetingPath}`,
+    });
+    this.greetingText = createElementWithProperties('span', styles.startGreetingText);
     const descriptionText = createElementWithProperties('p', styles.startText, undefined, [
       { innerHTML: `${startPageText}` },
     ]);
@@ -25,7 +32,7 @@ export class StartPageView {
       src: `${startImgPath}`,
     });
     rules.append(descriptionText, rulesText);
-    startImageContainer.append(startImage);
+    startImageContainer.append(startImage, greeting, this.greetingText);
     this.element.append(startImageContainer, rules);
   }
 

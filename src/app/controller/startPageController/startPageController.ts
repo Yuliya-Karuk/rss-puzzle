@@ -10,4 +10,8 @@ export class StartPageController {
   public createStartPage(): HTMLElement {
     return this.view.getStartPage();
   }
+
+  public setGreeting(value: string): void {
+    this.view.greetingText.innerText = value;
+  }
 }

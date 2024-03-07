@@ -4,10 +4,11 @@
 .start {
   @extend %container;
 
-  @include flex(center, center);
+  @include flex(space-between, center);
 
   @include media-laptop {
     flex-wrap: wrap;
+    justify-content: center;
     height: calc(100% - 110px);
   }
 
@@ -18,7 +19,6 @@
 
 .start-rules {
   @include font(2rem, 400, 1.2);
-
   @include flex(flex-start, center, column);
 
   @include media-laptop {
@@ -32,6 +32,8 @@
   min-height: 300px;
   padding: 40px;
 
+  color: var(--color-font-dark);
+
   background: rgb(255 255 255 / 30%);
   backdrop-filter: blur(30px);
   border-radius: 40px;
@@ -40,6 +42,8 @@
 
 .start-image-container {
   @include flex(center, center);
+
+  position: relative;
 
   width: 50%;
   max-width: 800px;
@@ -54,4 +58,63 @@
   height: auto;
   object-fit: contain;
   border-radius: 30px;
+}
+
+.start-greeting {
+  @include media-laptop {
+    right: -150px;
+    width: 250px;
+    height: 180px;
+  }
+
+  position: absolute;
+  z-index: 1;
+  top: -23%;
+  right: -130px;
+  transform-origin: 0 0;
+  transform: scaleX(0);
+
+  width: 300px;
+  height: 200px;
+
+  animation: appear 0.5s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.start-greeting-text {
+  @include font(2.6rem, 700, 1.2);
+  @include flex(center, center);
+
+  @include media-laptop {
+    right: -150px;
+    width: 250px;
+    height: 180px;
+    font-size: 2rem;
+  }
+
+  position: absolute;
+  z-index: 10;
+  top: -25%;
+  right: -130px;
+  transform-origin: 0 0;
+  transform: scaleX(0);
+
+  width: 300px;
+  height: 200px;
+
+  color: var(--color-font-dark);
+  text-align: center;
+
+  animation: appear 0.5s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes appear {
+  0% {
+    transform: scaleX(0);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
 }
