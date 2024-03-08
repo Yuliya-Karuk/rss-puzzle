@@ -5,7 +5,7 @@ import { StartPageController } from './startPageController/startPageController';
 export class AppController {
   public header: Header;
   public footer: Footer;
-  private startPageController: StartPageController;
+  public startPageController: StartPageController;
 
   constructor() {
     this.header = new Header();

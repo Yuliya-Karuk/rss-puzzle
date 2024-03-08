@@ -34,6 +34,7 @@ export class App {
 
   private bindStartPageListeners(): void {
     this.appController.header.logoutButton.addEventListener('click', () => this.logoutUser());
+    this.appController.startPageController.view.startButton.addEventListener('click', () => this.createGamePage());
   }
 
   private loginUser(e: Event): void {
@@ -57,5 +58,9 @@ export class App {
 
   public checkIsUserLogin(): boolean {
     return !!StorageService.getData();
+  }
+
+  public createGamePage(): void {
+    this.clearParentElement();
   }
 }

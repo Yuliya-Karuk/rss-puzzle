@@ -21,7 +21,7 @@ export class Header {
       src: `${logoPath}`,
     });
     const title = createElementWithProperties('h1', styles.headerTitle, undefined, [{ innerText: `${this.gameName}` }]);
-    this.logoutButton = createElementWithProperties('button', styles.headerButton, { type: 'button' }, [
+    this.logoutButton = createElementWithProperties('button', styles.btn, { type: 'button' }, [
       { innerText: `Logout` },
     ]);
     headerLogo.append(img, title);

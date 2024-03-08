@@ -1,12 +1,13 @@
 import { createElementWithProperties } from '../../../utils/utils';
 import styles from './startPageView.module.scss';
 import startImgPath from '../../../img/start_image.png';
-import greetingPath from '../../../img/greeting13.png';
+import greetingPath from '../../../img/greeting.png';
 import { startGameRules, startPageText } from '../../../utils/constants';
 
 export class StartPageView {
   public element: HTMLElement;
   public greetingText: HTMLSpanElement;
+  public startButton: HTMLButtonElement;
 
   constructor() {
     this.element = createElementWithProperties('main', styles.start);
@@ -31,7 +32,8 @@ export class StartPageView {
       alt: 'login image',
       src: `${startImgPath}`,
     });
-    rules.append(descriptionText, rulesText);
+    this.startButton = createElementWithProperties('button', styles.btn, { type: 'button' }, [{ innerText: 'Start' }]);
+    rules.append(descriptionText, rulesText, this.startButton);
     startImageContainer.append(startImage, greeting, this.greetingText);
     this.element.append(startImageContainer, rules);
   }

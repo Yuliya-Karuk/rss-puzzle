@@ -1,5 +1,6 @@
 @import '../../../styles/placeholders';
 @import '../../../styles/mixins';
+@import '../../../styles/button';
 
 .start {
   @extend %container;
@@ -10,11 +11,12 @@
     flex-wrap: wrap;
     justify-content: center;
     height: calc(100% - 110px);
+    padding: 3%;
   }
 
   gap: 30px;
   height: calc(100vh - 110px);
-  padding: 5% 3%;
+  padding: 0 3%;
 }
 
 .start-rules {
@@ -27,7 +29,7 @@
 
   gap: 20px;
 
-  width: 40%;
+  width: 50%;
   min-width: 300px;
   min-height: 300px;
   padding: 40px;
@@ -45,7 +47,7 @@
 
   position: relative;
 
-  width: 50%;
+  width: 45%;
   max-width: 800px;
   height: auto;
   max-height: 600px;
@@ -62,15 +64,16 @@
 
 .start-greeting {
   @include media-laptop {
+    top: -25%;
     right: -150px;
-    width: 250px;
-    height: 180px;
+    width: 240px;
+    height: 170px;
   }
 
   position: absolute;
   z-index: 1;
-  top: -23%;
-  right: -130px;
+  top: -30%;
+  right: -60px;
   transform-origin: 0 0;
   transform: scaleX(0);
 
@@ -86,16 +89,19 @@
   @include flex(center, center);
 
   @include media-laptop {
+    top: -25%;
     right: -150px;
-    width: 250px;
-    height: 180px;
+
+    width: 240px;
+    height: 170px;
+
     font-size: 2rem;
   }
 
   position: absolute;
   z-index: 10;
-  top: -25%;
-  right: -130px;
+  top: -30%;
+  right: -60px;
   transform-origin: 0 0;
   transform: scaleX(0);
 

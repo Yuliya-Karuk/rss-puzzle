@@ -52,7 +52,7 @@ export class LoginForm {
     const title = createElementWithProperties('h2', styles.loginTitle, undefined, [{ innerText: `Login` }]);
     this.loginButton = createElementWithProperties(
       'button',
-      styles.loginButton,
+      `${styles.btn} ${styles.loginButton}`,
       { type: 'submit', disabled: 'disabled' },
       [{ innerText: `Login` }]
     );
