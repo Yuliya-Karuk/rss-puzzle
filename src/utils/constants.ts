@@ -3,3 +3,7 @@ export const startPageText: string =
 
 export const startGameRules: string =
   '<b>Game rules:</b><br>🧩 goal: you need to put together a meaningful sentence from several words.<br>🎮 3 types of hints: translating a phrase in Russian, listening to the pronunciation of a sentence, background image puzzle hint (all hints can be turned on and off).<br>🌟 Make all sentences correctly and reveal all the puzzle pieces from the work of art.';
+
+export const GameConst: { [key: string]: string | number } = {
+  SentencesCount: 10,
+};

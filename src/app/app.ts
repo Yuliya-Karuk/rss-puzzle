@@ -62,5 +62,7 @@ export class App {
 
   public createGamePage(): void {
     this.clearParentElement();
+    const component = this.appController.getGamePage();
+    this.parentElement.append(this.appController.getHeader(), component, this.appController.getFooter());
   }
 }

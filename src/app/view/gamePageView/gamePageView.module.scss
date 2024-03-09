@@ -1,0 +1,50 @@
+@import '../../../styles/placeholders';
+@import '../../../styles/mixins';
+
+.game {
+  @include flex(center, center, column);
+
+  gap: 6.5%;
+  height: calc(100vh - 110px);
+  padding: 40px;
+}
+
+.game-results {
+  @extend %blurred-background;
+
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  width: 90%;
+  height: 85%;
+}
+
+.game-results-row {
+  @include flex(center, center);
+}
+
+.game-results-item {
+  @include flex(center, center);
+
+  flex-grow: 1;
+  height: 100%;
+  padding: 10px;
+  border: 1px solid #000;
+}
+
+.words {
+  @extend %blurred-background;
+
+  @include flex(stretch, center);
+
+  width: 90%;
+  height: 8.5%;
+}
+
+.word-item {
+  @include flex(center, center);
+
+  flex-grow: 1;
+  height: 100%;
+  padding: 10px;
+  border: 1px solid #000;
+}

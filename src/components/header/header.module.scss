@@ -3,6 +3,9 @@
 @import '../../styles/button';
 
 .header {
+
+  @extend %blurred-background;
+
   position: relative;
   z-index: 1;
 
@@ -10,9 +13,6 @@
   height: 60px;
 
   color: var(--color-font-dark);
-
-  background: var(--color-background-black-transparent);
-  backdrop-filter: blur(12.5px);
 }
 
 .header-wrapper {

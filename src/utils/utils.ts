@@ -26,3 +26,7 @@ export function createElementWithProperties<K extends keyof HTMLElementTagNameMa
   }
   return element;
 }
+
+export function shuffleWords(words: string[]): string[] {
+  return words.sort(() => Math.random() - 0.5);
+}

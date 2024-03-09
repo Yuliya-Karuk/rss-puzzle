@@ -6,3 +6,8 @@
   max-width: 1400px;
   margin: 0 auto;
 }
+
+%blurred-background {
+  background: var(--color-background-black-transparent);
+  backdrop-filter: blur(12.5px);
+}
