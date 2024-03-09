@@ -30,3 +30,9 @@ export function createElementWithProperties<K extends keyof HTMLElementTagNameMa
 export function shuffleWords(words: string[]): string[] {
   return words.sort(() => Math.random() - 0.5);
 }
+
+export function findPxPerChar(sentence: string[]): number {
+  const length = sentence.reduce((acc: number, el: string) => acc + el.length, 0);
+  const pxPerChar = Math.floor((window.innerWidth - 80) * 0.9) / length;
+  return pxPerChar;
+}

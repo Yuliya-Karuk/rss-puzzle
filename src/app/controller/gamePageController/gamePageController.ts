@@ -31,6 +31,7 @@ export class GamePageController {
   }
 
   private bindGameListeners(): void {
+    const context = this;
     for (let i = 0; i < this.view.sourceData.children.length; i += 1) {
       const item = this.view.sourceData.children[i];
       item.addEventListener('click', () => {
@@ -39,10 +40,15 @@ export class GamePageController {
         }
       });
     }
+    window.addEventListener('resize', () => context.changeWordsSize());
   }
 
   private moveWordToResult(word: Element, destination: Element, num: number): void {
     destination.children[this.wordCounter].replaceWith(word);
     this.wordCounter += num;
+  }
+
+  private changeWordsSize(): void {
+    this.view.setWordsSize();
   }
 }
