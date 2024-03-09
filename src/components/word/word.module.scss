@@ -1,0 +1,12 @@
+@import '../../styles/mixins';
+@import '../../styles/placeholders';
+@import '../../styles/button';
+
+.word-item {
+  @include flex(center, center);
+  @include font(2vw, 700, 1.2);
+
+  height: 100%;
+  color: var(--color-font-dark);
+  border: 1px solid #000;
+}

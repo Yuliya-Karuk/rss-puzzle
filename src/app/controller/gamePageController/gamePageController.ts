@@ -15,7 +15,6 @@ export class GamePageController {
   constructor() {
     this.view = new GamePageView();
     this.sentenceNumber = 0;
-    this.wordCounter = 0;
   }
 
   public renderOneSentence(): void {
@@ -32,20 +31,17 @@ export class GamePageController {
 
   private bindGameListeners(): void {
     const context = this;
-    for (let i = 0; i < this.view.sourceData.children.length; i += 1) {
-      const item = this.view.sourceData.children[i];
+    for (let i = 0; i < this.view.words.length; i += 1) {
+      const item = this.view.words[i].getComponent();
       item.addEventListener('click', () => {
         if (item.parentElement === this.view.sourceData) {
-          this.moveWordToResult(item, this.view.results.children[this.sentenceNumber], 1);
+          this.view.moveWordToResult(this.view.words[i], this.sentenceNumber, 1);
+        } else {
+          this.view.moveWordToSource(this.view.words[i], -1);
         }
       });
     }
     window.addEventListener('resize', () => context.changeWordsSize());
-  }
-
-  private moveWordToResult(word: Element, destination: Element, num: number): void {
-    destination.children[this.wordCounter].replaceWith(word);
-    this.wordCounter += num;
   }
 
   private changeWordsSize(): void {

@@ -1,13 +1,16 @@
 import { createElementWithProperties, findPxPerChar } from '../../../utils/utils';
 import styles from './gamePageView.module.scss';
 import { GameConst } from '../../../utils/constants';
+import { Word } from '../../../components/word/word';
 
 export class GamePageView {
   public element: HTMLElement;
   public results: HTMLDivElement;
   public sourceData: HTMLDivElement;
-  public words: HTMLDivElement[];
+  public words: Word[];
   private sentence: string[];
+  private sentenceNumber: number;
+  private wordCounter: number;
 
   constructor() {
     this.element = createElementWithProperties('main', styles.game);
@@ -30,11 +33,13 @@ export class GamePageView {
   }
 
   public renderSentence(sentence: string[], sentenceNumber: number): void {
+    this.wordCounter = 0;
     this.sentence = sentence;
+    this.sentenceNumber = sentenceNumber;
     for (let i = 0; i < sentence.length; i += 1) {
-      const word = createElementWithProperties('div', styles.wordItem, undefined, [{ innerHTML: `${sentence[i]}` }]);
+      const word = new Word(`${sentence[i]}`);
       const resultWord = createElementWithProperties('div', styles.gameResultsItem);
-      this.sourceData.append(word);
+      this.sourceData.append(word.getComponent());
       this.results.children[sentenceNumber].append(resultWord);
       this.words.push(word);
     }
@@ -44,7 +49,21 @@ export class GamePageView {
   public setWordsSize(): void {
     const pxPerChar = findPxPerChar(this.sentence);
     for (let i = 0; i < this.words.length; i += 1) {
-      this.words[i].setAttribute('style', `width: ${this.words[i].innerText.length * pxPerChar}px`);
+      this.words[i].getComponent().setAttribute('style', `width: ${this.words[i].value.length * pxPerChar}px`);
     }
+  }
+
+  public moveWordToResult(word: Word, sentenceNumber: number, num: number): void {
+    const destination = this.results.children[sentenceNumber];
+    destination.children[this.wordCounter].replaceWith(word.getComponent());
+    this.wordCounter += num;
+  }
+
+  public moveWordToSource(word: Word, num: number): void {
+    console.error(this.sourceData);
+    this.sourceData.append(word.getComponent());
+    const resultWord = createElementWithProperties('div', styles.gameResultsItem);
+    this.results.children[this.sentenceNumber].append(resultWord);
+    this.wordCounter += num;
   }
 }
