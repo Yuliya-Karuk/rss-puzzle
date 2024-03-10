@@ -10,7 +10,6 @@ export class GamePageView {
   public words: Word[];
   private sentence: string[];
   private sentenceNumber: number;
-  private wordCounter: number;
 
   constructor() {
     this.element = createElementWithProperties('main', styles.game);
@@ -33,7 +32,6 @@ export class GamePageView {
   }
 
   public renderSentence(sentence: string[], sentenceNumber: number): void {
-    this.wordCounter = 0;
     this.sentence = sentence;
     this.sentenceNumber = sentenceNumber;
     for (let i = 0; i < sentence.length; i += 1) {
@@ -53,17 +51,20 @@ export class GamePageView {
     }
   }
 
-  public moveWordToResult(word: Word, sentenceNumber: number, num: number): void {
-    const destination = this.results.children[sentenceNumber];
-    destination.children[this.wordCounter].replaceWith(word.getComponent());
-    this.wordCounter += num;
+  public moveWordToResult(word: Word): void {
+    const destination = this.results.children[this.sentenceNumber];
+    const index = this.findEmptySlot(destination);
+    destination.children[index].replaceWith(word.getComponent());
   }
 
-  public moveWordToSource(word: Word, num: number): void {
-    console.error(this.sourceData);
-    this.sourceData.append(word.getComponent());
+  public moveWordToSource(word: Word): void {
     const resultWord = createElementWithProperties('div', styles.gameResultsItem);
-    this.results.children[this.sentenceNumber].append(resultWord);
-    this.wordCounter += num;
+    word.getComponent().insertAdjacentElement('beforebegin', resultWord);
+    this.sourceData.append(word.getComponent());
+  }
+
+  private findEmptySlot(destination: Element): number {
+    const index = Array.from(destination.children).findIndex(el => el.className.includes('game-results-item'));
+    return index;
   }
 }

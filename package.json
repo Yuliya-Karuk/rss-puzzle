@@ -17,12 +17,12 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "./src/**.*": "npm run prettier:fix",
-    "./src/**.{css,scss}": "npm run stylelint:fix",
-    "./src/**.{ts,js}": "npm run lint:fix"
+    "**.*": "npm run prettier:fix",
+    "*.{css,scss}": "npm run stylelint:fix",
+    "*.{ts,js}": "npm run lint:fix"
   },
   "validate-branch-name": {
-    "pattern": "^(feat|fix|chore|refactor)\/RSS-PZ-(0\\d|\\d+)_\\w+",
+    "pattern": "^(feat|fix|chore|refactor)/RSS-PZ-(0\\d|\\d+)_\\w+",
     "errorMsg": "Branch name doesn't follow the defined repository rules"
   },
   "devDependencies": {

@@ -35,9 +35,9 @@ export class GamePageController {
       const item = this.view.words[i].getComponent();
       item.addEventListener('click', () => {
         if (item.parentElement === this.view.sourceData) {
-          this.view.moveWordToResult(this.view.words[i], this.sentenceNumber, 1);
+          this.view.moveWordToResult(this.view.words[i]);
         } else {
-          this.view.moveWordToSource(this.view.words[i], -1);
+          this.view.moveWordToSource(this.view.words[i]);
         }
       });
     }
