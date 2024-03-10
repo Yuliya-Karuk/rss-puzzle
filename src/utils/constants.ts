@@ -7,3 +7,5 @@ export const startGameRules: string =
 export const GameConst: { [key: string]: string | number } = {
   SentencesCount: 10,
 };
+
+export const PaddingMain = 20;

@@ -9,4 +9,12 @@
   height: 100%;
   color: var(--color-font-dark);
   border: 1px solid #000;
+
+  .game-results-row &_valid {
+    border: 2px solid var(--color-valid);
+  }
+
+  .game-results-row &_invalid {
+    border: 2px solid var(--color-invalid);
+  }
 }

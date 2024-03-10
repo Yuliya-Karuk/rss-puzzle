@@ -8,12 +8,13 @@ export class GamePageView {
   public results: HTMLDivElement;
   public sourceData: HTMLDivElement;
   public words: Word[];
+  public resultWords: Word[];
   private sentence: string[];
   private sentenceNumber: number;
+  public checkButton: HTMLButtonElement;
 
   constructor() {
     this.element = createElementWithProperties('main', styles.game);
-    this.words = [];
     this.createChildren();
   }
 
@@ -24,7 +25,10 @@ export class GamePageView {
       this.results.append(row);
     }
     this.sourceData = createElementWithProperties('div', styles.words);
-    this.element.append(this.results, this.sourceData);
+    this.checkButton = createElementWithProperties('button', styles.btn, { type: 'button', disabled: 'disabled' }, [
+      { innerText: 'Check' },
+    ]);
+    this.element.append(this.results, this.sourceData, this.checkButton);
   }
 
   public getGamePage(): HTMLElement {
@@ -32,6 +36,7 @@ export class GamePageView {
   }
 
   public renderSentence(sentence: string[], sentenceNumber: number): void {
+    this.words = [];
     this.sentence = sentence;
     this.sentenceNumber = sentenceNumber;
     for (let i = 0; i < sentence.length; i += 1) {
@@ -63,8 +68,28 @@ export class GamePageView {
     this.sourceData.append(word.getComponent());
   }
 
-  private findEmptySlot(destination: Element): number {
+  public findEmptySlot(destination: Element): number {
     const index = Array.from(destination.children).findIndex(el => el.className.includes('game-results-item'));
     return index;
+  }
+
+  public setCheckButton(state: boolean): void {
+    if (!state && !this.checkButton.hasAttribute('disabled')) {
+      this.checkButton.setAttribute('disabled', 'disabled');
+    }
+    if (state) {
+      this.checkButton.removeAttribute('disabled');
+      this.fillResultWords();
+    }
+  }
+
+  private fillResultWords(): void {
+    this.resultWords = [];
+    for (let i = 0; i < this.results.children[this.sentenceNumber].children.length; i += 1) {
+      const oneWord = this.words.find(
+        el => el.value === this.results.children[this.sentenceNumber].children[i].textContent
+      ) as Word;
+      this.resultWords.push(oneWord);
+    }
   }
 }

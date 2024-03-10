@@ -12,8 +12,18 @@ export class Word {
     this.isGuessed = false;
   }
 
-  public changeState(): void {
-    this.isGuessed = !this.isGuessed;
+  public checkState(state: boolean): void {
+    this.isGuessed = state;
+    if (this.isGuessed) {
+      this.element.classList.add(`${styles.wordItem}_valid`);
+    } else {
+      this.element.classList.add(`${styles.wordItem}_invalid`);
+    }
+  }
+
+  public removeState(): void {
+    this.element.classList.remove(`${styles.wordItem}_invalid`);
+    this.element.classList.remove(`${styles.wordItem}_valid`);
   }
 
   public getComponent(): HTMLDivElement {

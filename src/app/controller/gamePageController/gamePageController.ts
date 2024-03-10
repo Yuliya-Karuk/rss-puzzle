@@ -38,13 +38,31 @@ export class GamePageController {
           this.view.moveWordToResult(this.view.words[i]);
         } else {
           this.view.moveWordToSource(this.view.words[i]);
+          this.view.words[i].removeState();
         }
+        this.setStateCheckButton();
       });
     }
     window.addEventListener('resize', () => context.changeWordsSize());
+    this.view.checkButton.addEventListener('click', () => this.checkSentence());
   }
 
   private changeWordsSize(): void {
     this.view.setWordsSize();
+  }
+
+  private setStateCheckButton(): void {
+    this.view.setCheckButton(this.checkResultIsCompleted());
+  }
+
+  private checkResultIsCompleted(): boolean {
+    return this.view.sourceData.children.length === 0;
+  }
+
+  private checkSentence(): void {
+    for (let i = 0; i < this.correctSentence.length; i += 1) {
+      const state = this.correctSentence[i] === this.view.resultWords[i].value;
+      this.view.resultWords[i].checkState(state);
+    }
   }
 }

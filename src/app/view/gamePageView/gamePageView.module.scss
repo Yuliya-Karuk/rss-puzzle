@@ -1,12 +1,13 @@
 @import '../../../styles/placeholders';
 @import '../../../styles/mixins';
+@import '../../../styles/button';
 
 .game {
-  @include flex(center, center, column);
+  @include flex(space-between, center, column);
 
-  gap: 6.5%;
+  // gap: 6.5%;
   height: calc(100vh - 110px);
-  padding: 40px;
+  padding: 20px;
 }
 
 .game-results {
@@ -15,7 +16,7 @@
   display: grid;
   grid-template-rows: repeat(10, 1fr);
   width: 90%;
-  height: 85%;
+  height: 70%;
 }
 
 .game-results-row {
@@ -37,5 +38,5 @@
   @include flex(stretch, center);
 
   width: 90%;
-  height: 8.5%;
+  height: 7%;
 }

@@ -76,9 +76,4 @@
 .login-button {
   height: 50px;
   margin-top: 20px;
-
-  &:disabled {
-    cursor: default;
-    opacity: 0.7;
-  }
 }
