@@ -1,6 +1,6 @@
 import { WordCollection } from '../types/interfaces';
 
-export const wordCollectionLevel1: WordCollection = {
+export const wordCollection1: WordCollection = {
   rounds: [
     {
       levelData: {

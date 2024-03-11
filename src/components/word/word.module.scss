@@ -1,6 +1,5 @@
-@import '../../styles/mixins';
-@import '../../styles/placeholders';
-@import '../../styles/button';
+@import '../../styles/mixins.scss';
+@import '../../styles/placeholders.scss';
 
 .word-item {
   @include flex(center, center);
@@ -16,5 +15,9 @@
 
   .game-results-row &_invalid {
     border: 2px solid var(--color-invalid);
+  }
+
+  .game-results-row_guessed & {
+    pointer-events: none;
   }
 }

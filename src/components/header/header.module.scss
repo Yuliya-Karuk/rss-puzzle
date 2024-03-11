@@ -1,6 +1,5 @@
-@import '../../styles/mixins';
-@import '../../styles/placeholders';
-@import '../../styles/button';
+@import '../../styles/mixins.scss';
+@import '../../styles/placeholders.scss';
 
 .header {
   @extend %blurred-background;

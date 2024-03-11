@@ -2,19 +2,22 @@ import { createElementWithProperties, findPxPerChar } from '../../../utils/utils
 import styles from './gamePageView.module.scss';
 import { GameConst } from '../../../utils/constants';
 import { Word } from '../../../components/word/word';
+import { ButtonCheck } from '../../../components/buttonCheck/buttonCheck';
 
 export class GamePageView {
   public element: HTMLElement;
   public results: HTMLDivElement;
   public sourceData: HTMLDivElement;
   public words: Word[];
-  public resultWords: Word[];
+  public resultWords: (Word | undefined)[];
   private sentence: string[];
   private sentenceNumber: number;
-  public checkButton: HTMLButtonElement;
+  public buttonController: ButtonCheck;
+  public continueButton: HTMLButtonElement;
 
   constructor() {
     this.element = createElementWithProperties('main', styles.game);
+    this.buttonController = new ButtonCheck();
     this.createChildren();
   }
 
@@ -25,10 +28,7 @@ export class GamePageView {
       this.results.append(row);
     }
     this.sourceData = createElementWithProperties('div', styles.words);
-    this.checkButton = createElementWithProperties('button', styles.btn, { type: 'button', disabled: 'disabled' }, [
-      { innerText: 'Check' },
-    ]);
-    this.element.append(this.results, this.sourceData, this.checkButton);
+    this.element.append(this.results, this.sourceData, this.buttonController.getComponent());
   }
 
   public getGamePage(): HTMLElement {
@@ -38,6 +38,7 @@ export class GamePageView {
   public renderSentence(sentence: string[], sentenceNumber: number): void {
     this.words = [];
     this.sentence = sentence;
+    this.resultWords = Array.from({ length: sentence.length }, () => undefined);
     this.sentenceNumber = sentenceNumber;
     for (let i = 0; i < sentence.length; i += 1) {
       const word = new Word(`${sentence[i]}`);
@@ -54,18 +55,25 @@ export class GamePageView {
     for (let i = 0; i < this.words.length; i += 1) {
       this.words[i].getComponent().setAttribute('style', `width: ${this.words[i].value.length * pxPerChar}px`);
     }
+    for (let i = 0; i < this.resultWords.length; i += 1) {
+      if (this.resultWords[i]) {
+        this.words[i].getComponent().setAttribute('style', `width: ${this.words[i].value.length * pxPerChar}px`);
+      }
+    }
   }
 
   public moveWordToResult(word: Word): void {
     const destination = this.results.children[this.sentenceNumber];
     const index = this.findEmptySlot(destination);
     destination.children[index].replaceWith(word.getComponent());
+    this.resultWords[index] = word;
   }
 
   public moveWordToSource(word: Word): void {
     const resultWord = createElementWithProperties('div', styles.gameResultsItem);
     word.getComponent().insertAdjacentElement('beforebegin', resultWord);
     this.sourceData.append(word.getComponent());
+    this.resultWords.filter(el => el !== word);
   }
 
   public findEmptySlot(destination: Element): number {
@@ -74,22 +82,29 @@ export class GamePageView {
   }
 
   public setCheckButton(state: boolean): void {
-    if (!state && !this.checkButton.hasAttribute('disabled')) {
-      this.checkButton.setAttribute('disabled', 'disabled');
+    if (!state && !this.buttonController.isDisable) {
+      this.buttonController.disableCheckButton();
     }
     if (state) {
-      this.checkButton.removeAttribute('disabled');
-      this.fillResultWords();
+      this.buttonController.enableCheckButton();
     }
   }
 
-  private fillResultWords(): void {
-    this.resultWords = [];
-    for (let i = 0; i < this.results.children[this.sentenceNumber].children.length; i += 1) {
-      const oneWord = this.words.find(
-        el => el.value === this.results.children[this.sentenceNumber].children[i].textContent
-      ) as Word;
-      this.resultWords.push(oneWord);
+  public blockPreviousSentence(): void {
+    this.results.children[this.sentenceNumber].classList.add('game-results-row_guessed');
+  }
+
+  public changeButtons(state: boolean): void {
+    if (state) {
+      this.buttonController.setContinueState();
+    } else {
+      this.buttonController.setCheckState();
+    }
+  }
+
+  public clearResultsRows(): void {
+    for (let i = 0; i < this.results.children.length; i += 1) {
+      this.results.children[i].replaceChildren();
     }
   }
 }

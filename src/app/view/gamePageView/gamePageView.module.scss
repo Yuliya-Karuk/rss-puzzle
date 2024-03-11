@@ -1,6 +1,6 @@
-@import '../../../styles/placeholders';
-@import '../../../styles/mixins';
-@import '../../../styles/button';
+@import '../../../styles/placeholders.scss';
+@import '../../../styles/mixins.scss';
+@import '../../../styles/button.scss';
 
 .game {
   @include flex(space-between, center, column);

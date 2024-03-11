@@ -32,7 +32,7 @@ export class StartPageView {
       alt: 'login image',
       src: `${startImgPath}`,
     });
-    this.startButton = createElementWithProperties('button', styles.btn, { type: 'button' }, [{ innerText: 'Start' }]);
+    this.startButton = createElementWithProperties('button', 'btn', { type: 'button' }, [{ innerText: 'Start' }]);
     rules.append(descriptionText, rulesText, this.startButton);
     startImageContainer.append(startImage, greeting, this.greetingText);
     this.element.append(startImageContainer, rules);

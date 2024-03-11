@@ -1,6 +1,5 @@
-@import '../../styles/mixins';
-@import '../../styles/placeholders';
-@import '../../styles/button';
+@import '../../styles/mixins.scss';
+@import '../../styles/placeholders.scss';
 
 .login {
   @include font(2rem, 400, 1.2);
