@@ -8,10 +8,18 @@ export class App {
   public appController: AppController;
   public parentElement: HTMLBodyElement;
 
-  constructor(body: HTMLBodyElement) {
-    this.parentElement = body;
+  constructor() {
+    this.parentElement = isNotNullable(document.querySelector('body'));
     this.loginPageController = new LoginPageController();
     this.appController = new AppController();
+  }
+
+  public chooseFirstPage(): void {
+    if (this.checkIsUserLogin()) {
+      this.createStartPage();
+    } else {
+      this.createLoginPage();
+    }
   }
 
   public createLoginPage(): void {
@@ -22,10 +30,12 @@ export class App {
 
   public createStartPage(): void {
     const component = this.appController.getStartPage();
-    this.bindStartPageListeners();
-    this.parentElement.append(this.appController.getHeader(), component, this.appController.getFooter());
     const userData = isNotNullable(StorageService.getData());
+
+    this.parentElement.append(this.appController.getHeader(), component, this.appController.getFooter());
     this.appController.setGreetingUser(`Hi, ${userData.name} ${userData.surname}`);
+
+    this.bindStartPageListeners();
   }
 
   private bindLoginPageListeners(): void {
@@ -40,6 +50,7 @@ export class App {
   private loginUser(e: Event): void {
     e.stopPropagation();
     e.preventDefault();
+
     const userData = this.loginPageController.getInputsValues();
     StorageService.saveData(userData);
     this.clearParentElement();
@@ -62,6 +73,7 @@ export class App {
 
   public createGamePage(): void {
     this.clearParentElement();
+
     const component = this.appController.getGamePage();
     this.parentElement.append(this.appController.getHeader(), component, this.appController.getFooter());
   }

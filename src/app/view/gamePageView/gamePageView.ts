@@ -1,6 +1,6 @@
 import { createElementWithProperties, findPxPerChar, isNotNullable } from '../../../utils/utils';
 import styles from './gamePageView.module.scss';
-import { GameConst } from '../../../utils/constants';
+import { SentencesPerRound } from '../../../utils/constants';
 import { Word } from '../../../components/word/word';
 import { ButtonCheck } from '../../../components/buttonCheck/buttonCheck';
 import { ButtonAutoComplete } from '../../../components/buttonAutoComplete/buttonAutoComplete';
@@ -25,7 +25,7 @@ export class GamePageView {
 
   private createChildren(): void {
     this.results = createElementWithProperties('div', styles.gameResults);
-    for (let i = 0; i < (GameConst.SentencesCount as number); i += 1) {
+    for (let i = 0; i < SentencesPerRound; i += 1) {
       const row = createElementWithProperties('div', styles.gameResultsRow);
       this.results.append(row);
     }
@@ -86,13 +86,12 @@ export class GamePageView {
     return index;
   }
 
-  public setCheckButton(state: boolean): void {
-    if (!state && !this.buttonController.isDisable) {
+  public setCheckButton(makeButtonActive: boolean): void {
+    if (!makeButtonActive && !this.buttonController.isDisable) {
       this.buttonController.disableButton();
+      return;
     }
-    if (state) {
-      this.buttonController.enableButton();
-    }
+    this.buttonController.enableButton();
   }
 
   public blockPreviousSentence(): void {

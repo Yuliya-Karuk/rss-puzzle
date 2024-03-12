@@ -6,7 +6,9 @@ import { wordCollection5 } from '../data/wordCollectionLevel5';
 import { wordCollection6 } from '../data/wordCollectionLevel6';
 import { WordCollection } from '../types/interfaces';
 
-const CollectionPerLevel: { [key: number]: WordCollection } = {
+type Level = 1 | 2 | 3 | 4 | 5 | 6;
+
+const CollectionPerLevel: Record<Level, WordCollection> = {
   1: wordCollection1,
   2: wordCollection2,
   3: wordCollection3,
@@ -16,7 +18,7 @@ const CollectionPerLevel: { [key: number]: WordCollection } = {
 };
 
 export class DataService {
-  public level: number;
+  public level: Level;
   public round: number;
   private dataOnLevel: WordCollection;
   public roundPerLevel: number;
