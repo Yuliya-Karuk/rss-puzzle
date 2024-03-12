@@ -8,3 +8,13 @@
   --color-background-black-transparent: rgb(0 0 0 / 5%);
   --color-shadow-dark: rgb(0 0 0 / 40%);
 }
+
+@keyframes change-button {
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  100% {
+    transform: rotateY(360deg);
+  }
+}

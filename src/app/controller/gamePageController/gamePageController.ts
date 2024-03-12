@@ -44,6 +44,7 @@ export class GamePageController {
         this.setNextSentence();
       }
     });
+    this.view.buttonAutoComplete.getComponent().addEventListener('click', () => this.handleAutoComplete());
   }
 
   private bindWordListeners(): void {
@@ -104,5 +105,9 @@ export class GamePageController {
       this.sentenceNumber = 0;
     }
     this.view.clearResultsRows();
+  }
+
+  private handleAutoComplete(): void {
+    this.view.completeSentence(this.correctSentence);
   }
 }

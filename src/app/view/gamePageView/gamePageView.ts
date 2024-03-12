@@ -1,8 +1,9 @@
-import { createElementWithProperties, findPxPerChar } from '../../../utils/utils';
+import { createElementWithProperties, findPxPerChar, isNotNullable } from '../../../utils/utils';
 import styles from './gamePageView.module.scss';
 import { GameConst } from '../../../utils/constants';
 import { Word } from '../../../components/word/word';
 import { ButtonCheck } from '../../../components/buttonCheck/buttonCheck';
+import { ButtonAutoComplete } from '../../../components/buttonAutoComplete/buttonAutoComplete';
 
 export class GamePageView {
   public element: HTMLElement;
@@ -13,11 +14,12 @@ export class GamePageView {
   private sentence: string[];
   private sentenceNumber: number;
   public buttonController: ButtonCheck;
-  public continueButton: HTMLButtonElement;
+  public buttonAutoComplete: ButtonAutoComplete;
 
   constructor() {
     this.element = createElementWithProperties('main', styles.game);
     this.buttonController = new ButtonCheck();
+    this.buttonAutoComplete = new ButtonAutoComplete();
     this.createChildren();
   }
 
@@ -28,7 +30,9 @@ export class GamePageView {
       this.results.append(row);
     }
     this.sourceData = createElementWithProperties('div', styles.words);
-    this.element.append(this.results, this.sourceData, this.buttonController.getComponent());
+    const buttonContainer = createElementWithProperties('div', styles.buttons);
+    buttonContainer.append(this.buttonAutoComplete.getComponent(), this.buttonController.getComponent());
+    this.element.append(this.results, this.sourceData, buttonContainer);
   }
 
   public getGamePage(): HTMLElement {
@@ -48,6 +52,7 @@ export class GamePageView {
       this.words.push(word);
     }
     this.setWordsSize();
+    this.buttonAutoComplete.enableButton();
   }
 
   public setWordsSize(): void {
@@ -73,7 +78,7 @@ export class GamePageView {
     const resultWord = createElementWithProperties('div', styles.gameResultsItem);
     word.getComponent().insertAdjacentElement('beforebegin', resultWord);
     this.sourceData.append(word.getComponent());
-    this.resultWords.filter(el => el !== word);
+    this.resultWords = this.resultWords.filter(el => el !== word);
   }
 
   public findEmptySlot(destination: Element): number {
@@ -83,10 +88,10 @@ export class GamePageView {
 
   public setCheckButton(state: boolean): void {
     if (!state && !this.buttonController.isDisable) {
-      this.buttonController.disableCheckButton();
+      this.buttonController.disableButton();
     }
     if (state) {
-      this.buttonController.enableCheckButton();
+      this.buttonController.enableButton();
     }
   }
 
@@ -106,5 +111,26 @@ export class GamePageView {
     for (let i = 0; i < this.results.children.length; i += 1) {
       this.results.children[i].replaceChildren();
     }
+  }
+
+  public completeSentence(correctSentence: string[]): void {
+    this.resultWords = Array.from({ length: correctSentence.length }, () => undefined);
+    for (let i = 0; i < correctSentence.length; i += 1) {
+      const word = isNotNullable(this.words.pop());
+      let index = correctSentence.indexOf(word.value);
+      if (this.resultWords[index] !== undefined) {
+        index = correctSentence.indexOf(word.value, index + 1);
+      }
+      this.resultWords[index] = word;
+    }
+    const destination = this.results.children[this.sentenceNumber];
+    destination.replaceChildren();
+    for (let i = 0; i < this.resultWords.length; i += 1) {
+      destination.append(isNotNullable(this.resultWords[i]).getComponent());
+    }
+    this.buttonAutoComplete.disableButton();
+    this.setCheckButton(true);
+    this.blockPreviousSentence();
+    this.buttonController.getComponent().click();
   }
 }

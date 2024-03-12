@@ -1,6 +1,3 @@
-@import 'mixins.scss';
-@import 'placeholders.scss';
-
 .btn {
   @extend %transition;
 
@@ -25,4 +22,8 @@
     cursor: default;
     opacity: 0.7;
   }
+}
+
+.btn-active {
+  animation: change-button 0.5s ease-in-out;
 }

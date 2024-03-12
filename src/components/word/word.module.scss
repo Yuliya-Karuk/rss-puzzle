@@ -1,6 +1,3 @@
-@import '../../styles/mixins.scss';
-@import '../../styles/placeholders.scss';
-
 .word-item {
   @include flex(center, center);
   @include font(2vw, 700, 1.2);

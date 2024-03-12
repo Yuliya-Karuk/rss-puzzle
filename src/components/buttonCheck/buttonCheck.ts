@@ -1,5 +1,4 @@
 import { createElementWithProperties } from '../../utils/utils';
-import styles from './buttonCheck.module.scss';
 import { ButtonState } from '../../types/enums';
 
 export class ButtonCheck {
@@ -14,12 +13,9 @@ export class ButtonCheck {
   }
 
   private createNode(): void {
-    this.element = createElementWithProperties(
-      'button',
-      `btn ${styles.btnActive}`,
-      { type: 'button', disabled: 'disabled' },
-      [{ innerText: ButtonState.check }]
-    );
+    this.element = createElementWithProperties('button', 'btn btn-active', { type: 'button', disabled: 'disabled' }, [
+      { innerText: ButtonState.check },
+    ]);
     this.element.addEventListener('animationend', () => this.element.classList.remove('btn-active'));
   }
 
@@ -27,12 +23,12 @@ export class ButtonCheck {
     return this.element;
   }
 
-  public enableCheckButton(): void {
+  public enableButton(): void {
     this.element.removeAttribute('disabled');
     this.isDisable = false;
   }
 
-  public disableCheckButton(): void {
+  public disableButton(): void {
     this.element.setAttribute('disabled', 'disabled');
     this.isDisable = true;
   }
@@ -41,7 +37,7 @@ export class ButtonCheck {
     this.element.innerText = ButtonState.check;
     this.showAnimation();
     this.state = ButtonState.check;
-    this.disableCheckButton();
+    this.disableButton();
   }
 
   public setContinueState(): void {

@@ -1,7 +1,3 @@
-@import '../../../styles/placeholders.scss';
-@import '../../../styles/mixins.scss';
-@import '../../../styles/button.scss';
-
 .game {
   @include flex(space-between, center, column);
 
@@ -39,4 +35,10 @@
 
   width: 90%;
   height: 7%;
+}
+
+.buttons {
+  @include flex(center, center);
+
+  column-gap: 20px;
 }
