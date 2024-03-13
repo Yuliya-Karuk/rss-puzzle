@@ -1,0 +1,8 @@
+.placeholder {
+  @include flex(center, center);
+
+  flex-grow: 1;
+  height: 100%;
+  padding: 10px;
+  border: 1px solid #000;
+}

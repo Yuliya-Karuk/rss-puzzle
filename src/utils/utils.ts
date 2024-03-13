@@ -29,7 +29,7 @@ export function createElementWithProperties<K extends keyof HTMLElementTagNameMa
   return element;
 }
 
-export function shuffleWords(words: string[]): string[] {
+export function shuffleWords(words: Word[]): Word[] {
   const cloneWords = Object.assign([], words);
   return cloneWords.sort(() => Math.random() - 0.5);
 }
@@ -43,4 +43,25 @@ export function findPxPerChar(sentence: string[]): number {
 export function collectSentence(arr: Word[]): string {
   const sentence = arr.reduce((acc, el) => `${acc} ${el.value}`, '');
   return sentence.trim();
+}
+
+export function checkEventTarget(value: EventTarget | null): HTMLElement {
+  if (value instanceof HTMLElement) {
+    return value;
+  }
+  throw new Error(`Not expected value`);
+}
+
+interface ConstructorOf<T> {
+  new (...args: readonly never[]): T;
+}
+
+export function getDOMElement<T extends Node>(
+  elemType: ConstructorOf<T>,
+  element: Element | Document | DocumentFragment
+): T {
+  if (!(element instanceof elemType)) {
+    throw new Error(`Not expected value: ${element} of type:${elemType}`);
+  }
+  return element;
 }

@@ -1,20 +1,24 @@
-import { createElementWithProperties, findPxPerChar, isNotNullable } from '../../../utils/utils';
+import { createElementWithProperties, findPxPerChar, getDOMElement, shuffleWords } from '../../../utils/utils';
 import styles from './gamePageView.module.scss';
 import { SentencesPerRound } from '../../../utils/constants';
 import { Word } from '../../../components/word/word';
 import { ButtonCheck } from '../../../components/buttonCheck/buttonCheck';
 import { ButtonAutoComplete } from '../../../components/buttonAutoComplete/buttonAutoComplete';
+import { Placeholder } from '../../../components/placeholder/placeholder';
 
 export class GamePageView {
   public element: HTMLElement;
-  public results: HTMLDivElement;
-  public sourceData: HTMLDivElement;
+  public resultsElement: HTMLDivElement;
+  public sourceElement: HTMLDivElement;
   public words: Word[];
-  public resultWords: (Word | undefined)[];
+  public resultWords: (Word | Placeholder)[];
   private sentence: string[];
-  private sentenceNumber: number;
+  public sentenceNumber: number;
   public buttonController: ButtonCheck;
   public buttonAutoComplete: ButtonAutoComplete;
+  public placeholders: Placeholder[];
+  public resultRow: HTMLDivElement;
+  public wordsRightOrder: Word[];
 
   constructor() {
     this.element = createElementWithProperties('main', styles.game);
@@ -24,15 +28,18 @@ export class GamePageView {
   }
 
   private createChildren(): void {
-    this.results = createElementWithProperties('div', styles.gameResults);
+    this.resultsElement = createElementWithProperties('div', styles.gameResults);
+
     for (let i = 0; i < SentencesPerRound; i += 1) {
       const row = createElementWithProperties('div', styles.gameResultsRow);
-      this.results.append(row);
+      this.resultsElement.append(row);
     }
-    this.sourceData = createElementWithProperties('div', styles.words);
+
+    this.sourceElement = createElementWithProperties('div', styles.words);
     const buttonContainer = createElementWithProperties('div', styles.buttons);
+
     buttonContainer.append(this.buttonAutoComplete.getComponent(), this.buttonController.getComponent());
-    this.element.append(this.results, this.sourceData, buttonContainer);
+    this.element.append(this.resultsElement, this.sourceElement, buttonContainer);
   }
 
   public getGamePage(): HTMLElement {
@@ -40,96 +47,61 @@ export class GamePageView {
   }
 
   public renderSentence(sentence: string[], sentenceNumber: number): void {
-    this.words = [];
     this.sentence = sentence;
-    this.resultWords = Array.from({ length: sentence.length }, () => undefined);
     this.sentenceNumber = sentenceNumber;
+    this.resultRow = getDOMElement(HTMLDivElement, this.resultsElement.children[this.sentenceNumber]);
+
+    this.createRoundConst();
+
+    // this.wordsRightOrder = [];
+    // this.placeholders = [];
+    // this.resultWords = [];
+
     for (let i = 0; i < sentence.length; i += 1) {
-      const word = new Word(`${sentence[i]}`);
-      const resultWord = createElementWithProperties('div', styles.gameResultsItem);
-      this.sourceData.append(word.getComponent());
-      this.results.children[sentenceNumber].append(resultWord);
-      this.words.push(word);
+      const word = new Word(`${sentence[i]}`, `${this.sentenceNumber}_${i}`);
+      const placeholder = new Placeholder(`p${this.sentenceNumber}_${i}`);
+
+      // const resultWord = createElementWithProperties('div', styles.gameResultsItem, {
+      //   id: `b${this.sentenceNumber}_${i}`,
+      // });
+      // this.sourceElement.append(word.getComponent());
+      this.resultRow.append(placeholder.getComponent());
+
+      this.wordsRightOrder.push(word);
+      this.resultWords.push(placeholder);
     }
+
+    this.words = shuffleWords(this.wordsRightOrder);
+
+    for (let i = 0; i < this.wordsRightOrder.length; i += 1) {
+      this.sourceElement.append(this.words[i].getComponent());
+    }
+
     this.setWordsSize();
     this.buttonAutoComplete.enableButton();
   }
 
+  private createRoundConst(): void {
+    this.wordsRightOrder = [];
+    this.placeholders = [];
+    this.resultWords = [];
+  }
+
   public setWordsSize(): void {
     const pxPerChar = findPxPerChar(this.sentence);
+
     for (let i = 0; i < this.words.length; i += 1) {
       this.words[i].getComponent().setAttribute('style', `width: ${this.words[i].value.length * pxPerChar}px`);
     }
-    for (let i = 0; i < this.resultWords.length; i += 1) {
-      if (this.resultWords[i]) {
-        this.words[i].getComponent().setAttribute('style', `width: ${this.words[i].value.length * pxPerChar}px`);
-      }
-    }
-  }
-
-  public moveWordToResult(word: Word): void {
-    const destination = this.results.children[this.sentenceNumber];
-    const index = this.findEmptySlot(destination);
-    destination.children[index].replaceWith(word.getComponent());
-    this.resultWords[index] = word;
-  }
-
-  public moveWordToSource(word: Word): void {
-    const resultWord = createElementWithProperties('div', styles.gameResultsItem);
-    word.getComponent().insertAdjacentElement('beforebegin', resultWord);
-    this.sourceData.append(word.getComponent());
-    this.resultWords = this.resultWords.filter(el => el !== word);
-  }
-
-  public findEmptySlot(destination: Element): number {
-    const index = Array.from(destination.children).findIndex(el => el.className.includes('game-results-item'));
-    return index;
-  }
-
-  public setCheckButton(makeButtonActive: boolean): void {
-    if (!makeButtonActive && !this.buttonController.isDisable) {
-      this.buttonController.disableButton();
-      return;
-    }
-    this.buttonController.enableButton();
   }
 
   public blockPreviousSentence(): void {
-    this.results.children[this.sentenceNumber].classList.add('game-results-row_guessed');
-  }
-
-  public changeButtons(state: boolean): void {
-    if (state) {
-      this.buttonController.setContinueState();
-    } else {
-      this.buttonController.setCheckState();
-    }
+    this.resultsElement.children[this.sentenceNumber].classList.add('game-results-row_guessed');
   }
 
   public clearResultsRows(): void {
-    for (let i = 0; i < this.results.children.length; i += 1) {
-      this.results.children[i].replaceChildren();
+    for (let i = 0; i < this.resultsElement.children.length; i += 1) {
+      this.resultsElement.children[i].replaceChildren();
     }
-  }
-
-  public completeSentence(correctSentence: string[]): void {
-    this.resultWords = Array.from({ length: correctSentence.length }, () => undefined);
-    for (let i = 0; i < correctSentence.length; i += 1) {
-      const word = isNotNullable(this.words.pop());
-      let index = correctSentence.indexOf(word.value);
-      if (this.resultWords[index] !== undefined) {
-        index = correctSentence.indexOf(word.value, index + 1);
-      }
-      this.resultWords[index] = word;
-    }
-    const destination = this.results.children[this.sentenceNumber];
-    destination.replaceChildren();
-    for (let i = 0; i < this.resultWords.length; i += 1) {
-      destination.append(isNotNullable(this.resultWords[i]).getComponent());
-    }
-    this.buttonAutoComplete.disableButton();
-    this.setCheckButton(true);
-    this.blockPreviousSentence();
-    this.buttonController.getComponent().click();
   }
 }

@@ -1,6 +1,6 @@
 import { Footer } from '../../components/footer/footer';
 import { Header } from '../../components/header/header';
-import { GamePageController } from './gamePageController/gamePageController';
+import { GamePageController } from './gamePageControllers/gamePageController';
 import { StartPageController } from './startPageController/startPageController';
 
 export class AppController {
