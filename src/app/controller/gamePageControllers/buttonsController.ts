@@ -1,4 +1,3 @@
-// import { Word } from '../../../components/word/word';
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { ButtonState } from '../../../types/enums';
 import { Word } from '../../../components/word/word';

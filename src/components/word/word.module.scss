@@ -11,7 +11,7 @@
 
   color: var(--color-font-dark);
 
-  background: #d5acb4;
+  background: var(--color-primary-light);
   clip-path: polygon(calc(100% - 10px) 0%, 100% 50%, calc(100% - 10px) 100%, 0% 100%, 10px 50%, 0% 0%);
   filter: drop-shadow(2px 3px 3px blue);
 

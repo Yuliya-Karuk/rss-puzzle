@@ -7,6 +7,7 @@
   --color-font-dark: #594046;
   --color-background-black-transparent: rgb(0 0 0 / 5%);
   --color-shadow-dark: rgb(0 0 0 / 40%);
+  --color-primary-light: #d5acb4;
 }
 
 @keyframes change-button {

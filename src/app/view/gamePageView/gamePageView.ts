@@ -5,6 +5,7 @@ import { Word } from '../../../components/word/word';
 import { ButtonCheck } from '../../../components/buttonCheck/buttonCheck';
 import { ButtonAutoComplete } from '../../../components/buttonAutoComplete/buttonAutoComplete';
 import { Placeholder } from '../../../components/placeholder/placeholder';
+import { ButtonHint } from '../../../components/buttonHint/buttonHint';
 
 export class GamePageView {
   public element: HTMLElement;
@@ -19,6 +20,8 @@ export class GamePageView {
   public placeholders: Placeholder[];
   public resultRow: HTMLDivElement;
   public wordsRightOrder: Word[];
+  public translationRow: HTMLParagraphElement;
+  public translationHint: ButtonHint;
 
   constructor() {
     this.element = createElementWithProperties('main', styles.game);
@@ -28,6 +31,11 @@ export class GamePageView {
   }
 
   private createChildren(): void {
+    const hints = createElementWithProperties('div', styles.gameHints);
+    this.translationHint = new ButtonHint('hintTranslation');
+    this.translationRow = createElementWithProperties('p', styles.translationRow);
+    hints.append(this.translationHint.getComponent());
+
     this.resultsElement = createElementWithProperties('div', styles.gameResults);
 
     for (let i = 0; i < SentencesPerRound; i += 1) {
@@ -39,7 +47,7 @@ export class GamePageView {
     const buttonContainer = createElementWithProperties('div', styles.buttons);
 
     buttonContainer.append(this.buttonAutoComplete.getComponent(), this.buttonController.getComponent());
-    this.element.append(this.resultsElement, this.sourceElement, buttonContainer);
+    this.element.append(hints, this.translationRow, this.resultsElement, this.sourceElement, buttonContainer);
   }
 
   public getGamePage(): HTMLElement {

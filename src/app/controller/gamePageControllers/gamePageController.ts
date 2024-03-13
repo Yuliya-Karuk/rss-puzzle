@@ -5,6 +5,7 @@ import { GamePageView } from '../../view/gamePageView/gamePageView';
 import { ClickController } from './clickController';
 import { DragController } from './dragController';
 import { ButtonsController } from './buttonsController';
+import { HintsController } from './hintsController';
 
 export class GamePageController {
   public view: GamePageView;
@@ -16,6 +17,8 @@ export class GamePageController {
   private clickController: ClickController;
   private dragController: DragController;
   private buttonsController: ButtonsController;
+  private hintsController: HintsController;
+  public translation: string;
 
   constructor() {
     this.view = new GamePageView();
@@ -25,6 +28,7 @@ export class GamePageController {
     this.buttonsController = new ButtonsController(this.view);
     this.clickController = new ClickController(this.view, this.buttonsController);
     this.dragController = new DragController(this.view, this.buttonsController);
+    this.hintsController = new HintsController(this.view);
   }
 
   public createGamePage(): HTMLElement {
@@ -43,6 +47,7 @@ export class GamePageController {
     });
 
     this.view.getGamePage().addEventListener('drop', (e: DragEvent) => this.handleForbiddenDrag(e));
+    this.hintsController.bindHintsListeners();
   }
 
   private changeWordsSize(): void {
@@ -51,6 +56,7 @@ export class GamePageController {
 
   public setOneSentence(): void {
     this.correctSentence = this.dataController.getSentence(this.sentenceNumber).split(' ');
+    this.translation = this.dataController.getTranslation(this.sentenceNumber);
 
     this.view.renderSentence(this.correctSentence, this.sentenceNumber);
     this.setControllersForOneSentence();
@@ -60,6 +66,8 @@ export class GamePageController {
     this.buttonsController.setCorrectSentence(this.correctSentence);
     this.clickController.bindWordListeners();
     this.dragController.bindDragListeners();
+    this.hintsController.setTranslation(this.translation);
+    this.hintsController.setTranslationRow();
   }
 
   private setNextSentence(): void {

@@ -33,4 +33,8 @@ export class DataService {
   public getSentence(sentenceNumber: number): string {
     return this.dataOnLevel.rounds[this.round].words[sentenceNumber].textExample;
   }
+
+  public getTranslation(sentenceNumber: number): string {
+    return this.dataOnLevel.rounds[this.round].words[sentenceNumber].textExampleTranslate;
+  }
 }
