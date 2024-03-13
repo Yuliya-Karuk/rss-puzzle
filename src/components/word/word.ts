@@ -46,4 +46,12 @@ export class Word {
   public removeDragStyle(): void {
     this.element.classList.remove('drag');
   }
+
+  public setFirst(): void {
+    this.element.classList.add('word_first');
+  }
+
+  public setLast(): void {
+    this.element.classList.add('word_last');
+  }
 }

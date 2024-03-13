@@ -1,22 +1,38 @@
+// radial-gradient(var(--r) at calc(100% - var(--r)) calc(50% - var(--r)/2), #0000 98%, #0000ffcf) var(--r) 50%/100% calc(100% - 2*var(--r)) no-repeat,
+// radial-gradient(var(--r) at var(--r) calc(50% - var(--r)/2), green 98%, #0000);
+
 .word {
   @include flex(center, center);
   @include font(2vw, 700, 1.2);
 
   cursor: pointer;
+
   height: 100%;
+
   color: var(--color-font-dark);
-  border: 1px solid #000;
+
+  background: #d5acb4;
+  clip-path: polygon(calc(100% - 10px) 0%, 100% 50%, calc(100% - 10px) 100%, 0% 100%, 10px 50%, 0% 0%);
+  filter: drop-shadow(2px 3px 3px blue);
 
   .game-results-row &_valid {
-    border: 2px solid var(--color-valid);
+    background: #cffa9c;
   }
 
   .game-results-row &_invalid {
-    border: 2px solid var(--color-invalid);
+    background: #fbb9ab;
   }
 
   .game-results-row_guessed & {
     pointer-events: none;
+  }
+
+  &_first {
+    clip-path: polygon(0% 0%, calc(100% - 10px) 0%, 100% 50%, calc(100% - 10px) 100%, 0% 100%);
+  }
+
+  &_last {
+    clip-path: polygon(100% 0, 100% 50%, 100% 100%, 0% 100%, 10px 50%, 0% 0%);
   }
 }
 

@@ -53,18 +53,17 @@ export class GamePageView {
 
     this.createRoundConst();
 
-    // this.wordsRightOrder = [];
-    // this.placeholders = [];
-    // this.resultWords = [];
-
-    for (let i = 0; i < sentence.length; i += 1) {
+    for (let i = 0; i < this.sentence.length; i += 1) {
       const word = new Word(`${sentence[i]}`, `${this.sentenceNumber}_${i}`);
       const placeholder = new Placeholder(`p${this.sentenceNumber}_${i}`);
 
-      // const resultWord = createElementWithProperties('div', styles.gameResultsItem, {
-      //   id: `b${this.sentenceNumber}_${i}`,
-      // });
-      // this.sourceElement.append(word.getComponent());
+      if (i === 0) {
+        word.setFirst();
+      }
+      if (i === this.sentence.length - 1) {
+        word.setLast();
+      }
+
       this.resultRow.append(placeholder.getComponent());
 
       this.wordsRightOrder.push(word);
@@ -73,7 +72,7 @@ export class GamePageView {
 
     this.words = shuffleWords(this.wordsRightOrder);
 
-    for (let i = 0; i < this.wordsRightOrder.length; i += 1) {
+    for (let i = 0; i < this.words.length; i += 1) {
       this.sourceElement.append(this.words[i].getComponent());
     }
 
