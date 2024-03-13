@@ -1,13 +1,16 @@
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { ButtonState } from '../../../types/enums';
 import { Word } from '../../../components/word/word';
+import { type HintsController } from './hintsController';
 
 export class ButtonsController {
   private view: GamePageView;
   private correctSentence: string[];
+  private hintsController: HintsController;
 
-  constructor(view: GamePageView) {
+  constructor(view: GamePageView, hintsController: HintsController) {
     this.view = view;
+    this.hintsController = hintsController;
   }
 
   public setCorrectSentence(correctSentence: string[]): void {
@@ -66,6 +69,7 @@ export class ButtonsController {
     }
 
     if (resultBlockState) {
+      this.hintsController.setTranslationRow(true);
       this.changeButtons(true);
       this.view.blockPreviousSentence();
     }

@@ -25,10 +25,10 @@ export class GamePageController {
     this.sentenceNumber = 0;
     this.sentencePerRound = 9;
     this.dataController = new DataService();
-    this.buttonsController = new ButtonsController(this.view);
+    this.hintsController = new HintsController(this.view);
+    this.buttonsController = new ButtonsController(this.view, this.hintsController);
     this.clickController = new ClickController(this.view, this.buttonsController);
     this.dragController = new DragController(this.view, this.buttonsController);
-    this.hintsController = new HintsController(this.view);
   }
 
   public createGamePage(): HTMLElement {
@@ -67,7 +67,7 @@ export class GamePageController {
     this.clickController.bindWordListeners();
     this.dragController.bindDragListeners();
     this.hintsController.setTranslation(this.translation);
-    this.hintsController.setTranslationRow();
+    this.hintsController.setTranslationRow(false);
   }
 
   private setNextSentence(): void {

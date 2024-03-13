@@ -16,8 +16,8 @@ export class HintsController {
     this.view.translationHint.getComponent().addEventListener('click', this.handleTranslation.bind(this));
   }
 
-  public setTranslationRow(): void {
-    if (this.view.translationHint.isEnabled) {
+  public setTranslationRow(showGuessed: boolean): void {
+    if (this.view.translationHint.isEnabled || showGuessed) {
       this.view.translationRow.innerText = this.translation;
     } else {
       this.view.translationRow.innerText = '';
@@ -26,6 +26,6 @@ export class HintsController {
 
   private handleTranslation(): void {
     this.view.translationHint.toggleState();
-    this.setTranslationRow();
+    this.setTranslationRow(false);
   }
 }
