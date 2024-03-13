@@ -19,6 +19,7 @@ export class GamePageController {
   private buttonsController: ButtonsController;
   private hintsController: HintsController;
   public translation: string;
+  public audioSource: string;
 
   constructor() {
     this.view = new GamePageView();
@@ -57,6 +58,7 @@ export class GamePageController {
   public setOneSentence(): void {
     this.correctSentence = this.dataController.getSentence(this.sentenceNumber).split(' ');
     this.translation = this.dataController.getTranslation(this.sentenceNumber);
+    this.audioSource = this.dataController.getAudioSource(this.sentenceNumber);
 
     this.view.renderSentence(this.correctSentence, this.sentenceNumber);
     this.setControllersForOneSentence();
@@ -66,8 +68,9 @@ export class GamePageController {
     this.buttonsController.setCorrectSentence(this.correctSentence);
     this.clickController.bindWordListeners();
     this.dragController.bindDragListeners();
-    this.hintsController.setTranslation(this.translation);
+    this.hintsController.setHintsConst(this.translation, this.audioSource);
     this.hintsController.setTranslationRow(false);
+    this.hintsController.setPlayButton(false);
   }
 
   private setNextSentence(): void {

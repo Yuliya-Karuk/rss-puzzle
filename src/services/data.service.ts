@@ -37,4 +37,8 @@ export class DataService {
   public getTranslation(sentenceNumber: number): string {
     return this.dataOnLevel.rounds[this.round].words[sentenceNumber].textExampleTranslate;
   }
+
+  public getAudioSource(sentenceNumber: number): string {
+    return this.dataOnLevel.rounds[this.round].words[sentenceNumber].audioExample;
+  }
 }

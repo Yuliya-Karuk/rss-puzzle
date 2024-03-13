@@ -27,7 +27,17 @@
   height: 40px;
 
   .hint-icon {
-    background: center no-repeat transparent url('../../img/translation-icon.svg');
+    background: center no-repeat transparent url('../../img/translation-hint.svg');
+    background-size: contain;
+  }
+}
+
+.hint-audio {
+  width: 50px;
+  height: 40px;
+
+  .hint-icon {
+    background: center no-repeat transparent url('../../img/audio-hint.svg');
     background-size: contain;
   }
 }

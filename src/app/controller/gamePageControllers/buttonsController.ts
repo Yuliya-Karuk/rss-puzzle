@@ -70,6 +70,7 @@ export class ButtonsController {
 
     if (resultBlockState) {
       this.hintsController.setTranslationRow(true);
+      this.hintsController.setPlayButton(true);
       this.changeButtons(true);
       this.view.blockPreviousSentence();
     }

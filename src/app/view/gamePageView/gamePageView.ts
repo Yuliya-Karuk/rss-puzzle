@@ -22,6 +22,8 @@ export class GamePageView {
   public wordsRightOrder: Word[];
   public translationRow: HTMLParagraphElement;
   public translationHint: ButtonHint;
+  public audioHint: ButtonHint;
+  public playButton: HTMLButtonElement;
 
   constructor() {
     this.element = createElementWithProperties('main', styles.game);
@@ -34,8 +36,11 @@ export class GamePageView {
     const hints = createElementWithProperties('div', styles.gameHints);
     this.translationHint = new ButtonHint('hintTranslation');
     this.translationRow = createElementWithProperties('p', styles.translationRow);
-    hints.append(this.translationHint.getComponent());
+    this.audioHint = new ButtonHint('hintAudio');
+    this.playButton = createElementWithProperties('button', styles.buttonSound, { type: 'button' });
+    hints.append(this.playButton, this.translationHint.getComponent(), this.audioHint.getComponent());
 
+    // this.playButton = createElementWithProperties('button', styles.gameResults, { type: 'button' });
     this.resultsElement = createElementWithProperties('div', styles.gameResults);
 
     for (let i = 0; i < SentencesPerRound; i += 1) {

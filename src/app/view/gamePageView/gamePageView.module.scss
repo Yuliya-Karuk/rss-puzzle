@@ -43,6 +43,32 @@
 .game-hints {
   @include flex(flex-end, center);
 
+  gap: 15px;
   width: 95%;
-  height: 7%;
+  height: 40px;
+}
+
+.button-sound {
+  @extend %transition;
+
+  @include media-hover {
+    &:not([disabled]):hover {
+      filter: drop-shadow(2px 3px 5px var(--color-primary-bright));
+    }
+  }
+
+  width: 50px;
+  height: 100%;
+  margin-right: calc(50vw - 170px);
+
+  background: center no-repeat transparent url('../../../img/audio.svg');
+  background-size: contain;
+
+  &_hidden {
+    display: none;
+  }
+
+  &_shaking {
+    animation: shake 0.3s infinite;
+  }
 }
