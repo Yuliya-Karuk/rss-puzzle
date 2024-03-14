@@ -1,3 +1,5 @@
+import { HintsState } from '../types/interfaces';
+
 export const startPageText: string =
   '<strong>Puzzle English</strong> is a platform for learning English with games and interesting tasks, where you can study at any level, at any time and for any purpose.';
 
@@ -7,3 +9,9 @@ export const startGameRules: string =
 export const SentencesPerRound: number = 10;
 
 export const PaddingMain = 20;
+
+export const defaultHintsState: HintsState = {
+  translationHint: true,
+  audioHint: true,
+  imageHint: true,
+};

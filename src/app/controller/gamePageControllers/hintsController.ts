@@ -1,6 +1,8 @@
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { LoaderService } from '../../../services/loader.service';
 import { LevelData } from '../../../types/interfaces';
+import { StorageService } from '../../../services/localStorage.service';
+import { isNotNullable } from '../../../utils/utils';
 
 export class HintsController {
   private view: GamePageView;
@@ -106,5 +108,12 @@ export class HintsController {
     } else {
       this.view.words.forEach(word => word.hideBackground());
     }
+  }
+
+  public setHintsState(): void {
+    const hints = isNotNullable(StorageService.getHintsState());
+    this.view.translationHint.setState(hints.translationHint);
+    this.view.audioHint.setState(hints.audioHint);
+    this.view.imageHint.setState(hints.imageHint);
   }
 }

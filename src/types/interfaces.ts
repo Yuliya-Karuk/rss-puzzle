@@ -13,9 +13,20 @@ export interface DomElementProperties {
   [key: string]: string;
 }
 
-export interface LocalStorageData {
+export interface UserData {
   name: string;
   surname: string;
+}
+
+export interface HintsState {
+  translationHint: boolean;
+  audioHint: boolean;
+  imageHint: boolean;
+}
+
+export interface GameData {
+  userData: UserData;
+  hintsState: HintsState;
 }
 
 export interface WordCollection {

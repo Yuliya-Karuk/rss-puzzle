@@ -21,7 +21,8 @@
     mask: none;
   }
 
-  .words &_hidden {
+  .words &_hidden,
+  .game-results-row:not(.game-results-row_guessed) &_hidden {
     background: #d5acb4 !important;
   }
 }
@@ -41,7 +42,8 @@
     display: none;
   }
 
-  .words &_hidden {
+  .words &_hidden,
+  .game-results-row:not(.game-results-row_guessed) &_hidden {
     background: #d5acb4 !important;
   }
 }

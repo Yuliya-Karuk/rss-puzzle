@@ -37,6 +37,7 @@ export class GamePageController {
   public async setStartSetup(): Promise<void> {
     this.getLevelData();
     await this.hintsController.prepareImage();
+    this.hintsController.setHintsState();
     this.setOneSentence();
     this.bindGameListeners();
   }

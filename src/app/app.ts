@@ -1,4 +1,5 @@
 import { StorageService } from '../services/localStorage.service';
+import { defaultHintsState } from '../utils/constants';
 import { isNotNullable } from '../utils/utils';
 import { AppController } from './controller/appController';
 import { LoginPageController } from './controller/loginPageController/loginPageController';
@@ -30,7 +31,7 @@ export class App {
 
   public createStartPage(): void {
     const component = this.appController.getStartPage();
-    const userData = isNotNullable(StorageService.getData());
+    const userData = isNotNullable(StorageService.getUserData());
 
     this.parentElement.append(this.appController.getHeader(), component, this.appController.getFooter());
     this.appController.setGreetingUser(`Hi, ${userData.name} ${userData.surname}`);
@@ -52,7 +53,7 @@ export class App {
     e.preventDefault();
 
     const userData = this.loginPageController.getInputsValues();
-    StorageService.saveData(userData);
+    StorageService.saveData(userData, defaultHintsState);
     this.clearParentElement();
     this.createStartPage();
   }
@@ -68,7 +69,7 @@ export class App {
   }
 
   public checkIsUserLogin(): boolean {
-    return !!StorageService.getData();
+    return !!StorageService.getUserData();
   }
 
   public createGamePage(): void {

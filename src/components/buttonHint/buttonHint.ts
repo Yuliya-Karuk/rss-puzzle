@@ -1,12 +1,15 @@
+import { StorageService } from '../../services/localStorage.service';
 import { createElementWithProperties } from '../../utils/utils';
 import styles from './buttonHint.module.scss';
 
 export class ButtonHint {
   private element: HTMLButtonElement;
   public isEnabled: boolean;
+  private hintName: string;
 
-  constructor(className: string) {
-    this.createNode(className);
+  constructor(hintName: string) {
+    this.hintName = hintName;
+    this.createNode(this.hintName);
     this.isEnabled = true;
   }
 
@@ -23,6 +26,7 @@ export class ButtonHint {
   public toggleState(): void {
     this.isEnabled = !this.isEnabled;
     this.element.classList.toggle('hint_disabled');
+    this.updateStateInStorage();
   }
 
   public setState(state: boolean): void {
@@ -32,5 +36,9 @@ export class ButtonHint {
       return;
     }
     this.element.classList.add('hint_disabled');
+  }
+
+  private updateStateInStorage(): void {
+    StorageService.updateHint(this.hintName, this.isEnabled);
   }
 }

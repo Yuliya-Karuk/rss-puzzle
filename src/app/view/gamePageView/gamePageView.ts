@@ -41,11 +41,11 @@ export class GamePageView {
   private createChildren(): void {
     this.allLevelData = [];
     const hints = createElementWithProperties('div', styles.gameHints);
-    this.translationHint = new ButtonHint('hintTranslation');
+    this.translationHint = new ButtonHint('translationHint');
     this.translationRow = createElementWithProperties('p', styles.translationRow);
-    this.audioHint = new ButtonHint('hintAudio');
+    this.audioHint = new ButtonHint('audioHint');
     this.playButton = createElementWithProperties('button', styles.buttonSound, { type: 'button' });
-    this.imageHint = new ButtonHint('hintImage');
+    this.imageHint = new ButtonHint('imageHint');
     hints.append(
       this.playButton,
       this.translationHint.getComponent(),

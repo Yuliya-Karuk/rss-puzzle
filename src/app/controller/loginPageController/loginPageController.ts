@@ -1,4 +1,4 @@
-import { LocalStorageData } from '../../../types/interfaces';
+import { UserData } from '../../../types/interfaces';
 import { isNotNullable } from '../../../utils/utils';
 import { LoginPageView } from '../../view/loginPageView/loginPageView';
 
@@ -47,7 +47,7 @@ export class LoginPageController {
     }
   }
 
-  public getInputsValues(): LocalStorageData {
+  public getInputsValues(): UserData {
     const name = this.view.loginForm.nameInput.value;
     const surname = this.view.loginForm.surnameInput.value;
     return { name, surname };
