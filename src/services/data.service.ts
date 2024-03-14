@@ -4,7 +4,7 @@ import { wordCollection3 } from '../data/wordCollectionLevel3';
 import { wordCollection4 } from '../data/wordCollectionLevel4';
 import { wordCollection5 } from '../data/wordCollectionLevel5';
 import { wordCollection6 } from '../data/wordCollectionLevel6';
-import { WordCollection } from '../types/interfaces';
+import { LevelData, WordCollection } from '../types/interfaces';
 
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -40,5 +40,9 @@ export class DataService {
 
   public getAudioSource(sentenceNumber: number): string {
     return this.dataOnLevel.rounds[this.round].words[sentenceNumber].audioExample;
+  }
+
+  public getRoundData(): LevelData {
+    return this.dataOnLevel.rounds[this.round].levelData;
   }
 }

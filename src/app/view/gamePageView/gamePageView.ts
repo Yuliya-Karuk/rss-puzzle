@@ -1,4 +1,4 @@
-import { createElementWithProperties, findPxPerChar, getDOMElement, shuffleWords } from '../../../utils/utils';
+import { createElementWithProperties, getDOMElement, shuffleWords } from '../../../utils/utils';
 import styles from './gamePageView.module.scss';
 import { SentencesPerRound } from '../../../utils/constants';
 import { Word } from '../../../components/word/word';
@@ -6,6 +6,9 @@ import { ButtonCheck } from '../../../components/buttonCheck/buttonCheck';
 import { ButtonAutoComplete } from '../../../components/buttonAutoComplete/buttonAutoComplete';
 import { Placeholder } from '../../../components/placeholder/placeholder';
 import { ButtonHint } from '../../../components/buttonHint/buttonHint';
+import { styleWords } from '../../../utils/wordsStylist';
+
+type SavedDataRound = [Word[], string[], number];
 
 export class GamePageView {
   public element: HTMLElement;
@@ -20,10 +23,13 @@ export class GamePageView {
   public placeholders: Placeholder[];
   public resultRow: HTMLDivElement;
   public wordsRightOrder: Word[];
+  public allLevelData: SavedDataRound[];
   public translationRow: HTMLParagraphElement;
   public translationHint: ButtonHint;
   public audioHint: ButtonHint;
   public playButton: HTMLButtonElement;
+  public imageUrl: string;
+  public imageHint: ButtonHint;
 
   constructor() {
     this.element = createElementWithProperties('main', styles.game);
@@ -33,14 +39,20 @@ export class GamePageView {
   }
 
   private createChildren(): void {
+    this.allLevelData = [];
     const hints = createElementWithProperties('div', styles.gameHints);
     this.translationHint = new ButtonHint('hintTranslation');
     this.translationRow = createElementWithProperties('p', styles.translationRow);
     this.audioHint = new ButtonHint('hintAudio');
     this.playButton = createElementWithProperties('button', styles.buttonSound, { type: 'button' });
-    hints.append(this.playButton, this.translationHint.getComponent(), this.audioHint.getComponent());
+    this.imageHint = new ButtonHint('hintImage');
+    hints.append(
+      this.playButton,
+      this.translationHint.getComponent(),
+      this.audioHint.getComponent(),
+      this.imageHint.getComponent()
+    );
 
-    // this.playButton = createElementWithProperties('button', styles.gameResults, { type: 'button' });
     this.resultsElement = createElementWithProperties('div', styles.gameResults);
 
     for (let i = 0; i < SentencesPerRound; i += 1) {
@@ -70,26 +82,20 @@ export class GamePageView {
       const word = new Word(`${sentence[i]}`, `${this.sentenceNumber}_${i}`);
       const placeholder = new Placeholder(`p${this.sentenceNumber}_${i}`);
 
-      if (i === 0) {
-        word.setFirst();
-      }
-      if (i === this.sentence.length - 1) {
-        word.setLast();
-      }
-
       this.resultRow.append(placeholder.getComponent());
 
       this.wordsRightOrder.push(word);
       this.resultWords.push(placeholder);
     }
 
+    this.saveRoundData();
+    this.setWordsStyle(this.wordsRightOrder, this.sentence, this.sentenceNumber);
     this.words = shuffleWords(this.wordsRightOrder);
 
     for (let i = 0; i < this.words.length; i += 1) {
       this.sourceElement.append(this.words[i].getComponent());
     }
 
-    this.setWordsSize();
     this.buttonAutoComplete.enableButton();
   }
 
@@ -99,21 +105,26 @@ export class GamePageView {
     this.resultWords = [];
   }
 
-  public setWordsSize(): void {
-    const pxPerChar = findPxPerChar(this.sentence);
-
-    for (let i = 0; i < this.words.length; i += 1) {
-      this.words[i].getComponent().setAttribute('style', `width: ${this.words[i].value.length * pxPerChar}px`);
-    }
+  public setWordsStyle(wordsRightOrder: Word[], sentence: string[], sentenceNumber: number): void {
+    styleWords(wordsRightOrder, sentence, sentenceNumber, this.imageUrl);
   }
 
   public blockPreviousSentence(): void {
     this.resultsElement.children[this.sentenceNumber].classList.add('game-results-row_guessed');
   }
 
-  public clearResultsRows(): void {
+  public clearLevelConst(): void {
+    this.allLevelData = [];
     for (let i = 0; i < this.resultsElement.children.length; i += 1) {
       this.resultsElement.children[i].replaceChildren();
     }
+  }
+
+  public setImageUrl(imageUrl: string): void {
+    this.imageUrl = imageUrl;
+  }
+
+  private saveRoundData(): void {
+    this.allLevelData.push([this.wordsRightOrder, this.sentence, this.sentenceNumber]);
   }
 }

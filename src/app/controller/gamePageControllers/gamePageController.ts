@@ -6,6 +6,7 @@ import { ClickController } from './clickController';
 import { DragController } from './dragController';
 import { ButtonsController } from './buttonsController';
 import { HintsController } from './hintsController';
+import { LevelData } from '../../../types/interfaces';
 
 export class GamePageController {
   public view: GamePageView;
@@ -20,6 +21,7 @@ export class GamePageController {
   private hintsController: HintsController;
   public translation: string;
   public audioSource: string;
+  public levelData: LevelData;
 
   constructor() {
     this.view = new GamePageView();
@@ -32,9 +34,15 @@ export class GamePageController {
     this.dragController = new DragController(this.view, this.buttonsController);
   }
 
-  public createGamePage(): HTMLElement {
+  public async setStartSetup(): Promise<void> {
+    this.getLevelData();
+    await this.hintsController.prepareImage();
     this.setOneSentence();
     this.bindGameListeners();
+  }
+
+  public createGamePage(): HTMLElement {
+    this.setStartSetup();
     return this.view.getGamePage();
   }
 
@@ -52,7 +60,7 @@ export class GamePageController {
   }
 
   private changeWordsSize(): void {
-    this.view.setWordsSize();
+    this.view.allLevelData.forEach(levelData => this.view.setWordsStyle(...levelData));
   }
 
   public setOneSentence(): void {
@@ -68,9 +76,7 @@ export class GamePageController {
     this.buttonsController.setCorrectSentence(this.correctSentence);
     this.clickController.bindWordListeners();
     this.dragController.bindDragListeners();
-    this.hintsController.setHintsConst(this.translation, this.audioSource);
-    this.hintsController.setTranslationRow(false);
-    this.hintsController.setPlayButton(false);
+    this.hintsController.setHints(this.translation, this.audioSource);
   }
 
   private setNextSentence(): void {
@@ -84,15 +90,21 @@ export class GamePageController {
 
   private changeRound(): void {
     this.dataController.round += 1;
+    this.getLevelData();
     if (this.dataController.round < this.dataController.roundPerLevel) {
       this.sentenceNumber = 0;
     }
-    this.view.clearResultsRows();
+    this.view.clearLevelConst();
   }
 
   private handleForbiddenDrag(e: DragEvent): void {
     const wordId = isNotNullable(e.dataTransfer).getData('text');
     const word = isNotNullable(this.view.words.find(el => el.id === wordId));
     word.removeDragStyle();
+  }
+
+  private getLevelData(): void {
+    this.levelData = this.dataController.getRoundData();
+    this.hintsController.setLevelData(this.levelData);
   }
 }

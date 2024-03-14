@@ -1,41 +1,62 @@
-// radial-gradient(var(--r) at calc(100% - var(--r)) calc(50% - var(--r)/2), #0000 98%, #0000ffcf) var(--r) 50%/100% calc(100% - 2*var(--r)) no-repeat,
-// radial-gradient(var(--r) at var(--r) calc(50% - var(--r)/2), green 98%, #0000);
-
 .word {
   @include flex(center, center);
-  @include font(2vw, 700, 1.2);
+  @include font(1.6vw, 700, 1.2);
 
   cursor: pointer;
 
   height: 100%;
 
-  color: var(--color-font-dark);
+  color: var(--color-black);
+  text-shadow: 2px 1px 2px rgba(255 255 255 / 70%);
 
   background: var(--color-primary-light);
-  clip-path: polygon(calc(100% - 10px) 0%, 100% 50%, calc(100% - 10px) 100%, 0% 100%, 10px 50%, 0% 0%);
-  filter: drop-shadow(2px 3px 3px blue);
 
-  .game-results-row &_valid {
-    background: #cffa9c;
-  }
-
-  .game-results-row &_invalid {
-    background: #fbb9ab;
-  }
+  mask: radial-gradient(circle at 0 50%, transparent 8px, black 8px);
 
   .game-results-row_guessed & {
     pointer-events: none;
   }
 
   &_first {
-    clip-path: polygon(0% 0%, calc(100% - 10px) 0%, 100% 50%, calc(100% - 10px) 100%, 0% 100%);
+    mask: none;
   }
 
-  &_last {
-    clip-path: polygon(100% 0, 100% 50%, 100% 100%, 0% 100%, 10px 50%, 0% 0%);
+  .words &_hidden {
+    background: #d5acb4 !important;
   }
 }
 
 .drag {
-  background: #eec3c7;
+  opacity: 0.5;
+  filter: drop-shadow(1px 1px 5px var(--color-black));
+}
+
+.helper {
+  position: absolute;
+  z-index: 1;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+
+  .word_last + & {
+    display: none;
+  }
+
+  .words &_hidden {
+    background: #d5acb4 !important;
+  }
+}
+
+.word-container {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  height: 100%;
+
+  .game-results-row &_invalid {
+    filter: drop-shadow(1px 1px 5px #db0f08);
+  }
+
+  .game-results-row &_valid {
+    filter: drop-shadow(1px 1px 5px #0afa34);
+  }
 }

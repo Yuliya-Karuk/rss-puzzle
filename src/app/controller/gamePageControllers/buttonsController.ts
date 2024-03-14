@@ -19,6 +19,7 @@ export class ButtonsController {
 
   public bindButtonsListeners(callback: () => void): void {
     this.view.buttonController.getComponent().addEventListener('click', () => {
+      this.view.words.forEach(word => word.removeState());
       if (this.view.buttonController.state === ButtonState.check) {
         this.checkSentence();
       } else {
@@ -69,10 +70,11 @@ export class ButtonsController {
     }
 
     if (resultBlockState) {
+      this.view.blockPreviousSentence();
       this.hintsController.setTranslationRow(true);
       this.hintsController.setPlayButton(true);
+      this.hintsController.setWordsBackground(true);
       this.changeButtons(true);
-      this.view.blockPreviousSentence();
     }
   }
 
@@ -81,6 +83,7 @@ export class ButtonsController {
 
     for (let i = 0; i < this.view.wordsRightOrder.length; i += 1) {
       this.view.resultRow.append(this.view.wordsRightOrder[i].getComponent());
+      this.view.wordsRightOrder[i].removeState();
       this.view.resultWords[i] = this.view.wordsRightOrder[i];
     }
 
