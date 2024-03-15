@@ -1,6 +1,6 @@
 import { createElementWithProperties, getDOMElement, shuffleWords } from '../../../utils/utils';
 import styles from './gamePageView.module.scss';
-import { SentencesPerRound, LevelsNumber } from '../../../utils/constants';
+import { SentencesPerRound } from '../../../utils/constants';
 import { Word } from '../../../components/word/word';
 import { ButtonCheck } from '../../../components/buttonCheck/buttonCheck';
 import { ButtonAutoComplete } from '../../../components/buttonAutoComplete/buttonAutoComplete';
@@ -74,8 +74,8 @@ export class GamePageView {
     this.playButton = createElementWithProperties('button', styles.buttonSound, { type: 'button' });
     this.imageHint = new ButtonHint('imageHint');
 
-    this.levelSelect = new CustomSelect(LevelsNumber, 'Level');
-    this.roundSelect = new CustomSelect(this.dataController.roundPerLevel, 'Round');
+    this.levelSelect = new CustomSelect('Level');
+    this.roundSelect = new CustomSelect('Round');
     hints.append(
       this.levelSelect.getComponent(),
       this.roundSelect.getComponent(),

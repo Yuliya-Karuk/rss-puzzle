@@ -54,7 +54,6 @@ export class DataService {
     this.dataOnLevel = CollectionPerLevel[this.level];
     this.roundPerLevel = CollectionPerLevel[this.level].roundsCount;
     this.round = 0;
-    console.error(this.level);
     this.setRoundData();
   }
 

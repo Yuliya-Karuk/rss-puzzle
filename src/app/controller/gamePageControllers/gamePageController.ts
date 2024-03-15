@@ -7,6 +7,7 @@ import { DragController } from './dragController';
 import { ButtonsController } from './buttonsController';
 import { HintsController } from './hintsController';
 import { LevelController } from './levelController';
+import { StorageService } from '../../../services/localStorage.service';
 
 export class GamePageController {
   public view: GamePageView;
@@ -73,6 +74,8 @@ export class GamePageController {
     this.dataController.sentenceNumber += 1;
 
     if (this.dataController.sentenceNumber > this.dataController.sentencePerRound) {
+      this.saveCompletedRound();
+      this.view.roundSelect.setRoundCompleted(this.dataController.round);
       this.dataController.round += 1;
       this.dataController.sentenceNumber = 0;
 
@@ -82,13 +85,15 @@ export class GamePageController {
         if (newLevel) {
           this.dataController.setLevel(newLevel);
           this.view.levelSelect.setSelectHeader(this.dataController.level);
+          this.view.roundSelect.setSelectHeader(this.dataController.round + 1);
+          this.levelController.setRoundsSelect();
         } else {
           this.winGame();
           return;
         }
       } else {
         this.dataController.setRoundData();
-        this.view.roundSelect.setSelectHeader(this.dataController.round);
+        this.view.roundSelect.setSelectHeader(this.dataController.round + 1);
       }
 
       await this.hintsController.prepareRoundImage();
@@ -114,5 +119,9 @@ export class GamePageController {
 
   private winGame(): void {
     console.error('win');
+  }
+
+  private saveCompletedRound(): void {
+    StorageService.updateCompletedRounds(this.dataController.level, this.dataController.round);
   }
 }

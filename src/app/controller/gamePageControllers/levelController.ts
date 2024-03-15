@@ -2,6 +2,8 @@ import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { type DataService } from '../../../services/data.service';
 import { checkLevel, isNotNullable } from '../../../utils/utils';
 import { Callback } from '../../../types/types';
+import { StorageService } from '../../../services/localStorage.service';
+import { LevelsNumber } from '../../../utils/constants';
 
 export class LevelController {
   private view: GamePageView;
@@ -12,19 +14,27 @@ export class LevelController {
     this.view = view;
     this.dataController = dataController;
     this.setRoundCallback = setRoundCallback;
-    this.setSelects();
+    this.setSelectsHeaders();
   }
 
-  private setSelects(): void {
+  private setSelectsHeaders(): void {
     this.view.levelSelect.selectHeader.addEventListener('click', () => this.view.levelSelect.toggleActive());
     this.view.roundSelect.selectHeader.addEventListener('click', () => this.view.roundSelect.toggleActive());
 
-    this.view.levelSelect.selectItems.forEach(level => level.addEventListener('click', () => this.chooseLevel(level)));
-    this.setRoundListeners();
+    this.setLevelsSelect();
+    this.setRoundsSelect();
+
     document.addEventListener('click', (e: Event) => this.closeSelect(e));
   }
 
-  private setRoundListeners(): void {
+  private setLevelsSelect(): void {
+    this.view.levelSelect.setItemsNumber(LevelsNumber, []);
+    this.view.levelSelect.selectItems.forEach(level => level.addEventListener('click', () => this.chooseLevel(level)));
+  }
+
+  public setRoundsSelect(): void {
+    const completedRounds = isNotNullable(StorageService.getCompletedRounds());
+    this.view.roundSelect.setItemsNumber(this.dataController.roundPerLevel, completedRounds[this.dataController.level]);
     this.view.roundSelect.selectItems.forEach(round => round.addEventListener('click', () => this.chooseRound(round)));
   }
 
@@ -36,8 +46,7 @@ export class LevelController {
 
     this.dataController.setLevel(levelNumber);
 
-    this.view.roundSelect.setItemsNumber(this.dataController.roundPerLevel);
-    this.setRoundListeners();
+    this.setRoundsSelect();
 
     await this.setRoundCallback();
   }

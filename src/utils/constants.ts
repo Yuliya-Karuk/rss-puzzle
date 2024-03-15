@@ -1,4 +1,5 @@
 import { HintsState } from '../types/interfaces';
+import { CompletedRoundsData } from '../types/types';
 
 export const startPageText: string =
   '<strong>Puzzle English</strong> is a platform for learning English with games and interesting tasks, where you can study at any level, at any time and for any purpose.';
@@ -17,3 +18,12 @@ export const defaultHintsState: HintsState = {
 };
 
 export const LevelsNumber: number = 6;
+
+export const defaultCompletedRounds: CompletedRoundsData = {
+  1: [],
+  2: [],
+  3: [],
+  4: [],
+  5: [],
+  6: [],
+};

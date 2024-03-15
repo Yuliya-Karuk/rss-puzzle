@@ -1,6 +1,13 @@
 .select {
   position: relative;
-  width: fit-content;
+
+  &_level {
+    width: 7vw;
+  }
+
+  &_round {
+    width: 10vw;
+  }
 }
 
 .select-header {
@@ -60,7 +67,7 @@
 }
 
 .select-item {
-  @include font(1vw, 700, 1.2);
+  @include font(1.2vw, 700, 1.2);
 
   @include media-hover {
     &:not([disabled]):hover {
@@ -69,7 +76,26 @@
   }
 
   cursor: pointer;
-  padding: 5px 10px;
+  padding: 7px 10px;
   opacity: 0.9;
   transition: all 0.2s linear;
+
+  &_completed {
+    position: relative;
+    background-color: #e5cdd2;
+
+    &::after {
+      content: '';
+
+      position: absolute;
+      top: 5px;
+      right: 5px;
+
+      width: 20px;
+      height: 20px;
+
+      background: center transparent url('../../img/yes.svg');
+      background-size: contain;
+    }
+  }
 }
