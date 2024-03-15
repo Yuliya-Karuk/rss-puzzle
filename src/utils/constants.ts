@@ -8,10 +8,12 @@ export const startGameRules: string =
 
 export const SentencesPerRound: number = 10;
 
-export const PaddingMain = 20;
+export const PaddingMain: number = 20;
 
 export const defaultHintsState: HintsState = {
   translationHint: true,
   audioHint: true,
   imageHint: true,
 };
+
+export const LevelsNumber: number = 6;

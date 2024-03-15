@@ -1,0 +1,75 @@
+.select {
+  position: relative;
+  width: fit-content;
+}
+
+.select-header {
+  @include font(1.4vw, 700, 1.2);
+
+  cursor: pointer;
+
+  display: flex;
+
+  padding: 5px 10px;
+
+  background: var(--color-primary-light);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  .select-active & {
+    box-shadow: 0 1px 5px 1px rgb(0 0 0 / 70%);
+  }
+}
+
+.select-body {
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  right: 0;
+  left: 0;
+
+  display: none;
+
+  background: var(--color-primary-light);
+  border-top: 0;
+  border-radius: 5px;
+
+  .select-active & {
+    overflow: auto;
+    display: block;
+    max-height: 300px;
+    border: 1px solid var(--color-font-dark);
+  }
+}
+
+.select-body::-webkit-scrollbar {
+  width: 10px;
+  border: 1px solid var(--color-font-dark);
+  border-radius: 50px;
+}
+
+.select-body::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.select-body::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  height: 20px;
+  background-color: var(--color-font-dark);
+  border-radius: 20px;
+}
+
+.select-item {
+  @include font(1vw, 700, 1.2);
+
+  @include media-hover {
+    &:not([disabled]):hover {
+      background-color: #f2f2f2;
+    }
+  }
+
+  cursor: pointer;
+  padding: 5px 10px;
+  opacity: 0.9;
+  transition: all 0.2s linear;
+}

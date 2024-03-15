@@ -1,36 +1,28 @@
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { LoaderService } from '../../../services/loader.service';
-import { LevelData } from '../../../types/interfaces';
 import { StorageService } from '../../../services/localStorage.service';
 import { isNotNullable } from '../../../utils/utils';
+import { type DataService } from '../../../services/data.service';
 
 export class HintsController {
   private view: GamePageView;
-  private translation: string;
-  private audioSource: string;
   private audioContext: AudioContext;
   private audio: AudioBuffer;
-  private levelData: LevelData;
   public imageUrl: string;
+  private dataController: DataService;
 
-  constructor(view: GamePageView) {
+  constructor(view: GamePageView, dataController: DataService) {
     this.view = view;
+    this.dataController = dataController;
     this.audioContext = new AudioContext();
   }
 
-  public setHints(translation: string, audioSource: string): void {
-    this.translation = translation;
-    this.audioSource = audioSource;
-
+  public setHints(): void {
     this.setTranslationRow(false);
     this.setPlayButton(false);
     this.setWordsBackground(false);
 
     this.getAudio();
-  }
-
-  public setLevelData(levelData: LevelData): void {
-    this.levelData = levelData;
   }
 
   public bindHintsListeners(): void {
@@ -42,7 +34,7 @@ export class HintsController {
 
   public setTranslationRow(sentenceIsComplete: boolean): void {
     if (this.view.translationHint.isEnabled || sentenceIsComplete) {
-      this.view.translationRow.innerText = this.translation;
+      this.view.translationRow.innerText = this.dataController.translation;
     } else {
       this.view.translationRow.innerText = '';
     }
@@ -54,7 +46,7 @@ export class HintsController {
   }
 
   private async getAudio(): Promise<void> {
-    this.audio = await LoaderService.getAudio(this.audioSource, this.audioContext);
+    this.audio = await LoaderService.getAudio(this.dataController.audioUrl, this.audioContext);
   }
 
   private handlePlayAudio(): void {
@@ -92,8 +84,8 @@ export class HintsController {
     }
   }
 
-  public async prepareImage(): Promise<void> {
-    this.imageUrl = await LoaderService.getImage(this.levelData.imageSrc);
+  public async prepareRoundImage(): Promise<void> {
+    this.imageUrl = await LoaderService.getImage(this.dataController.roundData.imageSrc);
     this.view.setImageUrl(this.imageUrl);
   }
 

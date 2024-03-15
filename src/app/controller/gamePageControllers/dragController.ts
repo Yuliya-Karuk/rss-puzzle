@@ -39,7 +39,6 @@ export class DragController {
 
   private handleDragEnd(e: DragEvent, dragState: DragState): void {
     const wordId = isNotNullable(e.dataTransfer).getData('text');
-    console.error(wordId);
     const word = isNotNullable(this.view.words.find(el => el.id === wordId));
     const dragWordsInSource = isNotNullable(word.getComponent().parentElement).classList.contains('words');
     const dragWordsInResults = isNotNullable(word.getComponent().parentElement).classList.contains('game-results-row');

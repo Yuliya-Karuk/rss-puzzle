@@ -2,19 +2,17 @@ import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { ButtonState } from '../../../types/enums';
 import { Word } from '../../../components/word/word';
 import { type HintsController } from './hintsController';
+import { type DataService } from '../../../services/data.service';
 
 export class ButtonsController {
   private view: GamePageView;
-  private correctSentence: string[];
   private hintsController: HintsController;
+  private dataController: DataService;
 
-  constructor(view: GamePageView, hintsController: HintsController) {
+  constructor(view: GamePageView, dataController: DataService, hintsController: HintsController) {
     this.view = view;
+    this.dataController = dataController;
     this.hintsController = hintsController;
-  }
-
-  public setCorrectSentence(correctSentence: string[]): void {
-    this.correctSentence = correctSentence;
   }
 
   public bindButtonsListeners(callback: () => void): void {
@@ -56,10 +54,10 @@ export class ButtonsController {
   private checkSentence(): void {
     let resultBlockState = true;
 
-    for (let i = 0; i < this.correctSentence.length; i += 1) {
+    for (let i = 0; i < this.dataController.correctSentence.length; i += 1) {
       const wordValue = this.view.resultWords[i];
       if (wordValue instanceof Word) {
-        const isValid = this.correctSentence[i] === wordValue.value;
+        const isValid = this.dataController.correctSentence[i] === wordValue.value;
 
         if (!isValid) {
           resultBlockState = false;

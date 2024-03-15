@@ -1,5 +1,6 @@
 import { type Word } from '../components/word/word';
 import { DomElementAttribute, DomElementProperties } from '../types/interfaces';
+import { Level } from '../types/types';
 import { PaddingMain } from './constants';
 
 export function isNotNullable<T>(value: T): NonNullable<T> {
@@ -64,4 +65,11 @@ export function getDOMElement<T extends Node>(
     throw new Error(`Not expected value: ${element} of type:${elemType}`);
   }
   return element;
+}
+
+export function checkLevel(level: number): Level | null {
+  if (level >= 1 && level <= 6) {
+    return level as Level;
+  }
+  return null;
 }
