@@ -21,6 +21,7 @@ export class ButtonsController {
       if (this.view.buttonController.state === ButtonState.check) {
         this.checkSentence();
       } else {
+        this.view.translationRow.classList.remove('translation-row_info');
         callback();
       }
     });
@@ -68,12 +69,31 @@ export class ButtonsController {
     }
 
     if (resultBlockState) {
-      this.view.blockPreviousSentence();
-      this.hintsController.setTranslationRow(true);
-      this.hintsController.setPlayButton(true);
-      this.hintsController.setWordsBackground(true);
-      this.changeButtons(true);
+      this.finishSentence();
     }
+  }
+
+  private async finishSentence(): Promise<void> {
+    this.view.blockPreviousSentence();
+    this.hintsController.setTranslationRow(true);
+    this.hintsController.setPlayButton(true);
+    this.hintsController.setWordsBackground(true);
+    if (this.dataController.sentenceNumber === this.dataController.sentencePerRound) {
+      await this.showBackground();
+    }
+    this.changeButtons(true);
+  }
+
+  private async showBackground(): Promise<void> {
+    console.error(this.dataController.sentenceNumber);
+    this.view.hideRows();
+    this.view.words.forEach(word => word.removeState());
+
+    const data = this.dataController.roundData;
+    const imageInfo = `${data.author} - '${data.name}' (${data.year}yr)`;
+
+    this.view.translationRow.innerText = imageInfo;
+    this.view.translationRow.classList.add('translation-row_info');
   }
 
   private handleAutoComplete(): void {

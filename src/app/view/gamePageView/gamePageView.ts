@@ -133,7 +133,7 @@ export class GamePageView {
     this.resultRow.classList.add('game-results-row_guessed');
   }
 
-  public clearLevelConst(): void {
+  public clearRoundConst(): void {
     this.allLevelData = [];
     this.sourceElement.replaceChildren();
     for (let i = 0; i < this.resultsElement.children.length; i += 1) {
@@ -151,5 +151,9 @@ export class GamePageView {
       this.dataController.correctSentence,
       this.dataController.sentenceNumber,
     ]);
+  }
+
+  public hideRows(): void {
+    this.resultsElement.classList.add('game-results_hidden');
   }
 }

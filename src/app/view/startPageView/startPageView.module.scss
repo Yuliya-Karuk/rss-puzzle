@@ -110,13 +110,3 @@
   animation: appear 0.5s ease-in-out;
   animation-fill-mode: forwards;
 }
-
-@keyframes appear {
-  0% {
-    transform: scaleX(0);
-  }
-
-  100% {
-    transform: scaleX(1);
-  }
-}

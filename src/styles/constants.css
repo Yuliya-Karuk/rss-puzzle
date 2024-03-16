@@ -46,3 +46,25 @@
     opacity: 0.8;
   }
 }
+
+@keyframes appear {
+  0% {
+    transform: scaleX(0);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes disappear {
+  0% {
+    gap: 1px;
+    color: var(--color-black);
+  }
+
+  100% {
+    gap: 0;
+    color: transparent;
+  }
+}

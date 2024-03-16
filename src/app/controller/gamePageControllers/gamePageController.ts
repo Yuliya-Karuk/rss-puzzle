@@ -37,7 +37,6 @@ export class GamePageController {
   public async setStartSetup(): Promise<void> {
     const lastRound = isNotNullable(StorageService.getLastRound());
     const nextRound = this.findNext(lastRound);
-    console.error(nextRound);
 
     this.dataController.startedSetUp(nextRound.level, nextRound.round);
     this.levelController.setSelects(nextRound.level, nextRound.round);
@@ -97,7 +96,7 @@ export class GamePageController {
     }
 
     await this.hintsController.prepareRoundImage();
-    this.view.clearLevelConst();
+    this.view.clearRoundConst();
   }
 
   private setNextLevel(): void {
@@ -108,7 +107,7 @@ export class GamePageController {
 
   public async setNewRound(): Promise<void> {
     await this.hintsController.prepareRoundImage();
-    this.view.clearLevelConst();
+    this.view.clearRoundConst();
     this.setOneSentence();
     this.buttonsController.changeButtons(false);
   }
@@ -121,6 +120,10 @@ export class GamePageController {
     let { level, round } = lastRound;
 
     if (level === 1 && round === 0) {
+      if (isNotNullable(StorageService.getCompletedRounds())[1].includes(0)) {
+        round += 1;
+        return { level, round };
+      }
       return lastRound;
     }
 

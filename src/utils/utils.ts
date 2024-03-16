@@ -37,7 +37,7 @@ export function shuffleWords(words: Word[]): Word[] {
 
 export function findPxPerChar(sentence: string[]): number {
   const length = sentence.reduce((acc: number, el: string) => acc + el.length, 0);
-  const pxPerChar = Math.floor((window.innerWidth - PaddingMain * 2) * 0.9 - (sentence.length - 1) * 2) / length;
+  const pxPerChar = Math.floor((window.innerWidth - PaddingMain * 2) * 0.9) / length;
   return pxPerChar;
 }
 
