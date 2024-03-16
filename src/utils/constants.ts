@@ -1,4 +1,4 @@
-import { HintsState } from '../types/interfaces';
+import { HintsState, SavedRound } from '../types/interfaces';
 import { CompletedRoundsData } from '../types/types';
 
 export const startPageText: string =
@@ -26,4 +26,9 @@ export const defaultCompletedRounds: CompletedRoundsData = {
   4: [],
   5: [],
   6: [],
+};
+
+export const defaultLastRound: SavedRound = {
+  level: 1,
+  round: 0,
 };

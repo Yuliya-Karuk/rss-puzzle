@@ -20,9 +20,7 @@ export class CustomSelect {
       'div',
       `${styles.select} select_${this.selectText.toLowerCase()}`
     );
-    this.selectHeader = createElementWithProperties('div', styles.selectHeader, undefined, [
-      { innerText: `${this.selectText} 1` },
-    ]);
+    this.selectHeader = createElementWithProperties('div', styles.selectHeader);
     this.selectBody = createElementWithProperties('div', styles.selectBody);
     this.elementContainer.append(this.selectHeader, this.selectBody);
   }

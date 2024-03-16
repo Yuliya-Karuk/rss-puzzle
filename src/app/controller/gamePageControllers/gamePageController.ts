@@ -8,6 +8,7 @@ import { ButtonsController } from './buttonsController';
 import { HintsController } from './hintsController';
 import { LevelController } from './levelController';
 import { StorageService } from '../../../services/localStorage.service';
+import { SavedRound } from '../../../types/interfaces';
 
 export class GamePageController {
   public view: GamePageView;
@@ -28,29 +29,30 @@ export class GamePageController {
     this.dragController = new DragController(this.view, this.buttonsController);
   }
 
-  public async setStartSetup(): Promise<void> {
-    this.dataController.setRoundData();
-    await this.hintsController.prepareRoundImage();
-    this.hintsController.setHintsState();
-    this.setOneSentence();
-    this.bindGameListeners();
-  }
-
   public createGamePage(): HTMLElement {
     this.setStartSetup();
     return this.view.getGamePage();
   }
 
-  private bindGameListeners(): void {
+  public async setStartSetup(): Promise<void> {
+    const lastRound = isNotNullable(StorageService.getLastRound());
+    const nextRound = this.findNext(lastRound);
+    console.error(nextRound);
+
+    this.dataController.startedSetUp(nextRound.level, nextRound.round);
+    this.levelController.setSelects(nextRound.level, nextRound.round);
+    await this.hintsController.prepareRoundImage();
+    this.hintsController.setHintsState();
+    this.bindStaticGameListeners();
+    this.setOneSentence();
+  }
+
+  private bindStaticGameListeners(): void {
     const context = this;
     window.addEventListener('resize', () => context.changeWordsSize());
 
     this.buttonsController.bindButtonsListeners(this.setNextSentence.bind(this));
-    this.view.getGamePage().addEventListener('dragover', (e: DragEvent) => {
-      e.preventDefault();
-    });
-
-    this.view.getGamePage().addEventListener('drop', (e: DragEvent) => this.handleForbiddenDrag(e));
+    this.dragController.bindStaticListeners();
     this.hintsController.bindHintsListeners();
   }
 
@@ -71,43 +73,37 @@ export class GamePageController {
   }
 
   private async setNextSentence(): Promise<void> {
-    this.dataController.sentenceNumber += 1;
-
-    if (this.dataController.sentenceNumber > this.dataController.sentencePerRound) {
-      this.saveCompletedRound();
-      this.view.roundSelect.setRoundCompleted(this.dataController.round);
-      this.dataController.round += 1;
-      this.dataController.sentenceNumber = 0;
-
-      if (this.dataController.round > this.dataController.roundPerLevel - 1) {
-        const newLevel = checkLevel(this.dataController.level + 1);
-
-        if (newLevel) {
-          this.dataController.setLevel(newLevel);
-          this.view.levelSelect.setSelectHeader(this.dataController.level);
-          this.view.roundSelect.setSelectHeader(this.dataController.round + 1);
-          this.levelController.setRoundsSelect();
-        } else {
-          this.winGame();
-          return;
-        }
-      } else {
-        this.dataController.setRoundData();
-        this.view.roundSelect.setSelectHeader(this.dataController.round + 1);
-      }
-
-      await this.hintsController.prepareRoundImage();
-      this.view.clearLevelConst();
+    if (this.dataController.checkIsNotNewRound()) {
+      this.dataController.sentenceNumber += 1;
+    } else {
+      await this.setNextRound();
     }
 
     this.setOneSentence();
     this.buttonsController.changeButtons(false);
   }
 
-  private handleForbiddenDrag(e: DragEvent): void {
-    const wordId = isNotNullable(e.dataTransfer).getData('text');
-    const word = isNotNullable(this.view.words.find(el => el.id === wordId));
-    word.removeDragStyle();
+  private async setNextRound(): Promise<void> {
+    this.saveCompletedRound();
+    this.view.roundSelect.setRoundCompleted(this.dataController.round);
+    this.dataController.sentenceNumber = 0;
+
+    if (this.dataController.checkIsNotNewLevel()) {
+      this.dataController.round += 1;
+      this.dataController.setRoundData();
+      this.view.roundSelect.setSelectHeader(this.dataController.round + 1);
+    } else {
+      this.setNextLevel();
+    }
+
+    await this.hintsController.prepareRoundImage();
+    this.view.clearLevelConst();
+  }
+
+  private setNextLevel(): void {
+    const newLevel = checkLevel(this.dataController.level + 1);
+    this.dataController.setLevel(newLevel);
+    this.levelController.setSelects(this.dataController.level, this.dataController.round);
   }
 
   public async setNewRound(): Promise<void> {
@@ -117,11 +113,23 @@ export class GamePageController {
     this.buttonsController.changeButtons(false);
   }
 
-  private winGame(): void {
-    console.error('win');
-  }
-
   private saveCompletedRound(): void {
     StorageService.updateCompletedRounds(this.dataController.level, this.dataController.round);
+  }
+
+  private findNext(lastRound: SavedRound): SavedRound {
+    let { level, round } = lastRound;
+
+    if (level === 1 && round === 0) {
+      return lastRound;
+    }
+
+    if (round + 1 < this.dataController.getRoundsPerLevel(level)) {
+      round += 1;
+    } else {
+      level = checkLevel(level + 1);
+      round = 0;
+    }
+    return { level, round };
   }
 }

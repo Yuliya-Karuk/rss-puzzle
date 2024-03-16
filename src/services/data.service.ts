@@ -31,11 +31,15 @@ export class DataService {
 
   constructor() {
     this.sentencePerRound = 9;
-    this.level = 1;
-    this.round = 0;
+  }
+
+  public startedSetUp(level: Level, round: number): void {
+    this.level = level;
+    this.round = round;
     this.sentenceNumber = 0;
     this.dataOnLevel = CollectionPerLevel[this.level];
     this.roundPerLevel = CollectionPerLevel[this.level].roundsCount;
+    this.setRoundData();
   }
 
   public setSentence(): void {
@@ -61,5 +65,17 @@ export class DataService {
     this.round = round - 1;
     this.sentenceNumber = 0;
     this.setRoundData();
+  }
+
+  public getRoundsPerLevel(level: Level): number {
+    return CollectionPerLevel[level].roundsCount;
+  }
+
+  public checkIsNotNewRound(): boolean {
+    return this.sentenceNumber < 9;
+  }
+
+  public checkIsNotNewLevel(): boolean {
+    return this.round < this.roundPerLevel - 1;
   }
 }

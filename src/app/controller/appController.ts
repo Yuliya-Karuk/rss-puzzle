@@ -13,7 +13,6 @@ export class AppController {
     this.header = new Header();
     this.footer = new Footer();
     this.startPageController = new StartPageController();
-    this.gamePageController = new GamePageController();
   }
 
   public getStartPage(): HTMLElement {
@@ -33,6 +32,7 @@ export class AppController {
   }
 
   public getGamePage(): HTMLElement {
+    this.gamePageController = new GamePageController();
     return this.gamePageController.createGamePage();
   }
 }

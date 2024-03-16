@@ -1,15 +1,21 @@
-import { HintsState, UserData } from '../types/interfaces';
+import { HintsState, UserData, SavedRound } from '../types/interfaces';
 import { isNotNullable } from '../utils/utils';
 import { CompletedRoundsData } from '../types/types';
 
 export class StorageService {
   private static storageKey: string = 'RSS_Puzzle_YKaruk';
 
-  public static saveData(userData: UserData, hintsState: HintsState, completedRounds: CompletedRoundsData): void {
+  public static saveData(
+    userData: UserData,
+    hintsState: HintsState,
+    completedRounds: CompletedRoundsData,
+    lastRound: SavedRound
+  ): void {
     const data = {
       userData,
       hintsState,
       completedRounds,
+      lastRound,
     };
 
     localStorage.setItem(this.storageKey, JSON.stringify(data));
@@ -30,6 +36,11 @@ export class StorageService {
     return data ? JSON.parse(data).completedRounds : null;
   }
 
+  public static getLastRound(): SavedRound | null {
+    const data = localStorage.getItem(this.storageKey);
+    return data ? JSON.parse(data).lastRound : null;
+  }
+
   public static updateHint(hintName: string, isEnabled: boolean): void {
     const data = isNotNullable(localStorage.getItem(this.storageKey));
     const parsedData = JSON.parse(data);
@@ -40,6 +51,10 @@ export class StorageService {
   public static updateCompletedRounds(level: number, round: number): void {
     const data = isNotNullable(localStorage.getItem(this.storageKey));
     const parsedData = JSON.parse(data);
+    parsedData.lastRound = {
+      level,
+      round,
+    };
     parsedData.completedRounds[level].push(round);
     localStorage.setItem(this.storageKey, JSON.stringify(parsedData));
   }

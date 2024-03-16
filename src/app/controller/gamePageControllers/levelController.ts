@@ -1,7 +1,7 @@
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { type DataService } from '../../../services/data.service';
 import { checkLevel, isNotNullable } from '../../../utils/utils';
-import { Callback } from '../../../types/types';
+import { Callback, Level } from '../../../types/types';
 import { StorageService } from '../../../services/localStorage.service';
 import { LevelsNumber } from '../../../utils/constants';
 
@@ -14,28 +14,29 @@ export class LevelController {
     this.view = view;
     this.dataController = dataController;
     this.setRoundCallback = setRoundCallback;
-    this.setSelectsHeaders();
   }
 
-  private setSelectsHeaders(): void {
+  public setSelects(level: Level, round: number): void {
     this.view.levelSelect.selectHeader.addEventListener('click', () => this.view.levelSelect.toggleActive());
     this.view.roundSelect.selectHeader.addEventListener('click', () => this.view.roundSelect.toggleActive());
 
-    this.setLevelsSelect();
-    this.setRoundsSelect();
+    this.setLevelsSelect(level);
+    this.setRoundsSelect(round + 1);
 
     document.addEventListener('click', (e: Event) => this.closeSelect(e));
   }
 
-  private setLevelsSelect(): void {
+  private setLevelsSelect(level: Level): void {
+    this.view.levelSelect.setSelectHeader(level);
     this.view.levelSelect.setItemsNumber(LevelsNumber, []);
-    this.view.levelSelect.selectItems.forEach(level => level.addEventListener('click', () => this.chooseLevel(level)));
+    this.view.levelSelect.selectItems.forEach(lvl => lvl.addEventListener('click', () => this.chooseLevel(lvl)));
   }
 
-  public setRoundsSelect(): void {
+  public setRoundsSelect(round: number): void {
+    this.view.roundSelect.setSelectHeader(round);
     const completedRounds = isNotNullable(StorageService.getCompletedRounds());
     this.view.roundSelect.setItemsNumber(this.dataController.roundPerLevel, completedRounds[this.dataController.level]);
-    this.view.roundSelect.selectItems.forEach(round => round.addEventListener('click', () => this.chooseRound(round)));
+    this.view.roundSelect.selectItems.forEach(el => el.addEventListener('click', () => this.chooseRound(el)));
   }
 
   private async chooseLevel(level: HTMLDivElement): Promise<void> {
@@ -46,7 +47,7 @@ export class LevelController {
 
     this.dataController.setLevel(levelNumber);
 
-    this.setRoundsSelect();
+    this.setRoundsSelect(1);
 
     await this.setRoundCallback();
   }

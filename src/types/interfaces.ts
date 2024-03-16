@@ -1,3 +1,5 @@
+import { Level } from './types';
+
 export interface Props {
   tag: string;
   className: string;
@@ -24,9 +26,9 @@ export interface HintsState {
   imageHint: boolean;
 }
 
-export interface GameData {
-  userData: UserData;
-  hintsState: HintsState;
+export interface SavedRound {
+  level: Level;
+  round: number;
 }
 
 export interface WordCollection {

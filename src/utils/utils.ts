@@ -67,9 +67,9 @@ export function getDOMElement<T extends Node>(
   return element;
 }
 
-export function checkLevel(level: number): Level | null {
+export function checkLevel(level: number): Level {
   if (level >= 1 && level <= 6) {
     return level as Level;
   }
-  return null;
+  return 1 as Level;
 }

@@ -14,6 +14,19 @@ export class DragController {
     this.buttonsController = buttonsController;
   }
 
+  public bindStaticListeners(): void {
+    this.view.getGamePage().addEventListener('dragover', (e: DragEvent) => {
+      e.preventDefault();
+    });
+    this.view.getGamePage().addEventListener('drop', (e: DragEvent) => this.handleForbiddenDrag(e));
+  }
+
+  private handleForbiddenDrag(e: DragEvent): void {
+    const wordId = isNotNullable(e.dataTransfer).getData('text');
+    const word = isNotNullable(this.view.words.find(el => el.id === wordId));
+    word.removeDragStyle();
+  }
+
   public bindDragListeners(): void {
     this.view.resultRow.addEventListener('dragover', e => {
       this.handleDragOver(e as DragEvent);

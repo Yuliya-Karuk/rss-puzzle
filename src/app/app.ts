@@ -1,5 +1,5 @@
 import { StorageService } from '../services/localStorage.service';
-import { defaultCompletedRounds, defaultHintsState } from '../utils/constants';
+import { defaultCompletedRounds, defaultHintsState, defaultLastRound } from '../utils/constants';
 import { isNotNullable } from '../utils/utils';
 import { AppController } from './controller/appController';
 import { LoginPageController } from './controller/loginPageController/loginPageController';
@@ -53,7 +53,7 @@ export class App {
     e.preventDefault();
 
     const userData = this.loginPageController.getInputsValues();
-    StorageService.saveData(userData, defaultHintsState, defaultCompletedRounds);
+    StorageService.saveData(userData, defaultHintsState, defaultCompletedRounds, defaultLastRound);
     this.clearParentElement();
     this.createStartPage();
   }
