@@ -3,10 +3,10 @@ import styles from './gamePageView.module.scss';
 import { SentencesPerRound } from '../../../utils/constants';
 import { Word } from '../../../components/word/word';
 import { ButtonCheck } from '../../../components/buttonCheck/buttonCheck';
-import { ButtonAutoComplete } from '../../../components/buttonAutoComplete/buttonAutoComplete';
+import { ButtonSolution } from '../../../components/buttonSolution/buttonSolution';
 import { Placeholder } from '../../../components/placeholder/placeholder';
 import { ButtonHint } from '../../../components/buttonHint/buttonHint';
-import { styleWords } from '../../../utils/wordsStylist';
+import { removeStyleResults, styleResults, styleWords } from '../../../utils/wordsStylist';
 import { CustomSelect } from '../../../components/select/customSelect';
 import { type DataService } from '../../../services/data.service';
 
@@ -17,8 +17,8 @@ export class GamePageView {
   public resultsElement: HTMLDivElement;
   public sourceElement: HTMLDivElement;
 
-  public buttonController: ButtonCheck;
-  public buttonAutoComplete: ButtonAutoComplete;
+  public btnCheckController: ButtonCheck;
+  public btnSolutionController: ButtonSolution;
 
   public translationRow: HTMLParagraphElement;
   public translationHint: ButtonHint;
@@ -42,8 +42,8 @@ export class GamePageView {
   constructor(dataController: DataService) {
     this.dataController = dataController;
     this.element = createElementWithProperties('main', styles.game);
-    this.buttonController = new ButtonCheck();
-    this.buttonAutoComplete = new ButtonAutoComplete();
+    this.btnCheckController = new ButtonCheck();
+    this.btnSolutionController = new ButtonSolution();
     this.createChildren();
   }
 
@@ -62,8 +62,9 @@ export class GamePageView {
     this.sourceElement = createElementWithProperties('div', styles.words);
     const buttonContainer = createElementWithProperties('div', styles.buttons);
 
-    buttonContainer.append(this.buttonAutoComplete.getComponent(), this.buttonController.getComponent());
+    buttonContainer.append(this.btnSolutionController.getComponent(), this.btnCheckController.getComponent());
     this.element.append(this.resultsElement, this.sourceElement, buttonContainer);
+    this.resultsElement.addEventListener('animationend', () => this.setRoundBackground());
   }
 
   private createHintsAndSelects(): void {
@@ -115,8 +116,6 @@ export class GamePageView {
     for (let i = 0; i < this.words.length; i += 1) {
       this.sourceElement.append(this.words[i].getComponent());
     }
-
-    this.buttonAutoComplete.enableButton();
   }
 
   private createRoundConst(): void {
@@ -155,5 +154,17 @@ export class GamePageView {
 
   public hideRows(): void {
     this.resultsElement.classList.add('game-results_hidden');
+  }
+
+  public showRows(): void {
+    this.resultsElement.classList.remove('game-results_hidden');
+  }
+
+  public setRoundBackground(): void {
+    styleResults(this.resultsElement, this.imageUrl);
+  }
+
+  public removeStyleBackground(): void {
+    removeStyleResults(this.resultsElement);
   }
 }

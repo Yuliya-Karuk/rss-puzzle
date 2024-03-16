@@ -50,13 +50,14 @@ export class GamePageController {
     const context = this;
     window.addEventListener('resize', () => context.changeWordsSize());
 
-    this.buttonsController.bindButtonsListeners(this.setNextSentence.bind(this));
+    this.buttonsController.bindButtonsListeners(this.setNextSentence.bind(this), this.showResults.bind(this));
     this.dragController.bindStaticListeners();
     this.hintsController.bindHintsListeners();
   }
 
   private changeWordsSize(): void {
     this.view.allLevelData.forEach(levelData => this.view.setWordsStyle(...levelData));
+    this.view.setRoundBackground();
   }
 
   public setOneSentence(): void {
@@ -79,7 +80,7 @@ export class GamePageController {
     }
 
     this.setOneSentence();
-    this.buttonsController.changeButtons(false);
+    this.buttonsController.changeCheckButton(false);
   }
 
   private async setNextRound(): Promise<void> {
@@ -109,7 +110,7 @@ export class GamePageController {
     await this.hintsController.prepareRoundImage();
     this.view.clearRoundConst();
     this.setOneSentence();
-    this.buttonsController.changeButtons(false);
+    this.buttonsController.changeCheckButton(false);
   }
 
   private saveCompletedRound(): void {
@@ -134,5 +135,9 @@ export class GamePageController {
       round = 0;
     }
     return { level, round };
+  }
+
+  private showResults(): void {
+    console.error('link to results');
   }
 }

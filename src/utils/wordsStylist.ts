@@ -8,8 +8,8 @@ const HelperWidth = 16;
 
 export function styleWords(words: Word[], sentence: string[], sentenceNumber: number, imageUrl: string): void {
   const resultsWidth = (window.innerWidth - PaddingMain * 2) * 0.9;
-  const resultsHeight = (window.innerHeight - HeightNotMain - PaddingMain * 2) * 0.6;
-  const rowHeight = resultsHeight / SentencesPerRound;
+  const resultsHeight = (window.innerHeight - HeightNotMain - PaddingMain * 2) * 0.6 + (SentencesPerRound - 1);
+  const rowHeight = (window.innerHeight - HeightNotMain - PaddingMain * 2) * 0.06;
 
   let startWidth = 0;
   const startedHeight = rowHeight * sentenceNumber;
@@ -45,4 +45,19 @@ export function styleWords(words: Word[], sentence: string[], sentenceNumber: nu
       words[i].setLast();
     }
   }
+}
+
+export function styleResults(element: HTMLDivElement, imageUrl: string): void {
+  const resultsWidth = (window.innerWidth - PaddingMain * 2) * 0.9;
+  const resultsHeight = (window.innerHeight - HeightNotMain - PaddingMain * 2) * 0.6 + (SentencesPerRound - 1);
+
+  const background = {
+    backgroundImage: `url(${imageUrl})`,
+    backgroundSize: `${resultsWidth}px ${resultsHeight}px`,
+  };
+  Object.assign(element.style, background);
+}
+
+export function removeStyleResults(element: HTMLDivElement): void {
+  element.removeAttribute('style');
 }

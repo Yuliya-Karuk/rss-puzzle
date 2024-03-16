@@ -1,8 +1,9 @@
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
-import { ButtonState } from '../../../types/enums';
+import { ButtonCheckStates, ButtonSolutionStates } from '../../../types/enums';
 import { Word } from '../../../components/word/word';
 import { type HintsController } from './hintsController';
 import { type DataService } from '../../../services/data.service';
+import { Callback } from '../../../types/types';
 
 export class ButtonsController {
   private view: GamePageView;
@@ -15,40 +16,62 @@ export class ButtonsController {
     this.hintsController = hintsController;
   }
 
-  public bindButtonsListeners(callback: () => void): void {
-    this.view.buttonController.getComponent().addEventListener('click', () => {
+  public bindButtonsListeners(callbackNext: Callback, callbackResults: Callback): void {
+    this.view.btnCheckController.getComponent().addEventListener('click', () => {
       this.view.words.forEach(word => word.removeState());
-      if (this.view.buttonController.state === ButtonState.check) {
+      if (this.view.btnCheckController.state === ButtonCheckStates.check) {
         this.checkSentence();
       } else {
-        this.view.translationRow.classList.remove('translation-row_info');
-        callback();
+        this.handleContinue(callbackNext);
       }
     });
 
-    this.view.buttonAutoComplete.getComponent().addEventListener('click', () => this.handleAutoComplete());
+    this.view.btnSolutionController.getComponent().addEventListener('click', () => {
+      if (this.view.btnSolutionController.state === ButtonSolutionStates.solution) {
+        this.handleAutoComplete();
+      } else {
+        callbackResults();
+      }
+    });
+  }
+
+  public handleContinue(callbackNext: Callback): void {
+    this.view.btnSolutionController.enableButton();
+    this.view.translationRow.classList.remove('translation-row_info');
+    this.view.removeStyleBackground();
+    this.view.showRows();
+    callbackNext();
   }
 
   public setStateCheckButton(): void {
     const makeButtonActive = this.checkResultIsCompleted();
 
     if (makeButtonActive) {
-      this.view.buttonController.enableButton();
+      this.view.btnCheckController.enableButton();
       return;
     }
 
-    this.view.buttonController.disableButton();
+    this.view.btnCheckController.disableButton();
   }
 
   private checkResultIsCompleted(): boolean {
     return this.view.resultWords.every(el => el instanceof Word);
   }
 
-  public changeButtons(state: boolean): void {
+  public changeCheckButton(state: boolean): void {
     if (state) {
-      this.view.buttonController.setContinueState();
+      this.view.btnCheckController.setContinueState();
     } else {
-      this.view.buttonController.setCheckState();
+      this.view.btnCheckController.setCheckState();
+    }
+  }
+
+  public changeSolutionButton(state: boolean): void {
+    if (state) {
+      this.view.btnSolutionController.setResultsState();
+      this.view.btnSolutionController.enableButton();
+    } else {
+      this.view.btnSolutionController.setSolutionState();
     }
   }
 
@@ -81,7 +104,7 @@ export class ButtonsController {
     if (this.dataController.sentenceNumber === this.dataController.sentencePerRound) {
       await this.showBackground();
     }
-    this.changeButtons(true);
+    this.changeCheckButton(true);
   }
 
   private async showBackground(): Promise<void> {
@@ -94,6 +117,8 @@ export class ButtonsController {
 
     this.view.translationRow.innerText = imageInfo;
     this.view.translationRow.classList.add('translation-row_info');
+
+    this.changeSolutionButton(true);
   }
 
   private handleAutoComplete(): void {
@@ -105,9 +130,10 @@ export class ButtonsController {
       this.view.resultWords[i] = this.view.wordsRightOrder[i];
     }
 
-    this.view.buttonAutoComplete.disableButton();
+    this.view.btnSolutionController.disableButton();
+    console.error('disable');
     this.setStateCheckButton();
     this.view.blockPreviousSentence();
-    this.view.buttonController.getComponent().click();
+    this.view.btnCheckController.getComponent().click();
   }
 }

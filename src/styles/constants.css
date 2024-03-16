@@ -68,3 +68,16 @@
     color: transparent;
   }
 }
+
+@keyframes hide {
+  0% {
+    gap: 1px;
+    color: var(--color-black);
+  }
+
+  100% {
+    display: none;
+    gap: 0;
+    color: transparent;
+  }
+}

@@ -2,7 +2,7 @@
   @include flex(space-between, center, column);
 
   height: calc(100vh - 110px);
-  padding: 20px;
+  padding: 10px;
 }
 
 .game-results {
@@ -10,14 +10,18 @@
 
   display: grid;
   grid-template-rows: repeat(10, 1fr);
-  gap: 1px;
+  row-gap: 1px;
 
   width: 90%;
-  height: 60%;
+  height: calc(60% + 9px);
 
   &_hidden {
     animation: disappear 0.5s ease-in-out;
     animation-fill-mode: forwards;
+  }
+
+  &_start {
+    background: none !important;
   }
 }
 
@@ -28,7 +32,7 @@
   color: var(--color-black);
 
   .game-results_hidden & {
-    animation: disappear 0.5s ease-in-out;
+    animation: hide 0.5s ease-in-out;
     animation-fill-mode: forwards;
   }
 }
@@ -36,11 +40,12 @@
 .words {
   @extend %blurred-background;
 
-  @include flex(stretch, center);
+  @include flex(space-between, center);
 
-  gap: 1px;
-  width: 90%;
-  height: 6%;
+  width: 95%;
+  height: calc(6% + 20px);
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .buttons {
@@ -50,9 +55,9 @@
 }
 
 .translation-row {
-  @include font(2vw, 700, 1.2);
+  @include font(1.6vw, 700, 1.2);
 
-  height: 7%;
+  height: 5%;
 
   &_info {
     @include flex(center, center);

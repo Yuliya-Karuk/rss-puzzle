@@ -1,20 +1,20 @@
 import { createElementWithProperties } from '../../utils/utils';
-import { ButtonState } from '../../types/enums';
+import { ButtonCheckStates } from '../../types/enums';
 
 export class ButtonCheck {
-  public state: ButtonState;
+  public state: ButtonCheckStates;
   private element: HTMLButtonElement;
   public isDisable: boolean;
 
   constructor() {
-    this.state = ButtonState.check;
+    this.state = ButtonCheckStates.check;
     this.createNode();
     this.isDisable = true;
   }
 
   private createNode(): void {
     this.element = createElementWithProperties('button', 'btn btn-active', { type: 'button', disabled: 'disabled' }, [
-      { innerText: ButtonState.check },
+      { innerText: ButtonCheckStates.check },
     ]);
     this.element.addEventListener('animationend', () => this.element.classList.remove('btn-active'));
   }
@@ -34,16 +34,16 @@ export class ButtonCheck {
   }
 
   public setCheckState(): void {
-    this.element.innerText = ButtonState.check;
+    this.element.innerText = ButtonCheckStates.check;
     this.showAnimation();
-    this.state = ButtonState.check;
+    this.state = ButtonCheckStates.check;
     this.disableButton();
   }
 
   public setContinueState(): void {
-    this.element.innerText = ButtonState.continue;
+    this.element.innerText = ButtonCheckStates.continue;
     this.showAnimation();
-    this.state = ButtonState.continue;
+    this.state = ButtonCheckStates.continue;
   }
 
   private showAnimation(): void {
