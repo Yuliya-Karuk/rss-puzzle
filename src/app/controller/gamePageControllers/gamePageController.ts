@@ -78,7 +78,10 @@ export class GamePageController {
 
   private changeWordsSize(): void {
     this.view.allLevelData.forEach(levelData => this.view.setWordsStyle(...levelData));
-    this.view.setRoundBackground();
+
+    if (this.view.btnSolutionController.state === ButtonSolutionStates.results) {
+      this.view.setRoundBackground();
+    }
   }
 
   public setOneSentence(): void {

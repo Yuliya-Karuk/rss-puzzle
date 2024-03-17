@@ -1,7 +1,6 @@
 import { type Word } from '../components/word/word';
 import { DomElementAttribute, DomElementProperties } from '../types/interfaces';
 import { Level } from '../types/types';
-import { PaddingMain } from './constants';
 
 export function isNotNullable<T>(value: T): NonNullable<T> {
   if (value === undefined || value === null) {
@@ -33,12 +32,6 @@ export function createElementWithProperties<K extends keyof HTMLElementTagNameMa
 export function shuffleWords(words: Word[]): Word[] {
   const cloneWords = Object.assign([], words);
   return cloneWords.sort(() => Math.random() - 0.5);
-}
-
-export function findPxPerChar(sentence: string[]): number {
-  const length = sentence.reduce((acc: number, el: string) => acc + el.length, 0);
-  const pxPerChar = Math.floor((window.innerWidth - PaddingMain * 2) * 0.9) / length;
-  return pxPerChar;
 }
 
 export function collectSentence(arr: Word[]): string {

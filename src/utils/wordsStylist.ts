@@ -1,15 +1,26 @@
+/* eslint-disable max-lines-per-function */
 import { Word } from '../components/word/word';
-import { findPxPerChar } from './utils';
 import { PaddingMain, SentencesPerRound } from './constants';
 
 const HeightNotMain: number = 110;
 const HelperHeight = 16;
 const HelperWidth = 16;
+const resultsWidthFromMain = 0.6;
+const resultsHeightFromMain = 0.6;
+const sourceHeightFromMain = 0.06;
+
+export function findPxPerChar(sentence: string[]): number {
+  const length = sentence.reduce((acc: number, el: string) => acc + el.length, 0);
+  const pxPerChar =
+    Math.floor((window.innerWidth - PaddingMain * 2) * resultsWidthFromMain - (sentence.length - 1)) / length;
+  return pxPerChar;
+}
 
 export function styleWords(words: Word[], sentence: string[], sentenceNumber: number, imageUrl: string): void {
-  const resultsWidth = (window.innerWidth - PaddingMain * 2) * 0.9;
-  const resultsHeight = (window.innerHeight - HeightNotMain - PaddingMain * 2) * 0.6 + (SentencesPerRound - 1);
-  const rowHeight = (window.innerHeight - HeightNotMain - PaddingMain * 2) * 0.06;
+  const resultsWidth = (window.innerWidth - PaddingMain * 2) * resultsWidthFromMain;
+  const resultsHeight =
+    (window.innerHeight - HeightNotMain - PaddingMain * 2) * resultsHeightFromMain + (SentencesPerRound - 1);
+  const rowHeight = (window.innerHeight - HeightNotMain - PaddingMain * 2) * sourceHeightFromMain;
 
   let startWidth = 0;
   const startedHeight = rowHeight * sentenceNumber;
@@ -48,7 +59,7 @@ export function styleWords(words: Word[], sentence: string[], sentenceNumber: nu
 }
 
 export function styleResults(element: HTMLDivElement, imageUrl: string): void {
-  const resultsWidth = (window.innerWidth - PaddingMain * 2) * 0.9;
+  const resultsWidth = (window.innerWidth - PaddingMain * 2) * 0.6;
   const resultsHeight = (window.innerHeight - HeightNotMain - PaddingMain * 2) * 0.6 + (SentencesPerRound - 1);
 
   const background = {

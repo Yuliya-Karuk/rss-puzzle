@@ -66,7 +66,7 @@ export class ButtonsController {
   private async handleResults(callbackResults: Callback): Promise<void> {
     const cutImageUrl = await LoaderService.getImage(this.dataController.roundData.cutSrc);
     const data = this.dataController.roundData;
-    const imageInfo = `${data.author} - '${data.name}' (${data.year}yr)`;
+    const imageInfo = `${data.author} - '${data.name}' (${data.year})`;
     this.roundDataController.saveImageInfo(cutImageUrl, imageInfo);
     const audioContext = this.hintsController.getAudioContext();
     this.roundDataController.saveAudioContext(audioContext);
@@ -135,7 +135,7 @@ export class ButtonsController {
     this.view.words.forEach(word => word.removeState());
 
     const data = this.dataController.roundData;
-    const imageInfo = `${data.author} - '${data.name}' (${data.year}yr)`;
+    const imageInfo = `${data.author} - '${data.name}' (${data.year})`;
 
     this.view.translationRow.innerText = imageInfo;
     this.view.translationRow.classList.add('translation-row_info');

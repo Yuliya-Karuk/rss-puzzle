@@ -6,66 +6,6 @@ const ModalConst = {
   showModal: 'modal_active',
 };
 
-// const this.data = {
-//   imageUrl:
-//     'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-this.data/main/images/level1/cut/giuseppe.jpg',
-//   imageInfo: 'ALBOTTO, Francesco- San Giuseppe di Castello (1745 yr)',
-//   known: [
-//     {
-//       sentenceId: 's_0',
-//       sentence: 'He spent all his money. There is none left',
-//       audio: 'audio',
-//     },
-//     {
-//       sentenceId: 's_1',
-//       sentence: 'He spent all his money. There is none left',
-//       audio: 'audio',
-//     },
-//     {
-//       sentenceId: 's_2',
-//       sentence: 'He spent all his money. There is none left',
-//       audio: 'audio',
-//     },
-//     {
-//       sentenceId: 's_3',
-//       sentence: 'He spent all his money. There is none left',
-//       audio: 'audio',
-//     },
-//     {
-//       sentenceId: 's_4',
-//       sentence: 'He spent all his money. There is none left',
-//       audio: 'audio',
-//     },
-//   ],
-//   unknown: [
-//     {
-//       sentenceId: 's_5',
-//       sentence: 'He spent all his money. There is none left',
-//       audio: 'audio',
-//     },
-//     {
-//       sentenceId: 's_6',
-//       sentence: 'He spent all his money. There is none left',
-//       audio: 'audio',
-//     },
-//     {
-//       sentenceId: 's_7',
-//       sentence: 'He spent all his money. There is none left',
-//       audio: 'audio',
-//     },
-//     {
-//       sentenceId: 's_8',
-//       sentence: 'He spent all his money. There is none left',
-//       audio: 'audio',
-//     },
-//     {
-//       sentenceId: 's_9',
-//       sentence: 'He spent all his money. There is none left',
-//       audio: 'audio',
-//     },
-//   ],
-// };
-
 export class StatsPageView {
   public element: HTMLDivElement;
   public container: HTMLDivElement;
