@@ -6,23 +6,27 @@ import { type DataService } from '../../../services/data.service';
 import { Callback } from '../../../types/types';
 import { RoundDataController } from './roundDataController';
 import { LoaderService } from '../../../services/loader.service';
+import { ButtonsStateController } from './buttonStateController';
 
 export class ButtonsController {
   private view: GamePageView;
   private hintsController: HintsController;
   private dataController: DataService;
   private roundDataController: RoundDataController;
+  private buttonsStateController: ButtonsStateController;
 
   constructor(
     view: GamePageView,
     dataController: DataService,
     hintsController: HintsController,
-    roundDataController: RoundDataController
+    roundDataController: RoundDataController,
+    buttonsStateController: ButtonsStateController
   ) {
     this.view = view;
     this.dataController = dataController;
     this.hintsController = hintsController;
     this.roundDataController = roundDataController;
+    this.buttonsStateController = buttonsStateController;
   }
 
   public bindButtonsListeners(callbackNext: Callback, callbackResults: Callback): void {
@@ -53,7 +57,6 @@ export class ButtonsController {
   }
 
   public handleContinue(callbackNext: Callback): void {
-    this.view.btnSolutionController.enableButton();
     this.view.translationRow.classList.remove('translation-row_info');
     this.view.removeStyleBackground();
     this.view.showRows();
@@ -61,8 +64,6 @@ export class ButtonsController {
   }
 
   private async handleResults(callbackResults: Callback): Promise<void> {
-    this.view.btnSolutionController.disableButton();
-
     const cutImageUrl = await LoaderService.getImage(this.dataController.roundData.cutSrc);
     const data = this.dataController.roundData;
     const imageInfo = `${data.author} - '${data.name}' (${data.year}yr)`;
@@ -75,34 +76,15 @@ export class ButtonsController {
 
   public setStateCheckButton(): void {
     const makeButtonActive = this.checkResultIsCompleted();
-
     if (makeButtonActive) {
-      this.view.btnCheckController.enableButton();
-      return;
+      this.buttonsStateController.setStateAfterFill();
+    } else {
+      this.buttonsStateController.setStateBeforeFill();
     }
-
-    this.view.btnCheckController.disableButton();
   }
 
   private checkResultIsCompleted(): boolean {
     return this.view.resultWords.every(el => el instanceof Word);
-  }
-
-  public changeCheckButton(state: boolean): void {
-    if (state) {
-      this.view.btnCheckController.setContinueState();
-    } else {
-      this.view.btnCheckController.setCheckState();
-    }
-  }
-
-  public changeSolutionButton(state: boolean): void {
-    if (state) {
-      this.view.btnSolutionController.setResultsState();
-      this.view.btnSolutionController.enableButton();
-    } else {
-      this.view.btnSolutionController.setSolutionState();
-    }
   }
 
   private checkSentence(e: Event): void {
@@ -129,14 +111,14 @@ export class ButtonsController {
   private async finishSentence(e: Event): Promise<void> {
     this.updateStats(e.isTrusted);
     this.view.blockPreviousSentence();
-    this.view.btnSolutionController.disableButton();
+    this.buttonsStateController.setStateRightCompletedSentence();
     this.hintsController.setTranslationRow(true);
     this.hintsController.setPlayButton(true);
     this.hintsController.setWordsBackground(true);
+
     if (this.dataController.sentenceNumber === this.dataController.sentencePerRound) {
       await this.showBackground();
     }
-    this.changeCheckButton(true);
   }
 
   private updateStats(isKnown: boolean): void {
@@ -158,7 +140,7 @@ export class ButtonsController {
     this.view.translationRow.innerText = imageInfo;
     this.view.translationRow.classList.add('translation-row_info');
 
-    this.changeSolutionButton(true);
+    this.buttonsStateController.setStateRoundCompleted();
   }
 
   private handleAutoComplete(): void {
@@ -170,8 +152,7 @@ export class ButtonsController {
       this.view.resultWords[i] = this.view.wordsRightOrder[i];
     }
 
-    this.view.btnSolutionController.disableButton();
-    this.setStateCheckButton();
+    this.buttonsStateController.setStateAfterFill();
     this.view.blockPreviousSentence();
     this.view.btnCheckController.getComponent().click();
   }

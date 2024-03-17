@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DataService } from '../../../services/data.service';
 import { isNotNullable, checkLevel } from '../../../utils/utils';
 import { GamePageView } from '../../view/gamePageView/gamePageView';
@@ -12,6 +11,7 @@ import { SavedRound } from '../../../types/interfaces';
 import { StatsPageController } from '../statsPageController/statsPageController';
 import { ButtonSolutionStates } from '../../../types/enums';
 import { RoundDataController } from './roundDataController';
+import { ButtonsStateController } from './buttonStateController';
 
 export class GamePageController {
   public view: GamePageView;
@@ -23,6 +23,7 @@ export class GamePageController {
   private levelController: LevelController;
   private statsPageController: StatsPageController;
   private roundDataController: RoundDataController;
+  public buttonsStateController: ButtonsStateController;
 
   constructor(parentElement: HTMLBodyElement) {
     this.dataController = new DataService();
@@ -30,11 +31,16 @@ export class GamePageController {
     this.view = new GamePageView(this.dataController);
     this.levelController = new LevelController(this.view, this.dataController, this.setNewRound.bind(this));
     this.hintsController = new HintsController(this.view, this.dataController);
+    this.buttonsStateController = new ButtonsStateController(
+      this.view.btnCheckController,
+      this.view.btnSolutionController
+    );
     this.buttonsController = new ButtonsController(
       this.view,
       this.dataController,
       this.hintsController,
-      this.roundDataController
+      this.roundDataController,
+      this.buttonsStateController
     );
     this.clickController = new ClickController(this.view, this.buttonsController);
     this.dragController = new DragController(this.view, this.buttonsController);
@@ -55,6 +61,8 @@ export class GamePageController {
     this.levelController.setSelects(nextRound.level, nextRound.round);
     await this.hintsController.prepareRoundImage();
     this.hintsController.setHintsState();
+    this.buttonsStateController.setStartState();
+
     this.bindStaticGameListeners();
     this.setOneSentence();
   }
@@ -88,8 +96,6 @@ export class GamePageController {
   private async setNextSentence(): Promise<void> {
     if (this.view.btnSolutionController.state === ButtonSolutionStates.results) {
       this.hideResults();
-      this.view.btnSolutionController.setSolutionState();
-      this.view.btnSolutionController.enableButton();
     }
 
     if (this.dataController.checkIsNotNewRound()) {
@@ -99,7 +105,7 @@ export class GamePageController {
     }
 
     this.setOneSentence();
-    this.buttonsController.changeCheckButton(false);
+    this.buttonsStateController.setStartState();
   }
 
   private async setNextRound(): Promise<void> {
@@ -131,7 +137,7 @@ export class GamePageController {
     await this.hintsController.prepareRoundImage();
     this.view.clearRoundConst();
     this.setOneSentence();
-    this.buttonsController.changeCheckButton(false);
+    this.buttonsStateController.setStartState();
   }
 
   private saveCompletedRound(): void {
@@ -159,6 +165,8 @@ export class GamePageController {
   }
 
   private showResults(): void {
+    this.buttonsStateController.setStateInStatsPage();
+
     const data = this.roundDataController.getStats();
     this.statsPageController.renderStatsPage(data);
   }

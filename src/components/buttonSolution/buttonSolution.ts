@@ -8,9 +8,8 @@ export class ButtonSolution {
   public isDisable: boolean;
 
   constructor() {
-    this.state = ButtonSolutionStates.solution;
+    // this.state = ButtonSolutionStates.solution;
     this.createNode();
-    this.isDisable = false;
   }
 
   private createNode(): void {
@@ -44,7 +43,6 @@ export class ButtonSolution {
     this.showAnimation();
     this.element.classList.remove(styles.buttonResults);
     this.state = ButtonSolutionStates.solution;
-    this.disableButton();
   }
 
   public setResultsState(): void {
