@@ -2,7 +2,7 @@ import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { type DataService } from '../../../services/data.service';
 import { checkLevel, isNotNullable } from '../../../utils/utils';
 import { Callback, Level } from '../../../types/types';
-import { StorageService } from '../../../services/localStorage.service';
+import { StorageService } from '../../../services/storage.service';
 import { LevelsNumber } from '../../../utils/constants';
 
 export class LevelController {

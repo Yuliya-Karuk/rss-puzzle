@@ -1,4 +1,4 @@
-import { StorageService } from '../services/localStorage.service';
+import { StorageService } from '../services/storage.service';
 import { defaultCompletedRounds, defaultHintsState, defaultLastRound } from '../utils/constants';
 import { isNotNullable } from '../utils/utils';
 import { AppController } from './controller/appController';
@@ -75,7 +75,7 @@ export class App {
   public createGamePage(): void {
     this.clearParentElement();
 
-    const component = this.appController.getGamePage();
-    this.parentElement.append(this.appController.getHeader(), component, this.appController.getFooter());
+    const component = this.appController.getGamePage(this.parentElement);
+    this.parentElement.prepend(this.appController.getHeader(), component, this.appController.getFooter());
   }
 }

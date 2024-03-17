@@ -1,6 +1,6 @@
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { LoaderService } from '../../../services/loader.service';
-import { StorageService } from '../../../services/localStorage.service';
+import { StorageService } from '../../../services/storage.service';
 import { isNotNullable } from '../../../utils/utils';
 import { type DataService } from '../../../services/data.service';
 
@@ -47,6 +47,14 @@ export class HintsController {
 
   private async getAudio(): Promise<void> {
     this.audio = await LoaderService.getAudio(this.dataController.audioUrl, this.audioContext);
+  }
+
+  public getAudioBuffer(): AudioBuffer {
+    return this.audio;
+  }
+
+  public getAudioContext(): AudioContext {
+    return this.audioContext;
   }
 
   private handlePlayAudio(): void {

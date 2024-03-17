@@ -4,35 +4,52 @@ import { Word } from '../../../components/word/word';
 import { type HintsController } from './hintsController';
 import { type DataService } from '../../../services/data.service';
 import { Callback } from '../../../types/types';
+import { RoundDataController } from './roundDataController';
+import { LoaderService } from '../../../services/loader.service';
 
 export class ButtonsController {
   private view: GamePageView;
   private hintsController: HintsController;
   private dataController: DataService;
+  private roundDataController: RoundDataController;
 
-  constructor(view: GamePageView, dataController: DataService, hintsController: HintsController) {
+  constructor(
+    view: GamePageView,
+    dataController: DataService,
+    hintsController: HintsController,
+    roundDataController: RoundDataController
+  ) {
     this.view = view;
     this.dataController = dataController;
     this.hintsController = hintsController;
+    this.roundDataController = roundDataController;
   }
 
   public bindButtonsListeners(callbackNext: Callback, callbackResults: Callback): void {
-    this.view.btnCheckController.getComponent().addEventListener('click', () => {
-      this.view.words.forEach(word => word.removeState());
-      if (this.view.btnCheckController.state === ButtonCheckStates.check) {
-        this.checkSentence();
-      } else {
-        this.handleContinue(callbackNext);
-      }
-    });
+    this.view.btnCheckController
+      .getComponent()
+      .addEventListener('click', (e: Event) => this.handleBtnCheck(callbackNext, e));
 
-    this.view.btnSolutionController.getComponent().addEventListener('click', () => {
-      if (this.view.btnSolutionController.state === ButtonSolutionStates.solution) {
-        this.handleAutoComplete();
-      } else {
-        callbackResults();
-      }
-    });
+    this.view.btnSolutionController
+      .getComponent()
+      .addEventListener('click', this.handleBtnSolution.bind(this, callbackResults));
+  }
+
+  private handleBtnCheck(callbackNext: Callback, e: Event): void {
+    this.view.words.forEach(word => word.removeState());
+    if (this.view.btnCheckController.state === ButtonCheckStates.check) {
+      this.checkSentence(e);
+    } else {
+      this.handleContinue(callbackNext);
+    }
+  }
+
+  private handleBtnSolution(callbackResults: Callback): void {
+    if (this.view.btnSolutionController.state === ButtonSolutionStates.solution) {
+      this.handleAutoComplete();
+    } else {
+      this.handleResults(callbackResults);
+    }
   }
 
   public handleContinue(callbackNext: Callback): void {
@@ -41,6 +58,19 @@ export class ButtonsController {
     this.view.removeStyleBackground();
     this.view.showRows();
     callbackNext();
+  }
+
+  private async handleResults(callbackResults: Callback): Promise<void> {
+    this.view.btnSolutionController.disableButton();
+
+    const cutImageUrl = await LoaderService.getImage(this.dataController.roundData.cutSrc);
+    const data = this.dataController.roundData;
+    const imageInfo = `${data.author} - '${data.name}' (${data.year}yr)`;
+    this.roundDataController.saveImageInfo(cutImageUrl, imageInfo);
+    const audioContext = this.hintsController.getAudioContext();
+    this.roundDataController.saveAudioContext(audioContext);
+
+    callbackResults();
   }
 
   public setStateCheckButton(): void {
@@ -75,7 +105,7 @@ export class ButtonsController {
     }
   }
 
-  private checkSentence(): void {
+  private checkSentence(e: Event): void {
     let resultBlockState = true;
 
     for (let i = 0; i < this.dataController.correctSentence.length; i += 1) {
@@ -92,12 +122,14 @@ export class ButtonsController {
     }
 
     if (resultBlockState) {
-      this.finishSentence();
+      this.finishSentence(e);
     }
   }
 
-  private async finishSentence(): Promise<void> {
+  private async finishSentence(e: Event): Promise<void> {
+    this.updateStats(e.isTrusted);
     this.view.blockPreviousSentence();
+    this.view.btnSolutionController.disableButton();
     this.hintsController.setTranslationRow(true);
     this.hintsController.setPlayButton(true);
     this.hintsController.setWordsBackground(true);
@@ -107,8 +139,16 @@ export class ButtonsController {
     this.changeCheckButton(true);
   }
 
+  private updateStats(isKnown: boolean): void {
+    const stats = {
+      sentenceId: `s_${this.dataController.sentenceNumber}`,
+      sentence: this.dataController.sentence,
+      audio: this.hintsController.getAudioBuffer(),
+    };
+    this.roundDataController.saveOneSentence(stats, isKnown);
+  }
+
   private async showBackground(): Promise<void> {
-    console.error(this.dataController.sentenceNumber);
     this.view.hideRows();
     this.view.words.forEach(word => word.removeState());
 
@@ -131,7 +171,6 @@ export class ButtonsController {
     }
 
     this.view.btnSolutionController.disableButton();
-    console.error('disable');
     this.setStateCheckButton();
     this.view.blockPreviousSentence();
     this.view.btnCheckController.getComponent().click();

@@ -1,0 +1,144 @@
+.modal {
+  @include flex(center, center);
+
+  position: fixed;
+  z-index: 20;
+  top: 60px;
+  left: 0;
+
+  width: 100%;
+  height: calc(100% - 170px);
+
+  visibility: hidden;
+  background: center no-repeat url('../../../img/5178019.jpg');
+  background-size: cover;
+
+  &_active {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  @include flex(space-between, center, column);
+
+  gap: 10px;
+
+  width: 100%;
+  max-width: 600px;
+  height: 100%;
+
+  text-align: center;
+
+  background-color: 2px solid var(--color-font-dark);
+}
+
+.modal-title {
+  @include font(3rem, 900, 1.05);
+
+  color: var(--color-font-dark);
+}
+
+.modal-results-title {
+  @include font(1.8rem, 900, 1.05);
+
+  margin-bottom: 10px;
+  color: var(--color-font-dark);
+
+  b {
+    display: inline-block;
+
+    padding: 5px;
+
+    font-size: 1.6rem;
+
+    background: #7dd281;
+    border-radius: 5px;
+  }
+
+  .modal-result:nth-of-type(2) & {
+    margin-top: 10px;
+
+    b {
+      background: var(--color-invalid);
+    }
+  }
+}
+
+.modal-results {
+  overflow: auto;
+
+  width: 85%;
+  height: 60%;
+  padding: 10px 0 10px 20px;
+
+  background: var(--color-background-black-transparent);
+  backdrop-filter: blur(12.5px);
+  border-radius: 15px;
+}
+
+.modal-results::-webkit-scrollbar {
+  width: 10px;
+  border: 1px solid var(--color-font-dark);
+  border-radius: 50px;
+}
+
+.modal-results::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.modal-results::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  height: 20px;
+  background-color: var(--color-font-dark);
+  border-radius: 20px;
+}
+
+.modal-result {
+  @include flex(center, flex-start, column);
+
+  row-gap: 10px;
+  width: 90%;
+}
+
+.modal-item {
+  @include flex(flex-start, center);
+
+  gap: 20px;
+}
+
+.modal-item-audio {
+  width: 30px;
+  height: 30px;
+  background: center no-repeat url('../../../img/audio.svg');
+  background-size: contain;
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.modal-image-block {
+  @include flex(center, center, column);
+
+  gap: 15px;
+}
+
+.modal-img {
+  width: 250px;
+  box-shadow: 0 2px 10px 2px rgb(0 0 0 / 7000%);
+}
+
+.modal-img-info {
+  @include font(1.4rem, 400, 1.05);
+}
+
+.modal-item-text {
+  @include font(1.4rem, 700, 1.05);
+
+  color: #7dd281;
+
+  .modal-result:nth-of-type(2) & {
+    color: var(--color-invalid);
+  }
+}

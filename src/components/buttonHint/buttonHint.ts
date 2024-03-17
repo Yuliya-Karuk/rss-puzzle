@@ -1,4 +1,4 @@
-import { StorageService } from '../../services/localStorage.service';
+import { StorageService } from '../../services/storage.service';
 import { createElementWithProperties } from '../../utils/utils';
 import styles from './buttonHint.module.scss';
 

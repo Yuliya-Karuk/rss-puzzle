@@ -1,4 +1,4 @@
-import { HintsState, SavedRound } from '../types/interfaces';
+import { HintsState, SavedRound, SavedRoundStats } from '../types/interfaces';
 import { CompletedRoundsData } from '../types/types';
 
 export const startPageText: string =
@@ -31,4 +31,12 @@ export const defaultCompletedRounds: CompletedRoundsData = {
 export const defaultLastRound: SavedRound = {
   level: 1,
   round: 0,
+};
+
+export const defaultStats: SavedRoundStats = {
+  imageUrl: '',
+  imageInfo: '',
+  audioContext: null,
+  known: [],
+  unknown: [],
 };

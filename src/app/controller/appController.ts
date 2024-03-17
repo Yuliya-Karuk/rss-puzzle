@@ -31,8 +31,8 @@ export class AppController {
     this.startPageController.setGreeting(value);
   }
 
-  public getGamePage(): HTMLElement {
-    this.gamePageController = new GamePageController();
+  public getGamePage(parentElement: HTMLBodyElement): HTMLElement {
+    this.gamePageController = new GamePageController(parentElement);
     return this.gamePageController.createGamePage();
   }
 }

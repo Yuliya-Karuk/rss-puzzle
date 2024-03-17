@@ -58,3 +58,17 @@ export interface WordData {
   word: string;
   wordTranslate: string;
 }
+
+export interface SavedRoundSentence {
+  sentenceId: string;
+  sentence: string;
+  audio: AudioBuffer;
+}
+
+export interface SavedRoundStats {
+  imageUrl: string;
+  imageInfo: string;
+  audioContext: AudioContext | null;
+  known: SavedRoundSentence[];
+  unknown: SavedRoundSentence[];
+}

@@ -1,5 +1,6 @@
 import { createElementWithProperties } from '../../utils/utils';
 import { ButtonSolutionStates } from '../../types/enums';
+import styles from './buttonSolution.module.scss';
 
 export class ButtonSolution {
   public state: ButtonSolutionStates;
@@ -41,6 +42,7 @@ export class ButtonSolution {
   public setSolutionState(): void {
     this.element.innerText = ButtonSolutionStates.solution;
     this.showAnimation();
+    this.element.classList.remove(styles.buttonResults);
     this.state = ButtonSolutionStates.solution;
     this.disableButton();
   }
@@ -48,6 +50,7 @@ export class ButtonSolution {
   public setResultsState(): void {
     this.element.innerText = ButtonSolutionStates.results;
     this.showAnimation();
+    this.element.classList.add(styles.buttonResults);
     this.state = ButtonSolutionStates.results;
   }
 }
