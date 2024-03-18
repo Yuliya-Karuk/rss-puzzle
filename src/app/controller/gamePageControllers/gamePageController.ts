@@ -12,6 +12,8 @@ import { StatsPageController } from '../statsPageController/statsPageController'
 import { ButtonSolutionStates } from '../../../types/enums';
 import { RoundDataController } from './roundDataController';
 import { ButtonsStateController } from './buttonStateController';
+import { ReplaceController } from './replaceController';
+import { TouchController } from './touchController';
 
 export class GamePageController {
   public view: GamePageView;
@@ -24,6 +26,8 @@ export class GamePageController {
   private statsPageController: StatsPageController;
   private roundDataController: RoundDataController;
   public buttonsStateController: ButtonsStateController;
+  private replaceController: ReplaceController;
+  private touchController: TouchController;
 
   constructor(parentElement: HTMLBodyElement) {
     this.dataController = new DataService();
@@ -42,8 +46,10 @@ export class GamePageController {
       this.roundDataController,
       this.buttonsStateController
     );
-    this.clickController = new ClickController(this.view, this.buttonsController);
-    this.dragController = new DragController(this.view, this.buttonsController);
+    this.replaceController = new ReplaceController(this.view);
+    this.clickController = new ClickController(this.view, this.buttonsController, this.replaceController);
+    this.dragController = new DragController(this.view, this.buttonsController, this.replaceController);
+    this.touchController = new TouchController(this.view, this.replaceController);
     this.statsPageController = new StatsPageController(parentElement);
   }
 
@@ -92,6 +98,7 @@ export class GamePageController {
 
   private setControllersForOneSentence(): void {
     this.clickController.bindWordListeners();
+    this.touchController.bindTouchListeners();
     this.dragController.bindDragListeners();
     this.hintsController.setHints();
   }

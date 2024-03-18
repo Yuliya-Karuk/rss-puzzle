@@ -8,7 +8,6 @@ export class ButtonSolution {
   public isDisable: boolean;
 
   constructor() {
-    // this.state = ButtonSolutionStates.solution;
     this.createNode();
   }
 

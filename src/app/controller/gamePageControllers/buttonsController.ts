@@ -40,7 +40,7 @@ export class ButtonsController {
   }
 
   private handleBtnCheck(callbackNext: Callback, e: Event): void {
-    this.view.words.forEach(word => word.removeState());
+    this.view.wordsRightOrder.forEach(word => word.removeState());
     if (this.view.btnCheckController.state === ButtonCheckStates.check) {
       this.checkSentence(e);
     } else {
@@ -132,7 +132,7 @@ export class ButtonsController {
 
   private async showBackground(): Promise<void> {
     this.view.hideRows();
-    this.view.words.forEach(word => word.removeState());
+    this.view.wordsRightOrder.forEach(word => word.removeState());
 
     const data = this.dataController.roundData;
     const imageInfo = `${data.author} - '${data.name}' (${data.year})`;
@@ -145,6 +145,7 @@ export class ButtonsController {
 
   private handleAutoComplete(): void {
     this.view.resultRow.replaceChildren();
+    this.view.sourceElement.replaceChildren();
 
     for (let i = 0; i < this.view.wordsRightOrder.length; i += 1) {
       this.view.resultRow.append(this.view.wordsRightOrder[i].getComponent());

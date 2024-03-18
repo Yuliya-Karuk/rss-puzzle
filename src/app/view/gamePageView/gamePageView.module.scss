@@ -42,9 +42,12 @@
 
   @include flex(space-between, center);
 
+  gap: 20px;
+
   width: 80%;
   height: calc(6% + 20px);
   padding: 10px;
+
   border-radius: 10px;
 }
 

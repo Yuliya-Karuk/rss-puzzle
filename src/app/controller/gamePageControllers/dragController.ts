@@ -4,14 +4,20 @@ import { checkEventTarget, isNotNullable } from '../../../utils/utils';
 import { DragState } from '../../../types/enums';
 import { type ButtonsController } from './buttonsController';
 import { Placeholder } from '../../../components/placeholder/placeholder';
+import { ReplaceController } from './replaceController';
 
+// const movedElements: HTMLElement[] = [];
 export class DragController {
   private view: GamePageView;
   private buttonsController: ButtonsController;
+  private replaceController: ReplaceController;
+  private previousTarget: HTMLElement | null;
 
-  constructor(view: GamePageView, buttonsController: ButtonsController) {
+  constructor(view: GamePageView, buttonsController: ButtonsController, replaceController: ReplaceController) {
     this.view = view;
     this.buttonsController = buttonsController;
+    this.replaceController = replaceController;
+    this.previousTarget = null;
   }
 
   public bindStaticListeners(): void {
@@ -23,18 +29,14 @@ export class DragController {
 
   private handleForbiddenDrag(e: DragEvent): void {
     const wordId = isNotNullable(e.dataTransfer).getData('text');
-    const word = isNotNullable(this.view.words.find(el => el.id === wordId));
+    const word = isNotNullable(this.view.wordsRightOrder.find(el => el.id === wordId));
     word.removeDragStyle();
   }
 
   public bindDragListeners(): void {
-    this.view.resultRow.addEventListener('dragover', e => {
-      this.handleDragOver(e as DragEvent);
-    });
+    this.view.resultRow.addEventListener('dragover', (e: DragEvent) => this.handleDragOver(e));
 
-    this.view.resultRow.addEventListener('drop', e => {
-      this.handleDragEnd(e as DragEvent, DragState.toResults);
-    });
+    this.view.resultRow.addEventListener('drop', (e: DragEvent) => this.handleDragEnd(e, DragState.toResults));
 
     this.view.sourceElement.addEventListener('dragover', e => {
       this.handleDragOver(e as DragEvent);
@@ -48,11 +50,30 @@ export class DragController {
   private handleDragOver(e: DragEvent): void {
     e.preventDefault();
     isNotNullable(e.dataTransfer).dropEffect = 'move';
+
+    // const targetEl = checkEventTarget(isNotNullable(e.target));
+
+    // if (targetEl.classList.contains('word-container')) {
+    //   this.handleMoveEffects(targetEl, false);
+    //   // this.previousTarget = targetEl;
+    // } else {
+    //   this.previousTarget.style.marginLeft = 'unset';
+    // }
+  }
+
+  private handleMoveEffects(targetEl: HTMLElement, isStopped: boolean): void {
+    if (!isStopped) {
+      if (this.previousTarget && this.previousTarget !== targetEl) {
+        this.previousTarget.style.marginLeft = 'unset';
+      }
+      this.previousTarget = targetEl;
+      this.previousTarget.style.marginLeft = '20px';
+    }
   }
 
   private handleDragEnd(e: DragEvent, dragState: DragState): void {
     const wordId = isNotNullable(e.dataTransfer).getData('text');
-    const word = isNotNullable(this.view.words.find(el => el.id === wordId));
+    const word = isNotNullable(this.view.wordsRightOrder.find(el => el.id === wordId));
     const dragWordsInSource = isNotNullable(word.getComponent().parentElement).classList.contains('words');
     const dragWordsInResults = isNotNullable(word.getComponent().parentElement).classList.contains('game-results-row');
 
@@ -61,7 +82,7 @@ export class DragController {
     } else if (dragState === DragState.toResults && dragWordsInResults) {
       this.dragInResult(word, checkEventTarget(e.target), e);
     } else if (dragState === DragState.toSource && !dragWordsInSource) {
-      this.dragToSource(word);
+      this.dragToSource(word, checkEventTarget(e.target));
     }
 
     this.buttonsController.setStateCheckButton();
@@ -69,53 +90,26 @@ export class DragController {
   }
 
   public dragToResult(word: Word, replacedElement: HTMLElement, e: DragEvent): void {
-    if (!replacedElement.classList.contains('word')) {
-      const indexPlaceholder = this.view.resultWords.findIndex(
-        el => el.id === replacedElement.id && el instanceof Placeholder
-      );
+    const replacedComponent = isNotNullable(this.view.resultWords.find(el => el.getComponent() === replacedElement));
+    const componentIndex = this.view.resultWords.findIndex(el => el === replacedComponent);
+    const wordIndex = this.view.words.findIndex(el => el === word);
 
-      this.view.placeholders.push(this.view.resultWords[indexPlaceholder]);
-      this.view.resultWords[indexPlaceholder] = word;
-
-      replacedElement.replaceWith(word.getComponent());
+    if (replacedComponent instanceof Placeholder) {
+      this.replaceController.replacePlaceholderInResults(word, wordIndex, replacedComponent, componentIndex);
     } else {
-      const indexReplacedElement = this.view.resultWords.findIndex(el => el?.id === replacedElement.id);
-
-      if (e.clientX > replacedElement.getBoundingClientRect().left + replacedElement.offsetWidth / 2) {
-        isNotNullable(replacedElement.parentNode).insertBefore(word.getComponent(), replacedElement.nextSibling);
-        this.view.resultWords.splice(indexReplacedElement + 1, 0, word);
-      } else {
-        isNotNullable(replacedElement.parentNode).insertBefore(word.getComponent(), replacedElement);
-        this.view.resultWords.splice(indexReplacedElement, 0, word);
-      }
-
-      const placeholderIndex = this.view.resultWords.findLastIndex(el => el instanceof Placeholder);
-      const placeholder = this.view.resultWords.splice(placeholderIndex, 1)[0];
-      this.view.placeholders.push(this.view.resultWords.splice(placeholderIndex, 1)[0]);
-      placeholder.getComponent().remove();
+      this.replaceController.moveWordWithReplaceLastPlaceholder(e, word, wordIndex, replacedComponent, componentIndex);
     }
   }
 
-  public dragToSource(word: Word): void {
-    const placeholder = isNotNullable(this.view.placeholders.pop());
+  public dragToSource(word: Word, replacedElement: HTMLElement): void {
+    const placeholder = isNotNullable(this.view.words.find(el => el.getComponent() === replacedElement));
+    const placeholderIndex = this.view.words.findIndex(el => el === placeholder);
+    const wordIndex = this.view.resultWords.findIndex(el => el === word);
 
-    word.getComponent().insertAdjacentElement('beforebegin', placeholder.getComponent());
-    this.view.sourceElement.append(word.getComponent());
-
-    const index = this.view.resultWords.findIndex(el => el === word);
-    this.view.resultWords[index] = placeholder;
+    this.replaceController.replacePlaceholderInSource(word, wordIndex, placeholder, placeholderIndex);
   }
 
   private dragInResult(word: Word, replacedElement: HTMLElement, e: DragEvent): void {
-    this.view.resultWords = this.view.resultWords.filter(el => el !== word);
-    const indexReplacedElement = this.view.resultWords.findIndex(el => el?.id === replacedElement.id);
-
-    if (e.clientX > replacedElement.getBoundingClientRect().left + replacedElement.offsetWidth / 2) {
-      isNotNullable(replacedElement.parentNode).insertBefore(word.getComponent(), replacedElement.nextSibling);
-      this.view.resultWords.splice(indexReplacedElement + 1, 0, word);
-    } else {
-      isNotNullable(replacedElement.parentNode).insertBefore(word.getComponent(), replacedElement);
-      this.view.resultWords.splice(indexReplacedElement, 0, word);
-    }
+    this.replaceController.moveWordsInResults(word, replacedElement, e);
   }
 }

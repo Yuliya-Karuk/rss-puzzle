@@ -17,6 +17,7 @@ html {
 }
 
 body {
+  position: relative;
   background: center no-repeat url('./../img/5178019.jpg');
 
   /* background: center no-repeat url('./../img/5208314.jpg');

@@ -1,26 +1,28 @@
 import { Word } from '../../../components/word/word';
-import { isNotNullable } from '../../../utils/utils';
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import type { ButtonsController } from './buttonsController';
+import { ReplaceController } from './replaceController';
 
 export class ClickController {
   private view: GamePageView;
   private buttonsController: ButtonsController;
+  private replaceController: ReplaceController;
 
-  constructor(view: GamePageView, buttonsController: ButtonsController) {
+  constructor(view: GamePageView, buttonsController: ButtonsController, replaceController: ReplaceController) {
     this.view = view;
     this.buttonsController = buttonsController;
+    this.replaceController = replaceController;
   }
 
   public bindWordListeners(): void {
     for (let i = 0; i < this.view.words.length; i += 1) {
-      const item = this.view.words[i].getComponent();
+      const item = this.view.wordsRightOrder[i].getComponent();
 
       item.addEventListener('click', () => {
         if (item.parentElement === this.view.sourceElement) {
-          this.moveWordToResult(this.view.words[i]);
+          this.moveWordToResult(this.view.wordsRightOrder[i]);
         } else {
-          this.moveWordToSource(this.view.words[i]);
+          this.moveWordToSource(this.view.wordsRightOrder[i]);
         }
 
         this.buttonsController.setStateCheckButton();
@@ -34,23 +36,20 @@ export class ClickController {
   }
 
   private moveWordToResult(word: Word): void {
-    const index = this.findEmptySlot(this.view.resultRow);
-    const placeholder = this.view.resultWords[index];
+    const placeholderIndex = this.findEmptySlot(this.view.resultRow);
+    const placeholder = this.view.resultWords[placeholderIndex];
+    const wordIndex = this.view.words.findIndex(el => el === word);
 
-    this.view.resultRow.children[index].replaceWith(word.getComponent());
-    this.view.placeholders.push(placeholder);
-    this.view.resultWords[index] = word;
+    this.replaceController.replacePlaceholderInResults(word, wordIndex, placeholder, placeholderIndex);
   }
 
   private moveWordToSource(word: Word): void {
     word.removeState();
 
-    const placeholder = isNotNullable(this.view.placeholders.pop());
-    word.getComponent().insertAdjacentElement('beforebegin', placeholder.getComponent());
+    const placeholderIndex = this.findEmptySlot(this.view.sourceElement);
+    const placeholder = this.view.words[placeholderIndex];
+    const wordIndex = this.view.resultWords.findIndex(el => el === word);
 
-    this.view.sourceElement.append(word.getComponent());
-
-    const index = this.view.resultWords.findIndex(el => el === word);
-    this.view.resultWords[index] = placeholder;
+    this.replaceController.replacePlaceholderInSource(word, wordIndex, placeholder, placeholderIndex);
   }
 }

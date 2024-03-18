@@ -83,4 +83,13 @@ export class Word {
     this.element.classList.add('word_hidden');
     this.helper.classList.add('helper_hidden');
   }
+
+  public makeWordDraggableByTouch(): void {
+    this.elementContainer.classList.add('word-container_touch');
+  }
+
+  public clearWordDraggableByTouch(): void {
+    this.elementContainer.removeAttribute('style');
+    this.elementContainer.classList.remove('word-container_touch');
+  }
 }

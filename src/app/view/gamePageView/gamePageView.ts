@@ -28,7 +28,7 @@ export class GamePageView {
   public levelSelect: CustomSelect;
   public roundSelect: CustomSelect;
 
-  public words: Word[];
+  public words: (Word | Placeholder)[];
   public resultWords: (Word | Placeholder)[];
   public placeholders: Placeholder[];
   public resultRow: HTMLDivElement;
@@ -120,7 +120,7 @@ export class GamePageView {
 
   private createRoundConst(): void {
     this.wordsRightOrder = [];
-    this.placeholders = [];
+    this.words = [];
     this.resultWords = [];
   }
 

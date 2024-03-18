@@ -7,15 +7,10 @@ export class ButtonCheck {
   public isDisable: boolean;
 
   constructor() {
-    // this.state = ButtonCheckStates.check;
     this.createNode();
-    // this.isDisable = true;
   }
 
   private createNode(): void {
-    // this.element = createElementWithProperties('button', 'btn btn-active', { type: 'button', disabled: 'disabled' }, [
-    //   { innerText: ButtonCheckStates.check },
-    // ]);
     this.element = createElementWithProperties('button', 'btn btn-active', { type: 'button' }, [
       { innerText: ButtonCheckStates.check },
     ]);
