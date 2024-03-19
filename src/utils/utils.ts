@@ -73,3 +73,11 @@ export function checkTouch(value: Touch | null): HTMLElement {
   }
   throw new Error(`Not expected value`);
 }
+
+export function findElementsUnderTouch(touch: Touch): Element[] {
+  const x = touch.clientX;
+  const y = touch.clientY;
+
+  const elementsUnderTouch = document.elementsFromPoint(x, y);
+  return elementsUnderTouch;
+}

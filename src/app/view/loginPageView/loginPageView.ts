@@ -1,7 +1,7 @@
-import { createElementWithProperties } from '../../../utils/utils';
-import styles from './loginPageView.module.scss';
 import { LoginForm } from '../../../components/loginForm/loginForm';
 import loginImagePath from '../../../img/login_image.png';
+import { createElementWithProperties } from '../../../utils/utils';
+import styles from './loginPageView.module.scss';
 
 export class LoginPageView {
   public loginForm: LoginForm;

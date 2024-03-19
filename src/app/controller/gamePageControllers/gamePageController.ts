@@ -1,18 +1,18 @@
 import { DataService } from '../../../services/data.service';
-import { isNotNullable, checkLevel } from '../../../utils/utils';
+import { StorageService } from '../../../services/storage.service';
+import { ButtonSolutionStates } from '../../../types/enums';
+import { SavedRound } from '../../../types/interfaces';
+import { checkLevel, isNotNullable } from '../../../utils/utils';
 import { GamePageView } from '../../view/gamePageView/gamePageView';
+import { StatsPageController } from '../statsPageController/statsPageController';
+import { ButtonsStateController } from './buttonStateController';
+import { ButtonsController } from './buttonsController';
 import { ClickController } from './clickController';
 import { DragController } from './dragController';
-import { ButtonsController } from './buttonsController';
 import { HintsController } from './hintsController';
 import { LevelController } from './levelController';
-import { StorageService } from '../../../services/storage.service';
-import { SavedRound } from '../../../types/interfaces';
-import { StatsPageController } from '../statsPageController/statsPageController';
-import { ButtonSolutionStates } from '../../../types/enums';
-import { RoundDataController } from './roundDataController';
-import { ButtonsStateController } from './buttonStateController';
 import { ReplaceController } from './replaceController';
+import { RoundDataController } from './roundDataController';
 import { TouchController } from './touchController';
 
 export class GamePageController {
@@ -122,6 +122,7 @@ export class GamePageController {
     this.saveCompletedRound();
     this.roundDataController.clearStats();
     this.view.roundSelect.setRoundCompleted(this.dataController.round);
+    this.view.renderRows();
     this.dataController.sentenceNumber = 0;
 
     if (this.dataController.checkIsNotNewLevel()) {
@@ -146,6 +147,7 @@ export class GamePageController {
     this.roundDataController.clearStats();
     await this.hintsController.prepareRoundImage();
     this.view.clearRoundConst();
+    this.view.renderRows();
     this.setOneSentence();
     this.buttonsStateController.setStartState();
   }

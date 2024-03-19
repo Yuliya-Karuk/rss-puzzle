@@ -1,16 +1,9 @@
 import { Word } from '../../../components/word/word';
-import { checkEventTarget, isNotNullable } from '../../../utils/utils';
+import { DragStartPlace, ReplacedComponent, ReplacedPlace } from '../../../types/enums';
+import { checkEventTarget, findElementsUnderTouch, isNotNullable } from '../../../utils/utils';
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { type ButtonsController } from './buttonsController';
 import { ReplaceController } from './replaceController';
-
-export function findReplacedElement(touch: Touch): Element[] {
-  const x = touch.clientX;
-  const y = touch.clientY;
-
-  const elementsUnderTouch = document.elementsFromPoint(x, y);
-  return elementsUnderTouch;
-}
 
 export class TouchController {
   private view: GamePageView;
@@ -18,12 +11,23 @@ export class TouchController {
   private buttonsController: ButtonsController;
   private isDraggingStart: boolean;
   private touch: Touch;
+  private wordStartPlace: DragStartPlace;
+  private wordIndex: number;
+  private dragWord: Word;
+  private replacedEl: Element;
+  private replacedType: ReplacedComponent;
+  private replacedPlace: ReplacedPlace;
 
   constructor(view: GamePageView, buttonsController: ButtonsController, replaceController: ReplaceController) {
     this.isDraggingStart = true;
     this.view = view;
     this.replaceController = replaceController;
     this.buttonsController = buttonsController;
+    this.bindStartListeners();
+  }
+
+  private bindStartListeners(): void {
+    document.addEventListener('touchend', (e: TouchEvent) => this.handleTouchEnd(e));
   }
 
   public bindTouchListeners(): void {
@@ -31,8 +35,6 @@ export class TouchController {
       word.getComponent().addEventListener('touchstart', (e: TouchEvent) => this.handleTouchStart(e));
       word.getComponent().addEventListener('touchmove', (e: TouchEvent) => this.handleTouchMove(e, word));
     });
-
-    document.addEventListener('touchend', (e: TouchEvent) => this.handleTouchEnd(e));
   }
 
   private handleTouchStart(e: TouchEvent): void {
@@ -43,6 +45,7 @@ export class TouchController {
     e.preventDefault();
 
     if (this.isDraggingStart) {
+      this.findStartWordPlace(word);
       word.makeWordDraggableByTouch();
       document.body.append(word.getComponent());
       this.isDraggingStart = false;
@@ -60,71 +63,100 @@ export class TouchController {
     word.setContainerStyle(styles);
   }
 
+  private findStartWordPlace(word: Word): void {
+    this.dragWord = word;
+    if (this.view.resultWords.includes(word)) {
+      this.wordStartPlace = DragStartPlace.results;
+      this.wordIndex = this.view.resultWords.findIndex(el => el === word);
+    } else {
+      this.wordStartPlace = DragStartPlace.source;
+      this.wordIndex = this.view.words.findIndex(el => el === word);
+    }
+  }
+
+  private findReplacedEl(elementsUnderTouch: Element[]): void {
+    const isPlaceholder = elementsUnderTouch.find(el => el.classList.contains('placeholder'));
+    if (isPlaceholder) {
+      this.replacedEl = isNotNullable(elementsUnderTouch.find(el => el.classList.contains('placeholder')));
+      this.replacedType = ReplacedComponent.placeholder;
+    } else {
+      this.replacedEl = isNotNullable(
+        elementsUnderTouch.find(el => el.classList.contains('word-container') && el !== this.dragWord.getComponent())
+      );
+      this.replacedType = ReplacedComponent.word;
+    }
+    this.findReplacedElPlace();
+  }
+
+  private findReplacedElPlace(): void {
+    const replacedInResults = isNotNullable(this.replacedEl.parentElement).classList.contains('game-results-row');
+    if (replacedInResults) {
+      this.replacedPlace = ReplacedPlace.results;
+    } else {
+      this.replacedPlace = ReplacedPlace.source;
+    }
+  }
+
   private handleTouchEnd(e: TouchEvent): void {
+    console.error(e);
     this.isDraggingStart = true;
     e.preventDefault();
 
-    let replacedEl: Element;
-    const elementsUnderTouch = findReplacedElement(e.changedTouches[0]);
-    const wordEl = isNotNullable(e.target);
-
-    if (!checkEventTarget(wordEl).classList.contains('word-container')) {
+    if (!checkEventTarget(e.target).classList.contains('word-container')) {
       return;
     }
+
+    const elementsUnderTouch = findElementsUnderTouch(e.changedTouches[0]);
 
     if (this.checkIsOut(elementsUnderTouch)) {
-      this.handleForbiddenDrag(wordEl);
+      this.handleForbiddenDrag();
       return;
     }
 
-    const replacedIsPlaceholder = Boolean(elementsUnderTouch.find(el => el.classList.contains('placeholder')));
-    const replacedIsWord = Boolean(
-      elementsUnderTouch.find(el => el.classList.contains('word-container') && el !== wordEl)
-    );
+    this.findReplacedEl(elementsUnderTouch);
 
-    if (replacedIsPlaceholder) {
-      replacedEl = isNotNullable(elementsUnderTouch.find(el => el.classList.contains('placeholder')));
-
-      this.handleReplacePlaceholder(wordEl, replacedEl);
-    }
-    if (replacedIsWord) {
-      replacedEl = isNotNullable(
-        elementsUnderTouch.find(el => el.classList.contains('word-container') && el !== wordEl)
-      );
-
-      this.handleReplaceWord(wordEl, replacedEl);
+    if (this.replacedType === ReplacedComponent.placeholder) {
+      this.handleReplacePlaceholder();
+    } else {
+      this.handleReplaceWord();
     }
 
+    this.dragWord.clearWordDraggableByTouch();
     this.buttonsController.setStateCheckButton();
   }
 
-  private handleReplacePlaceholder(wordEl: EventTarget, replacedEl: Element): void {
-    const dragWordsInResults = isNotNullable(replacedEl.parentElement).classList.contains('game-results-row');
-    const dragWordsInSource = isNotNullable(replacedEl.parentElement).classList.contains('words');
-
-    if (dragWordsInResults) {
-      const wordElFromSource = this.view.words.findIndex(el => el.getComponent() === wordEl);
-
-      if (wordElFromSource !== -1) {
-        const word = this.view.words.find(el => el.getComponent() === wordEl) as Word;
-        const wordIndex = this.view.words.findIndex(el => el.getComponent() === wordEl);
-        word.clearWordDraggableByTouch();
-
-        this.dragToResult(replacedEl, word, wordIndex);
-      } else {
-        const word = this.view.resultWords.find(el => el.getComponent() === wordEl) as Word;
-        word.clearWordDraggableByTouch();
-
-        this.replaceController.moveWordsInResults(word, replacedEl as HTMLElement, this.touch);
-      }
+  private handleReplacePlaceholder(): void {
+    if (this.replacedPlace === ReplacedPlace.source) {
+      this.dragToSource(this.replacedEl, this.dragWord, this.wordIndex);
     }
 
-    if (dragWordsInSource) {
-      const word = this.view.resultWords.find(el => el.getComponent() === wordEl) as Word;
-      const wordIndex = this.view.resultWords.findIndex(el => el.getComponent() === wordEl);
-      word.clearWordDraggableByTouch();
+    if (this.replacedPlace === ReplacedPlace.results) {
+      if (this.wordStartPlace === DragStartPlace.source) {
+        this.dragToResult(this.replacedEl, this.dragWord, this.wordIndex);
+      } else {
+        this.replaceController.moveWordsInResults(this.dragWord, this.replacedEl as HTMLElement, this.touch);
+      }
+    }
+  }
 
-      this.dragToSource(replacedEl, word, wordIndex);
+  private handleReplaceWord(): void {
+    if (this.wordStartPlace === DragStartPlace.source) {
+      const replacedComponent = isNotNullable(
+        this.view.resultWords.find(el => el.getComponent() === this.replacedEl)
+      ) as Word;
+      const componentIndex = this.view.resultWords.findIndex(el => el === replacedComponent);
+
+      this.replaceController.moveWordWithReplaceLastPlaceholder(
+        this.touch,
+        this.dragWord,
+        this.wordIndex,
+        replacedComponent,
+        componentIndex
+      );
+    }
+
+    if (this.wordStartPlace === DragStartPlace.results) {
+      this.replaceController.moveWordsInResults(this.dragWord, this.replacedEl as HTMLElement, this.touch);
     }
   }
 
@@ -142,46 +174,16 @@ export class TouchController {
     this.replaceController.replacePlaceholderInSource(word, wordIndex, placeholder, placeholderIndex);
   }
 
-  private handleReplaceWord(wordEl: EventTarget, replacedEl: Element): void {
-    const wordElFromSource = this.view.sourceElement.children.length === 7;
-
-    const replacedComponent = isNotNullable(this.view.resultWords.find(el => el.getComponent() === replacedEl)) as Word;
-    const componentIndex = this.view.resultWords.findIndex(el => el === replacedComponent);
-
-    if (wordElFromSource) {
-      const word = this.view.words.find(el => el.getComponent() === wordEl) as Word;
-      const wordIndex = this.view.words.findIndex(el => el.getComponent() === wordEl);
-      word.clearWordDraggableByTouch();
-
-      this.replaceController.moveWordWithReplaceLastPlaceholder(
-        this.touch,
-        word,
-        wordIndex,
-        replacedComponent,
-        componentIndex
-      );
-    } else {
-      const word = this.view.resultWords.find(el => el.getComponent() === wordEl) as Word;
-      word.clearWordDraggableByTouch();
-
-      this.replaceController.moveWordsInResults(word, replacedEl as HTMLElement, this.touch);
-    }
-  }
-
   private checkIsOut(elementsUnderTouch: Element[]): boolean {
     return !elementsUnderTouch.includes(this.view.resultRow) && !elementsUnderTouch.includes(this.view.sourceElement);
   }
 
-  private handleForbiddenDrag(wordEl: EventTarget): void {
-    let word;
-    const wordElFromSource = this.view.words.find(el => el.getComponent() === wordEl);
-    if (wordElFromSource) {
-      this.view.sourceElement.append(checkEventTarget(wordEl));
-      word = this.view.words.find(el => el.getComponent() === wordEl) as Word;
+  private handleForbiddenDrag(): void {
+    if (this.wordStartPlace === DragStartPlace.source) {
+      this.view.sourceElement.children[this.wordIndex].before(this.dragWord.getComponent());
     } else {
-      this.view.resultRow.append(checkEventTarget(wordEl));
-      word = this.view.resultWords.find(el => el.getComponent() === wordEl) as Word;
+      this.view.resultRow.children[this.wordIndex].before(this.dragWord.getComponent());
     }
-    isNotNullable(word).clearWordDraggableByTouch();
+    isNotNullable(this.dragWord).clearWordDraggableByTouch();
   }
 }

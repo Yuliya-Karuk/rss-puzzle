@@ -1,5 +1,5 @@
-import { createElementWithProperties } from '../../utils/utils';
 import { ButtonSolutionStates } from '../../types/enums';
+import { createElementWithProperties } from '../../utils/utils';
 import styles from './buttonSolution.module.scss';
 
 export class ButtonSolution {
@@ -16,7 +16,7 @@ export class ButtonSolution {
       { innerText: this.state },
     ]);
     this.element.addEventListener('animationend', () => this.element.classList.remove('btn-active'));
-    this.element.addEventListener('click', () => this.showAnimation());
+    this.element.addEventListener('pointerup', () => this.showAnimation());
   }
 
   public getComponent(): HTMLButtonElement {

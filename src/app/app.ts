@@ -44,8 +44,8 @@ export class App {
   }
 
   private bindStartPageListeners(): void {
-    this.appController.header.logoutButton.addEventListener('click', () => this.logoutUser());
-    this.appController.startPageController.view.startButton.addEventListener('click', () => this.createGamePage());
+    this.appController.header.logoutButton.addEventListener('pointerup', () => this.logoutUser());
+    this.appController.startPageController.view.startButton.addEventListener('pointerup', () => this.createGamePage());
   }
 
   private loginUser(e: Event): void {

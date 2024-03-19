@@ -1,14 +1,14 @@
-import { createElementWithProperties, getDOMElement, shuffleWords } from '../../../utils/utils';
-import styles from './gamePageView.module.scss';
-import { SentencesPerRound } from '../../../utils/constants';
-import { Word } from '../../../components/word/word';
 import { ButtonCheck } from '../../../components/buttonCheck/buttonCheck';
+import { ButtonHint } from '../../../components/buttonHint/buttonHint';
 import { ButtonSolution } from '../../../components/buttonSolution/buttonSolution';
 import { Placeholder } from '../../../components/placeholder/placeholder';
-import { ButtonHint } from '../../../components/buttonHint/buttonHint';
-import { removeStyleResults, styleResults, styleWords } from '../../../utils/wordsStylist';
 import { CustomSelect } from '../../../components/select/customSelect';
+import { Word } from '../../../components/word/word';
 import { type DataService } from '../../../services/data.service';
+import { SentencesPerRound } from '../../../utils/constants';
+import { createElementWithProperties, getDOMElement, shuffleWords } from '../../../utils/utils';
+import { removeStyleResults, styleResults, styleWords } from '../../../utils/wordsStylist';
+import styles from './gamePageView.module.scss';
 
 type SavedDataRound = [Word[], string[], number];
 
@@ -30,7 +30,6 @@ export class GamePageView {
 
   public words: (Word | Placeholder)[];
   public resultWords: (Word | Placeholder)[];
-  public placeholders: Placeholder[];
   public resultRow: HTMLDivElement;
   public wordsRightOrder: Word[];
   public allLevelData: SavedDataRound[];
@@ -53,11 +52,7 @@ export class GamePageView {
     this.createHintsAndSelects();
 
     this.resultsElement = createElementWithProperties('div', styles.gameResults);
-
-    for (let i = 0; i < SentencesPerRound; i += 1) {
-      const row = createElementWithProperties('div', styles.gameResultsRow);
-      this.resultsElement.append(row);
-    }
+    this.renderRows();
 
     this.sourceElement = createElementWithProperties('div', styles.words);
     const buttonContainer = createElementWithProperties('div', styles.buttons);
@@ -93,9 +88,16 @@ export class GamePageView {
     return this.element;
   }
 
+  public renderRows(): void {
+    this.resultsElement.replaceChildren();
+    for (let i = 0; i < SentencesPerRound; i += 1) {
+      const row = createElementWithProperties('div', styles.gameResultsRow);
+      this.resultsElement.append(row);
+    }
+  }
+
   public renderSentence(): void {
     this.resultRow = getDOMElement(HTMLDivElement, this.resultsElement.children[this.dataController.sentenceNumber]);
-
     this.createRoundConst();
 
     for (let i = 0; i < this.dataController.correctSentence.length; i += 1) {
@@ -119,6 +121,7 @@ export class GamePageView {
   }
 
   private createRoundConst(): void {
+    this.sourceElement.replaceChildren();
     this.wordsRightOrder = [];
     this.words = [];
     this.resultWords = [];

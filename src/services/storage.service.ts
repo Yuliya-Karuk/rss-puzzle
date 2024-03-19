@@ -1,6 +1,6 @@
-import { HintsState, UserData, SavedRound } from '../types/interfaces';
-import { isNotNullable } from '../utils/utils';
+import { HintsState, SavedRound, UserData } from '../types/interfaces';
 import { CompletedRoundsData } from '../types/types';
+import { isNotNullable } from '../utils/utils';
 
 export class StorageService {
   private static storageKey: string = 'RSS_Puzzle_YKaruk';

@@ -1,6 +1,6 @@
+import logoPath from '../../img/logo.png';
 import { createElementWithProperties } from '../../utils/utils';
 import styles from './header.module.scss';
-import logoPath from '../../img/logo.png';
 
 export class Header {
   private gameName: string;

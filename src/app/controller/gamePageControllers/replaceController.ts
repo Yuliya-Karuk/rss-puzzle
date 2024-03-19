@@ -1,7 +1,7 @@
 import { Placeholder } from '../../../components/placeholder/placeholder';
 import { Word } from '../../../components/word/word';
-import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { isNotNullable } from '../../../utils/utils';
+import { type GamePageView } from '../../view/gamePageView/gamePageView';
 
 export class ReplaceController {
   private view: GamePageView;

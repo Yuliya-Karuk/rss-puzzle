@@ -1,8 +1,8 @@
+import greetingPath from '../../../img/greeting.png';
+import startImgPath from '../../../img/start_image.png';
+import { startGameRules, startPageText } from '../../../utils/constants';
 import { createElementWithProperties } from '../../../utils/utils';
 import styles from './startPageView.module.scss';
-import startImgPath from '../../../img/start_image.png';
-import greetingPath from '../../../img/greeting.png';
-import { startGameRules, startPageText } from '../../../utils/constants';
 
 export class StartPageView {
   public element: HTMLElement;

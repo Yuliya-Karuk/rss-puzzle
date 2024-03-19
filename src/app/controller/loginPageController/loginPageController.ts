@@ -44,6 +44,8 @@ export class LoginPageController {
   private checkFormValidity(): void {
     if (this.view.loginForm.nameInput.checkValidity() && this.view.loginForm.surnameInput.checkValidity()) {
       this.view.loginForm.loginButton.removeAttribute('disabled');
+    } else {
+      this.view.loginForm.loginButton.setAttribute('disabled', 'disabled');
     }
   }
 

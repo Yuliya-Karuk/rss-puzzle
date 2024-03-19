@@ -3,7 +3,6 @@
   @include font(1.6vw, 700, 1.2);
 
   pointer-events: none;
-  cursor: pointer;
 
   height: 100%;
 
@@ -54,6 +53,7 @@
 }
 
 .word-container {
+  cursor: pointer;
   position: relative;
   z-index: 5;
   display: flex;

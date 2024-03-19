@@ -28,7 +28,7 @@ export class StatsPageController {
   }
 
   private bindStatsListeners(): void {
-    this.view.buttons.forEach(btn => btn.addEventListener('click', this.playAudio.bind(this, btn)));
+    this.view.buttons.forEach(btn => btn.addEventListener('pointerup', this.playAudio.bind(this, btn)));
   }
 
   private playAudio(button: HTMLButtonElement): void {

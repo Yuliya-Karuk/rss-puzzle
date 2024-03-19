@@ -1,12 +1,12 @@
-import { type GamePageView } from '../../view/gamePageView/gamePageView';
-import { ButtonCheckStates, ButtonSolutionStates } from '../../../types/enums';
 import { Word } from '../../../components/word/word';
-import { type HintsController } from './hintsController';
 import { type DataService } from '../../../services/data.service';
-import { Callback } from '../../../types/types';
-import { RoundDataController } from './roundDataController';
 import { LoaderService } from '../../../services/loader.service';
+import { ButtonCheckStates, ButtonSolutionStates } from '../../../types/enums';
+import { Callback } from '../../../types/types';
+import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { ButtonsStateController } from './buttonStateController';
+import { type HintsController } from './hintsController';
+import { RoundDataController } from './roundDataController';
 
 export class ButtonsController {
   private view: GamePageView;
@@ -157,6 +157,7 @@ export class ButtonsController {
 
     this.buttonsStateController.setStateAfterFill();
     this.view.blockPreviousSentence();
-    this.view.btnCheckController.getComponent().click();
+    const pointerEvent = new Event('pointerup');
+    this.view.btnCheckController.getComponent().dispatchEvent(pointerEvent);
   }
 }

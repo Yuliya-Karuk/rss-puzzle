@@ -1,8 +1,8 @@
-import { type GamePageView } from '../../view/gamePageView/gamePageView';
+import { type DataService } from '../../../services/data.service';
 import { LoaderService } from '../../../services/loader.service';
 import { StorageService } from '../../../services/storage.service';
 import { isNotNullable } from '../../../utils/utils';
-import { type DataService } from '../../../services/data.service';
+import { type GamePageView } from '../../view/gamePageView/gamePageView';
 
 export class HintsController {
   private view: GamePageView;
@@ -26,10 +26,10 @@ export class HintsController {
   }
 
   public bindHintsListeners(): void {
-    this.view.translationHint.getComponent().addEventListener('click', this.handleTranslationHint.bind(this));
-    this.view.audioHint.getComponent().addEventListener('click', this.handleAudioHint.bind(this));
-    this.view.playButton.addEventListener('click', this.handlePlayAudio.bind(this));
-    this.view.imageHint.getComponent().addEventListener('click', this.handleImageHint.bind(this));
+    this.view.translationHint.getComponent().addEventListener('pointerup', this.handleTranslationHint.bind(this));
+    this.view.audioHint.getComponent().addEventListener('pointerup', this.handleAudioHint.bind(this));
+    this.view.playButton.addEventListener('pointerup', this.handlePlayAudio.bind(this));
+    this.view.imageHint.getComponent().addEventListener('pointerup', this.handleImageHint.bind(this));
   }
 
   public setTranslationRow(sentenceIsComplete: boolean): void {

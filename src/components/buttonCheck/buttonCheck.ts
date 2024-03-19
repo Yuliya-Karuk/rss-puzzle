@@ -1,5 +1,5 @@
-import { createElementWithProperties } from '../../utils/utils';
 import { ButtonCheckStates } from '../../types/enums';
+import { createElementWithProperties } from '../../utils/utils';
 
 export class ButtonCheck {
   public state: ButtonCheckStates;
