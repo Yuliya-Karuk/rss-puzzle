@@ -32,11 +32,13 @@ export class ButtonsController {
   public bindButtonsListeners(callbackNext: Callback, callbackResults: Callback): void {
     this.view.btnCheckController
       .getComponent()
-      .addEventListener('click', (e: Event) => this.handleBtnCheck(callbackNext, e));
+      .addEventListener('pointerup', (e: Event) => this.handleBtnCheck(callbackNext, e));
+    this.view.btnCheckController.getComponent().addEventListener('touchend', (e: Event) => e.preventDefault());
 
     this.view.btnSolutionController
       .getComponent()
-      .addEventListener('click', this.handleBtnSolution.bind(this, callbackResults));
+      .addEventListener('pointerup', this.handleBtnSolution.bind(this, callbackResults));
+    this.view.btnSolutionController.getComponent().addEventListener('touchend', (e: Event) => e.preventDefault());
   }
 
   private handleBtnCheck(callbackNext: Callback, e: Event): void {

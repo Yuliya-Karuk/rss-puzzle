@@ -104,9 +104,9 @@ export class HintsController {
 
   public setWordsBackground(sentenceIsComplete: boolean): void {
     if (this.view.imageHint.isEnabled || sentenceIsComplete) {
-      this.view.words.forEach(word => word.showBackground());
+      this.view.wordsRightOrder.forEach(word => word.showBackground());
     } else {
-      this.view.words.forEach(word => word.hideBackground());
+      this.view.wordsRightOrder.forEach(word => word.hideBackground());
     }
   }
 

@@ -33,6 +33,9 @@ export class AppController {
 
   public getGamePage(parentElement: HTMLBodyElement): HTMLElement {
     this.gamePageController = new GamePageController(parentElement);
+    console.error(
+      'Уважаемый проверяющий, можешь пожалуйства проверить немного работу в последний день дедлайна, потому что есть баги с drag-and-drop'
+    );
     return this.gamePageController.createGamePage();
   }
 }

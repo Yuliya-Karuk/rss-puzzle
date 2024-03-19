@@ -42,6 +42,8 @@
 
   @include flex(space-between, center);
 
+  position: static;
+
   gap: 20px;
 
   width: 80%;
@@ -99,7 +101,8 @@
   background-size: contain;
 
   &_hidden {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
   }
 
   &_shaking {

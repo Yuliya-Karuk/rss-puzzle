@@ -6,18 +6,15 @@ import { type ButtonsController } from './buttonsController';
 import { Placeholder } from '../../../components/placeholder/placeholder';
 import { ReplaceController } from './replaceController';
 
-// const movedElements: HTMLElement[] = [];
 export class DragController {
   private view: GamePageView;
   private buttonsController: ButtonsController;
   private replaceController: ReplaceController;
-  private previousTarget: HTMLElement | null;
 
   constructor(view: GamePageView, buttonsController: ButtonsController, replaceController: ReplaceController) {
     this.view = view;
     this.buttonsController = buttonsController;
     this.replaceController = replaceController;
-    this.previousTarget = null;
   }
 
   public bindStaticListeners(): void {
@@ -50,25 +47,6 @@ export class DragController {
   private handleDragOver(e: DragEvent): void {
     e.preventDefault();
     isNotNullable(e.dataTransfer).dropEffect = 'move';
-
-    // const targetEl = checkEventTarget(isNotNullable(e.target));
-
-    // if (targetEl.classList.contains('word-container')) {
-    //   this.handleMoveEffects(targetEl, false);
-    //   // this.previousTarget = targetEl;
-    // } else {
-    //   this.previousTarget.style.marginLeft = 'unset';
-    // }
-  }
-
-  private handleMoveEffects(targetEl: HTMLElement, isStopped: boolean): void {
-    if (!isStopped) {
-      if (this.previousTarget && this.previousTarget !== targetEl) {
-        this.previousTarget.style.marginLeft = 'unset';
-      }
-      this.previousTarget = targetEl;
-      this.previousTarget.style.marginLeft = '20px';
-    }
   }
 
   private handleDragEnd(e: DragEvent, dragState: DragState): void {

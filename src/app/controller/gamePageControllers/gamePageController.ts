@@ -49,7 +49,7 @@ export class GamePageController {
     this.replaceController = new ReplaceController(this.view);
     this.clickController = new ClickController(this.view, this.buttonsController, this.replaceController);
     this.dragController = new DragController(this.view, this.buttonsController, this.replaceController);
-    this.touchController = new TouchController(this.view, this.replaceController);
+    this.touchController = new TouchController(this.view, this.buttonsController, this.replaceController);
     this.statsPageController = new StatsPageController(parentElement);
   }
 

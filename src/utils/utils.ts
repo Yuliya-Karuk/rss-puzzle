@@ -66,3 +66,10 @@ export function checkLevel(level: number): Level {
   }
   return 1 as Level;
 }
+
+export function checkTouch(value: Touch | null): HTMLElement {
+  if (value instanceof HTMLElement) {
+    return value;
+  }
+  throw new Error(`Not expected value`);
+}

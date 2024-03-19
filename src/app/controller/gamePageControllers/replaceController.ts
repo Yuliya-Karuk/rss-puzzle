@@ -35,7 +35,7 @@ export class ReplaceController {
   }
 
   public moveWordWithReplaceLastPlaceholder(
-    e: DragEvent,
+    e: DragEvent | Touch,
     word: Word,
     wIndex: number,
     movedWord: Word,
@@ -43,15 +43,7 @@ export class ReplaceController {
   ): void {
     const movedElement = movedWord.getComponent();
 
-    this.moveWord(word, movedElement, movedIndex, e);
-
-    // if (e.clientX > movedElement.getBoundingClientRect().left + movedElement.offsetWidth / 2) {
-    //   isNotNullable(movedElement.parentNode).insertBefore(word.getComponent(), movedElement.nextSibling);
-    //   this.view.resultWords.splice(movedIndex + 1, 0, word);
-    // } else {
-    //   isNotNullable(movedElement.parentNode).insertBefore(word.getComponent(), movedElement);
-    //   this.view.resultWords.splice(movedIndex, 0, word);
-    // }
+    this.moveWordDrag(word, movedElement, movedIndex, e);
 
     const placeholderIndex = this.view.resultWords.findLastIndex(el => el instanceof Placeholder);
     const placeholder = this.view.resultWords.splice(placeholderIndex, 1)[0];
@@ -65,22 +57,19 @@ export class ReplaceController {
     this.view.words[wIndex] = placeholder;
   }
 
-  public moveWordsInResults(word: Word, movedElement: HTMLElement, e: DragEvent): void {
+  public moveWordsInResults(word: Word, movedElement: HTMLElement, e: DragEvent | Touch): void {
     this.view.resultWords = this.view.resultWords.filter(el => el !== word);
     const movedIndex = this.view.resultWords.findIndex(el => el.getComponent() === movedElement);
 
-    this.moveWord(word, movedElement, movedIndex, e);
-
-    // if (e.clientX > replacedElement.getBoundingClientRect().left + replacedElement.offsetWidth / 2) {
-    //   isNotNullable(replacedElement.parentNode).insertBefore(word.getComponent(), replacedElement.nextSibling);
-    //   this.view.resultWords.splice(indexReplacedElement + 1, 0, word);
-    // } else {
-    //   isNotNullable(replacedElement.parentNode).insertBefore(word.getComponent(), replacedElement);
-    //   this.view.resultWords.splice(indexReplacedElement, 0, word);
-    // }
+    this.moveWordDrag(word, movedElement, movedIndex, e);
   }
 
-  private moveWord(word: Word, movedElement: HTMLDivElement | HTMLElement, movedIndex: number, e: DragEvent): void {
+  private moveWordDrag(
+    word: Word,
+    movedElement: HTMLDivElement | HTMLElement,
+    movedIndex: number,
+    e: DragEvent | Touch
+  ): void {
     if (e.clientX > movedElement.getBoundingClientRect().left + movedElement.offsetWidth / 2) {
       isNotNullable(movedElement.parentNode).insertBefore(word.getComponent(), movedElement.nextSibling);
       this.view.resultWords.splice(movedIndex + 1, 0, word);

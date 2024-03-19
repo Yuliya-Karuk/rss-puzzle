@@ -70,6 +70,10 @@ export class Word {
     Object.assign(this.element.style, inlineStyles);
   }
 
+  public setContainerStyle(inlineStyles: Partial<CSSStyleDeclaration>): void {
+    Object.assign(this.elementContainer.style, inlineStyles);
+  }
+
   public setHelperStyle(inlineStyles: Partial<CSSStyleDeclaration>): void {
     Object.assign(this.helper.style, inlineStyles);
   }
