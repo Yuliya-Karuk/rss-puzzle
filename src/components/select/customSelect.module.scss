@@ -11,7 +11,7 @@
 }
 
 .select-header {
-  @include font(1.4vw, 700, 1.2);
+  @include font(1.3vw, 700, 1.2);
 
   cursor: pointer;
 
@@ -85,6 +85,12 @@
     background-color: #e5cdd2;
 
     &::after {
+      @include media-laptop {
+        right: 0;
+        width: 15px;
+        height: 15px;
+      }
+
       content: '';
 
       position: absolute;

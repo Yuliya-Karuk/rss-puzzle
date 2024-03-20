@@ -133,6 +133,7 @@ export class GamePageView {
 
   public blockPreviousSentence(): void {
     this.resultRow.classList.add('game-results-row_guessed');
+    this.wordsRightOrder.forEach(word => word.makeUndragable());
   }
 
   public clearRoundConst(): void {

@@ -1,10 +1,14 @@
 .word {
   @include flex(center, center);
-  @include font(1.6vw, 700, 1.2);
+  @include font(1.3vw, 700, 1.2);
 
   pointer-events: none;
 
+  position: relative;
+  z-index: 5;
+
   height: 100%;
+  padding-left: 10px;
 
   color: #f6eef0;
   text-shadow: 2px 1px 2px rgba(0 0 0 / 70%);
@@ -12,10 +16,6 @@
   background: var(--color-primary-light);
 
   mask: radial-gradient(circle at 0 50%, transparent 8px, black 8px);
-
-  .game-results-row_guessed & {
-    pointer-events: none;
-  }
 
   &_first {
     mask: none;
@@ -55,7 +55,7 @@
 .word-container {
   cursor: pointer;
   position: relative;
-  z-index: 5;
+  z-index: 50;
   display: flex;
 
   .game-results-row &_invalid {
@@ -64,6 +64,10 @@
 
   .game-results-row &_valid {
     filter: drop-shadow(1px 1px 5px #0afa34);
+  }
+
+  .game-results-row_guessed & {
+    pointer-events: none;
   }
 
   &_touch {

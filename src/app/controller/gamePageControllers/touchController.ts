@@ -17,6 +17,7 @@ export class TouchController {
   private replacedEl: Element;
   private replacedType: ReplacedComponent;
   private replacedPlace: ReplacedPlace;
+  private isForbidden: boolean;
 
   constructor(view: GamePageView, buttonsController: ButtonsController, replaceController: ReplaceController) {
     this.isDraggingStart = true;
@@ -75,15 +76,24 @@ export class TouchController {
   }
 
   private findReplacedEl(elementsUnderTouch: Element[]): void {
+    this.isForbidden = false;
+
     const isPlaceholder = elementsUnderTouch.find(el => el.classList.contains('placeholder'));
+    const isWord = elementsUnderTouch.find(
+      el => el.classList.contains('word-container') && el !== this.dragWord.getComponent()
+    );
+
     if (isPlaceholder) {
       this.replacedEl = isNotNullable(elementsUnderTouch.find(el => el.classList.contains('placeholder')));
       this.replacedType = ReplacedComponent.placeholder;
-    } else {
+    } else if (isWord) {
       this.replacedEl = isNotNullable(
         elementsUnderTouch.find(el => el.classList.contains('word-container') && el !== this.dragWord.getComponent())
       );
       this.replacedType = ReplacedComponent.word;
+    } else {
+      this.isForbidden = true;
+      return;
     }
     this.findReplacedElPlace();
   }
@@ -94,11 +104,17 @@ export class TouchController {
       this.replacedPlace = ReplacedPlace.results;
     } else {
       this.replacedPlace = ReplacedPlace.source;
+
+      if (this.replacedType === ReplacedComponent.word) {
+        this.isForbidden = true;
+      }
+      if (this.replacedType === ReplacedComponent.placeholder && this.wordStartPlace === DragStartPlace.source) {
+        this.isForbidden = true;
+      }
     }
   }
 
   private handleTouchEnd(e: TouchEvent): void {
-    console.error(e);
     this.isDraggingStart = true;
     e.preventDefault();
 
@@ -107,13 +123,12 @@ export class TouchController {
     }
 
     const elementsUnderTouch = findElementsUnderTouch(e.changedTouches[0]);
+    this.findReplacedEl(elementsUnderTouch);
 
-    if (this.checkIsOut(elementsUnderTouch)) {
+    if (this.isForbidden) {
       this.handleForbiddenDrag();
       return;
     }
-
-    this.findReplacedEl(elementsUnderTouch);
 
     if (this.replacedType === ReplacedComponent.placeholder) {
       this.handleReplacePlaceholder();
@@ -172,10 +187,6 @@ export class TouchController {
     const placeholderIndex = this.view.words.findIndex(el => el === placeholder);
 
     this.replaceController.replacePlaceholderInSource(word, wordIndex, placeholder, placeholderIndex);
-  }
-
-  private checkIsOut(elementsUnderTouch: Element[]): boolean {
-    return !elementsUnderTouch.includes(this.view.resultRow) && !elementsUnderTouch.includes(this.view.sourceElement);
   }
 
   private handleForbiddenDrag(): void {

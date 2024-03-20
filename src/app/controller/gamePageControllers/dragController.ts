@@ -1,6 +1,6 @@
 import { Placeholder } from '../../../components/placeholder/placeholder';
 import { Word } from '../../../components/word/word';
-import { DragStartPlace, DragState } from '../../../types/enums';
+import { DragStartPlace, ReplacedComponent, ReplacedPlace } from '../../../types/enums';
 import { checkEventTarget, isNotNullable } from '../../../utils/utils';
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { type ButtonsController } from './buttonsController';
@@ -8,25 +8,31 @@ import { ReplaceController } from './replaceController';
 
 export class DragController {
   private view: GamePageView;
+  private parentEl: HTMLBodyElement;
   private buttonsController: ButtonsController;
   private replaceController: ReplaceController;
   private dragWord: Word;
   private wordStartPlace: DragStartPlace;
   private replacedEl: HTMLElement;
+  private replacedPlace: ReplacedPlace;
 
-  constructor(view: GamePageView, buttonsController: ButtonsController, replaceController: ReplaceController) {
+  constructor(
+    view: GamePageView,
+    buttonsController: ButtonsController,
+    replaceController: ReplaceController,
+    parentEl: HTMLBodyElement
+  ) {
     this.view = view;
+    this.parentEl = parentEl;
     this.buttonsController = buttonsController;
     this.replaceController = replaceController;
   }
 
   public bindStaticListeners(): void {
-    this.view.getGamePage().addEventListener('dragover', (e: DragEvent) => {
+    this.parentEl.addEventListener('dragover', (e: DragEvent) => {
       e.preventDefault();
     });
-    this.view.getGamePage().addEventListener('drop', (e: DragEvent) => this.handleForbiddenDrag(e));
-    this.view.sourceElement.addEventListener('dragover', (e: DragEvent) => this.handleDragOver(e));
-    this.view.sourceElement.addEventListener('drop', (e: DragEvent) => this.handleDragEnd(e, DragState.toSource));
+    this.parentEl.addEventListener('drop', (e: DragEvent) => this.handleForbiddenDrag(e));
   }
 
   private handleForbiddenDrag(e: DragEvent): void {
@@ -36,14 +42,38 @@ export class DragController {
   }
 
   public bindDragListeners(): void {
-    this.view.resultRow.addEventListener('dragover', (e: DragEvent) => this.handleDragOver(e));
-
-    this.view.resultRow.addEventListener('drop', (e: DragEvent) => this.handleDragEnd(e, DragState.toResults));
+    this.view.words.forEach(word => {
+      word.getComponent().addEventListener('dragover', (e: DragEvent) => this.handleDragOver(e));
+      word.getComponent().addEventListener('drop', (e: DragEvent) => this.handleDrag(e, ReplacedComponent.word));
+    });
+    this.view.resultWords.forEach(pl => {
+      pl.getComponent().addEventListener('dragover', (e: DragEvent) => this.handleDragOver(e));
+      pl.getComponent().addEventListener('drop', (e: DragEvent) => this.handleDrag(e, ReplacedComponent.placeholder));
+    });
   }
 
   public handleDragOver(e: DragEvent): void {
     e.preventDefault();
     isNotNullable(e.dataTransfer).dropEffect = 'move';
+  }
+
+  private handleDrag(e: DragEvent, replacedComp: ReplacedComponent): void {
+    e.preventDefault();
+
+    const wordId = isNotNullable(e.dataTransfer).getData('text');
+    this.dragWord = isNotNullable(this.view.wordsRightOrder.find(el => el.id === wordId));
+    this.replacedEl = checkEventTarget(e.target);
+    this.findStartWordPlace();
+    this.findReplacedElPlace();
+
+    if (replacedComp === ReplacedComponent.placeholder) {
+      this.handleReplacePlaceholder(e);
+    } else {
+      this.handleMoveWord(e);
+    }
+
+    this.buttonsController.setStateCheckButton();
+    this.dragWord.removeDragStyle();
   }
 
   private findStartWordPlace(): void {
@@ -54,26 +84,31 @@ export class DragController {
     }
   }
 
-  public handleDragEnd(e: DragEvent, dragState: DragState): void {
-    e.preventDefault();
+  private findReplacedElPlace(): void {
+    const replacedInResults = isNotNullable(this.replacedEl.parentElement).classList.contains('game-results-row');
+    if (replacedInResults) {
+      this.replacedPlace = ReplacedPlace.results;
+    } else {
+      this.replacedPlace = ReplacedPlace.source;
+    }
+  }
 
-    const wordId = isNotNullable(e.dataTransfer).getData('text');
-    this.dragWord = isNotNullable(this.view.wordsRightOrder.find(el => el.id === wordId));
-    this.replacedEl = checkEventTarget(e.target);
-    this.findStartWordPlace();
-
-    if (dragState === DragState.toResults && this.wordStartPlace === DragStartPlace.source) {
+  private handleReplacePlaceholder(e: DragEvent): void {
+    if (this.replacedPlace === ReplacedPlace.results && this.wordStartPlace === DragStartPlace.source) {
       this.dragToResult(e);
     }
-    if (dragState === DragState.toResults && this.wordStartPlace === DragStartPlace.results) {
-      this.dragInResult(e);
-    }
-    if (dragState === DragState.toSource && this.wordStartPlace === DragStartPlace.source) {
+    if (this.replacedPlace === ReplacedPlace.source && this.wordStartPlace === DragStartPlace.results) {
       this.dragToSource();
     }
+    if (this.replacedPlace === ReplacedPlace.results && this.wordStartPlace === DragStartPlace.results) {
+      this.dragInResult(e);
+    }
+  }
 
-    this.buttonsController.setStateCheckButton();
-    this.dragWord.removeDragStyle();
+  private handleMoveWord(e: DragEvent): void {
+    if (this.replacedPlace === ReplacedPlace.results && this.wordStartPlace === DragStartPlace.results) {
+      this.dragInResult(e);
+    }
   }
 
   public dragToResult(e: DragEvent): void {

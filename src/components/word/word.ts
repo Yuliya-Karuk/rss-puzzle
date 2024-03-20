@@ -50,12 +50,18 @@ export class Word {
     if (e.target instanceof HTMLElement) {
       isNotNullable(e.dataTransfer).setData('text', isNotNullable(e.target).id);
       isNotNullable(e.dataTransfer).dropEffect = 'move';
-      e.target.classList.add('drag');
+      if (e.target.draggable) {
+        e.target.classList.add('drag');
+      }
     }
   }
 
   public removeDragStyle(): void {
     this.elementContainer.classList.remove('drag');
+  }
+
+  public makeUndragable(): void {
+    this.elementContainer.removeAttribute('draggable');
   }
 
   public setFirst(): void {

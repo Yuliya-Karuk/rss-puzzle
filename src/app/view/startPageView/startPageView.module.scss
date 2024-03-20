@@ -5,7 +5,7 @@
 
   @include media-laptop {
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     height: calc(100% - 110px);
     padding: 3%;
   }
@@ -41,6 +41,10 @@
 .start-image-container {
   @include flex(center, center);
 
+  @include media-laptop {
+    margin-left: 100px;
+  }
+
   position: relative;
 
   width: 45%;
@@ -60,7 +64,7 @@
 
 .start-greeting {
   @include media-laptop {
-    top: -25%;
+    top: -20%;
     right: -150px;
     width: 240px;
     height: 170px;
@@ -85,7 +89,7 @@
   @include flex(center, center);
 
   @include media-laptop {
-    top: -25%;
+    top: -22%;
     right: -150px;
 
     width: 240px;
