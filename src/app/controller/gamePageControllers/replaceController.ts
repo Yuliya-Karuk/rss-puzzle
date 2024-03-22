@@ -12,6 +12,7 @@ export class ReplaceController {
 
   public replacePlaceholderInResults(word: Word, wIndex: number, placeholder: Placeholder, pIndex: number): void {
     placeholder.getComponent().after(word.getComponent());
+
     if (wIndex !== 0) {
       this.view.sourceElement.children[wIndex - 1].after(placeholder.getComponent());
     } else {
@@ -24,6 +25,7 @@ export class ReplaceController {
 
   public replacePlaceholderInSource(word: Word, wIndex: number, placeholder: Placeholder, pIndex: number): void {
     placeholder.getComponent().after(word.getComponent());
+
     if (wIndex !== 0) {
       this.view.resultRow.children[wIndex - 1].after(placeholder.getComponent());
     } else {

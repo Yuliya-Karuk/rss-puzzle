@@ -14,6 +14,7 @@ export class ButtonCheck {
     this.element = createElementWithProperties('button', 'btn btn-active', { type: 'button' }, [
       { innerText: ButtonCheckStates.check },
     ]);
+
     this.element.addEventListener('animationend', () => this.element.classList.remove('btn-active'));
   }
 
@@ -34,6 +35,7 @@ export class ButtonCheck {
   public setCheckState(): void {
     this.element.innerText = ButtonCheckStates.check;
     this.showAnimation();
+
     this.state = ButtonCheckStates.check;
     this.disableButton();
   }
@@ -41,6 +43,7 @@ export class ButtonCheck {
   public setContinueState(): void {
     this.element.innerText = ButtonCheckStates.continue;
     this.showAnimation();
+
     this.state = ButtonCheckStates.continue;
   }
 

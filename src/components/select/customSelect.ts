@@ -20,8 +20,10 @@ export class CustomSelect {
       'div',
       `${styles.select} select_${this.selectText.toLowerCase()}`
     );
+
     this.selectHeader = createElementWithProperties('div', styles.selectHeader);
     this.selectBody = createElementWithProperties('div', styles.selectBody);
+
     this.elementContainer.append(this.selectHeader, this.selectBody);
   }
 
@@ -45,13 +47,16 @@ export class CustomSelect {
     this.itemsNumber = itemsNumber;
     this.selectBody.replaceChildren();
     this.selectItems = [];
+
     for (let i = 0; i < this.itemsNumber; i += 1) {
       const selectItem = createElementWithProperties('div', styles.selectItem, { id: `${this.selectText}_${i + 1}` }, [
         { innerText: `${this.selectText} ${i + 1}` },
       ]);
+
       if (completedRounds.includes(i)) {
         selectItem.classList.add('select-item_completed');
       }
+
       this.selectBody.append(selectItem);
       this.selectItems.push(selectItem);
     }

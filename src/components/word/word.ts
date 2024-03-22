@@ -21,15 +21,18 @@ export class Word {
       draggable: 'true',
       id: this.id,
     });
+
     this.element = createElementWithProperties('div', styles.word, undefined, [{ innerHTML: this.value }]);
     this.helper = createElementWithProperties('div', styles.helper);
 
     this.elementContainer.append(this.element, this.helper);
+
     this.elementContainer.addEventListener('dragstart', (e: DragEvent) => this.handleDragStart(e));
   }
 
   public checkState(state: boolean): void {
     this.isGuessed = state;
+
     if (this.isGuessed) {
       this.elementContainer.classList.add(`${styles.wordContainer}_valid`);
     } else {
@@ -50,6 +53,7 @@ export class Word {
     if (e.target instanceof HTMLElement) {
       isNotNullable(e.dataTransfer).setData('text', isNotNullable(e.target).id);
       isNotNullable(e.dataTransfer).dropEffect = 'move';
+
       if (e.target.draggable) {
         e.target.classList.add('drag');
       }

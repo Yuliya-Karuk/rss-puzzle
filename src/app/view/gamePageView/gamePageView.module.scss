@@ -1,17 +1,14 @@
 .game {
   @include flex(space-between, center, column);
-
   height: calc(100vh - 110px);
   padding: 10px;
 }
 
 .game-results {
   @extend %blurred-background;
-
   display: grid;
   grid-template-rows: repeat(10, 1fr);
   row-gap: 1px;
-
   width: 60%;
   height: calc(60% + 9px);
 
@@ -27,7 +24,6 @@
 
 .game-results-row {
   @include flex(center, center);
-
   gap: 1px;
   color: var(--color-black);
 
@@ -41,34 +37,26 @@
   @extend %blurred-background;
 
   @include flex(space-between, center);
-
   position: static;
-
   gap: 20px;
-
   width: 80%;
   height: calc(6% + 20px);
   padding: 10px;
-
   border-radius: 10px;
 }
 
 .buttons {
   @include flex(center, center);
-
   column-gap: 20px;
 }
 
 .translation-row {
   @include font(1.6vw, 700, 1.2);
-
   height: 5%;
 
   &_info {
     @include flex(center, center);
-
     padding: 0 30px;
-
     background: rgb(0 0 0 / 10%);
     backdrop-filter: blur(15px);
     border: 1px solid var(--color-primary-light);
@@ -78,7 +66,6 @@
 
 .game-hints {
   @include flex(space-between, center);
-
   gap: 15px;
   width: 95%;
   height: 40px;
@@ -92,11 +79,9 @@
       filter: drop-shadow(2px 3px 5px var(--color-primary-bright));
     }
   }
-
   width: 50px;
   height: 100%;
   margin: 0 auto;
-
   background: center no-repeat transparent url('../../../img/audio.svg');
   background-size: contain;
 

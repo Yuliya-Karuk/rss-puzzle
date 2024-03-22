@@ -6,6 +6,7 @@ export function isNotNullable<T>(value: T): NonNullable<T> {
   if (value === undefined || value === null) {
     throw new Error(`Not expected value`);
   }
+
   return value;
 }
 
@@ -16,16 +17,20 @@ export function createElementWithProperties<K extends keyof HTMLElementTagNameMa
   props?: DomElementProperties[]
 ): HTMLElementTagNameMap[K] {
   const element = document.createElement(tagName);
+
   element.className = elClassName;
+
   if (attr) {
     for (let i = 0; i < Object.keys(attr).length; i += 1) {
       const key = Object.keys(attr)[i];
       element.setAttribute(key, attr[key]);
     }
   }
+
   if (props) {
     Object.assign(element, ...props);
   }
+
   return element;
 }
 
@@ -43,6 +48,7 @@ export function checkEventTarget(value: EventTarget | null): HTMLElement {
   if (value instanceof HTMLElement) {
     return value;
   }
+
   throw new Error(`Not expected value`);
 }
 
@@ -57,6 +63,7 @@ export function getDOMElement<T extends Node>(
   if (!(element instanceof elemType)) {
     throw new Error(`Not expected value: ${element} of type:${elemType}`);
   }
+
   return element;
 }
 
@@ -64,6 +71,7 @@ export function checkLevel(level: number): Level {
   if (level >= 1 && level <= 6) {
     return level as Level;
   }
+
   return 1 as Level;
 }
 
@@ -71,6 +79,7 @@ export function checkTouch(value: Touch | null): HTMLElement {
   if (value instanceof HTMLElement) {
     return value;
   }
+
   throw new Error(`Not expected value`);
 }
 
@@ -80,4 +89,41 @@ export function findElementsUnderTouch(touch: Touch): Element[] {
 
   const elementsUnderTouch = document.elementsFromPoint(x, y);
   return elementsUnderTouch;
+}
+
+export function findRoundNumber(roundId: string): number {
+  const roundNumber = Number(roundId.split('_')[1]);
+  return roundNumber;
+}
+
+export function checkElement(value: Element | undefined): HTMLElement {
+  if (value instanceof HTMLElement) {
+    return value;
+  }
+
+  throw new Error(`Not expected value`);
+}
+
+export function isInputTooShort(input: HTMLInputElement, inputName?: string): string {
+  let errorMessage = '';
+  if (input.validity.tooShort) {
+    errorMessage += `Your ${inputName} should contain minimum ${inputName === 'name' ? 3 : 4} letters. `;
+  }
+  return errorMessage;
+}
+
+export function isFirstLetterLowerCase(input: HTMLInputElement, inputName?: string): string {
+  let errorMessage = '';
+  if (input.value[0].toUpperCase() !== input.value[0]) {
+    errorMessage += `Your ${inputName} should start with capital letter. `;
+  }
+  return errorMessage;
+}
+
+export function isContainForbiddenLetters(input: HTMLInputElement): string {
+  let errorMessage = '';
+  if (!input.value.match('^[a-zA-Z\\-]+$')) {
+    errorMessage += `Only English letters and “-” are allowed.`;
+  }
+  return errorMessage;
 }

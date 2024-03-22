@@ -10,6 +10,7 @@ export class LoginPageView {
   constructor() {
     this.element = createElementWithProperties('div', styles.page);
     this.loginForm = new LoginForm();
+
     this.createChildren();
   }
 
@@ -19,6 +20,7 @@ export class LoginPageView {
       alt: 'login image',
       src: `${loginImagePath}`,
     });
+
     loginImageContainer.append(loginImage);
     this.element.append(this.loginForm.getComponent(), loginImageContainer);
   }

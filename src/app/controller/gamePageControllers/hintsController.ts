@@ -27,8 +27,11 @@ export class HintsController {
 
   public bindHintsListeners(): void {
     this.view.translationHint.getComponent().addEventListener('pointerup', this.handleTranslationHint.bind(this));
+
     this.view.audioHint.getComponent().addEventListener('pointerup', this.handleAudioHint.bind(this));
+
     this.view.playButton.addEventListener('pointerup', this.handlePlayAudio.bind(this));
+
     this.view.imageHint.getComponent().addEventListener('pointerup', this.handleImageHint.bind(this));
   }
 
@@ -62,9 +65,11 @@ export class HintsController {
     source.buffer = this.audio;
     source.connect(this.audioContext.destination);
     source.start(this.audioContext.currentTime);
+
     this.view.playButton.setAttribute('disabled', 'disabled');
 
     this.startAnimationSound();
+
     source.addEventListener('ended', () => {
       this.finishAnimationSound();
       this.view.playButton.removeAttribute('disabled');
@@ -112,6 +117,7 @@ export class HintsController {
 
   public setHintsState(): void {
     const hints = isNotNullable(StorageService.getHintsState());
+
     this.view.translationHint.setState(hints.translationHint);
     this.view.audioHint.setState(hints.audioHint);
     this.view.imageHint.setState(hints.imageHint);

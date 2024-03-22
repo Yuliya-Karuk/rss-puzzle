@@ -6,7 +6,7 @@
     "node": true
   },
   "extends": [
-    "airbnb",
+    "airbnb-base",
     "airbnb-typescript",
     "eslint:recommended",
     "plugin:import/recommended",
@@ -15,20 +15,13 @@
     "plugin:prettier/recommended",
     "prettier"
   ],
-  "plugins": [
-    "@typescript-eslint",
-    "import",
-    "prettier"
-  ],
+  "plugins": ["@typescript-eslint", "import", "prettier"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "ignorePatterns": [
-    "node_modules",
-    "dist"
-  ],
+  "ignorePatterns": ["node_modules", "dist"],
   "rules": {
     "no-debugger": "off",
     "no-console": ["error", { "allow": ["warn", "error"] }],
@@ -68,6 +61,7 @@
         "allowDestructuring": true,
         "allowedNames": ["context"]
       }
-    ]
+    ],
+    "react/jsx-filename-extension": "off"
   }
 }

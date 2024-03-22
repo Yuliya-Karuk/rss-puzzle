@@ -16,6 +16,7 @@ export class ButtonHint {
   private createNode(className: string): void {
     const icon = createElementWithProperties('span', `hint-icon`);
     this.element = createElementWithProperties('button', `hint ${styles[className]}`, { type: 'button' });
+
     this.element.append(icon);
   }
 
@@ -26,11 +27,13 @@ export class ButtonHint {
   public toggleState(): void {
     this.isEnabled = !this.isEnabled;
     this.element.classList.toggle('hint_disabled');
+
     this.updateStateInStorage();
   }
 
   public setState(state: boolean): void {
     this.isEnabled = state;
+
     if (this.isEnabled) {
       this.element.classList.remove('hint_disabled');
       return;

@@ -2,7 +2,7 @@ import { type DataService } from '../../../services/data.service';
 import { StorageService } from '../../../services/storage.service';
 import { Callback, Level } from '../../../types/types';
 import { LevelsNumber } from '../../../utils/constants';
-import { checkLevel, isNotNullable } from '../../../utils/utils';
+import { checkLevel, findRoundNumber, isNotNullable } from '../../../utils/utils';
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 
 export class LevelController {
@@ -13,12 +13,14 @@ export class LevelController {
   constructor(view: GamePageView, dataController: DataService, setRoundCallback: Callback) {
     this.view = view;
     this.dataController = dataController;
+
     this.setRoundCallback = setRoundCallback;
     this.setStartListeners();
   }
 
   private setStartListeners(): void {
     document.addEventListener('pointerup', (e: Event) => this.closeSelect(e));
+
     this.view.levelSelect.selectHeader.addEventListener('pointerup', () => this.view.levelSelect.toggleActive());
     this.view.roundSelect.selectHeader.addEventListener('pointerup', () => this.view.roundSelect.toggleActive());
   }
@@ -36,7 +38,9 @@ export class LevelController {
 
   public setRoundsSelect(round: number): void {
     this.view.roundSelect.setSelectHeader(round);
+
     const completedRounds = isNotNullable(StorageService.getCompletedRounds());
+
     this.view.roundSelect.setItemsNumber(this.dataController.roundPerLevel, completedRounds[this.dataController.level]);
     this.view.roundSelect.selectItems.forEach(el => el.addEventListener('pointerup', () => this.chooseRound(el)));
   }
@@ -55,7 +59,7 @@ export class LevelController {
   }
 
   private async chooseRound(round: HTMLDivElement): Promise<void> {
-    const roundNumber = Number(round.id.split('_')[1]);
+    const roundNumber = findRoundNumber(round.id);
 
     this.view.roundSelect.selectHeader.innerText = round.innerText;
     this.view.roundSelect.toggleActive();
@@ -66,6 +70,7 @@ export class LevelController {
 
   private closeSelect(e: Event): void {
     let closestSelect;
+
     if (e.target instanceof Element) {
       closestSelect = isNotNullable(e.target).closest('.select');
     }

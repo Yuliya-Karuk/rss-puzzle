@@ -15,6 +15,7 @@ export class ButtonSolution {
     this.element = createElementWithProperties('button', 'btn btn-active', { type: 'button' }, [
       { innerText: this.state },
     ]);
+
     this.element.addEventListener('animationend', () => this.element.classList.remove('btn-active'));
     this.element.addEventListener('pointerup', () => this.showAnimation());
   }
@@ -40,6 +41,7 @@ export class ButtonSolution {
   public setSolutionState(): void {
     this.element.innerText = ButtonSolutionStates.solution;
     this.showAnimation();
+
     this.element.classList.remove(styles.buttonResults);
     this.state = ButtonSolutionStates.solution;
   }
@@ -47,6 +49,7 @@ export class ButtonSolution {
   public setResultsState(): void {
     this.element.innerText = ButtonSolutionStates.results;
     this.showAnimation();
+
     this.element.classList.add(styles.buttonResults);
     this.state = ButtonSolutionStates.results;
   }

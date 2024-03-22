@@ -56,17 +56,21 @@ export class GamePageController {
   public createGamePage(): HTMLElement {
     this.statsPageController.insertStatsView();
     this.setStartSetup();
+
     return this.view.getGamePage();
   }
 
   public async setStartSetup(): Promise<void> {
     const lastRound = isNotNullable(StorageService.getLastRound());
-    const nextRound = this.findNext(lastRound);
+    const nextRound = this.getNextRound(lastRound);
 
     this.dataController.startedSetUp(nextRound.level, nextRound.round);
+
     this.levelController.setSelects(nextRound.level, nextRound.round);
+
     await this.hintsController.prepareRoundImage();
     this.hintsController.setHintsState();
+
     this.buttonsStateController.setStartState();
 
     this.bindStaticGameListeners();
@@ -75,6 +79,7 @@ export class GamePageController {
 
   private bindStaticGameListeners(): void {
     const context = this;
+
     window.addEventListener('resize', () => context.changeWordsSize());
 
     this.buttonsController.bindButtonsListeners(this.setNextSentence.bind(this), this.showResults.bind(this));
@@ -93,6 +98,7 @@ export class GamePageController {
   public setOneSentence(): void {
     this.dataController.setSentence();
     this.view.renderSentence();
+
     this.setControllersForOneSentence();
   }
 
@@ -120,9 +126,12 @@ export class GamePageController {
 
   private async setNextRound(): Promise<void> {
     this.saveCompletedRound();
+
     this.roundDataController.clearStats();
+
     this.view.roundSelect.setRoundCompleted(this.dataController.round);
     this.view.renderRows();
+
     this.dataController.sentenceNumber = 0;
 
     if (this.dataController.checkIsNotNewLevel()) {
@@ -139,16 +148,21 @@ export class GamePageController {
 
   private setNextLevel(): void {
     const newLevel = checkLevel(this.dataController.level + 1);
+
     this.dataController.setLevel(newLevel);
     this.levelController.setSelects(this.dataController.level, this.dataController.round);
   }
 
   public async setNewRound(): Promise<void> {
     this.roundDataController.clearStats();
+
     await this.hintsController.prepareRoundImage();
+
     this.view.clearRoundConst();
     this.view.renderRows();
+
     this.setOneSentence();
+
     this.buttonsStateController.setStartState();
   }
 
@@ -156,7 +170,7 @@ export class GamePageController {
     StorageService.updateCompletedRounds(this.dataController.level, this.dataController.round);
   }
 
-  private findNext(lastRound: SavedRound): SavedRound {
+  private getNextRound(lastRound: SavedRound): SavedRound {
     let { level, round } = lastRound;
 
     if (level === 1 && round === 0) {

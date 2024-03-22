@@ -41,21 +41,26 @@ export class LoginForm {
   private createChildren(): void {
     this.nameInput = createElementWithProperties('input', styles.loginInput, LoginInputs.name);
     this.surnameInput = createElementWithProperties('input', styles.loginInput, LoginInputs.surname);
+
     const nameLabel = createElementWithProperties('label', styles.loginLabel, { for: 'name' }, [
       { innerText: `First name` },
     ]);
     const surnameLabel = createElementWithProperties('label', styles.loginLabel, { for: 'surname' }, [
       { innerText: `Last name` },
     ]);
+
     this.nameError = createElementWithProperties('span', styles.loginError);
     this.surnameError = createElementWithProperties('span', styles.loginError);
+
     const title = createElementWithProperties('h2', styles.loginTitle, undefined, [{ innerText: `Login` }]);
+
     this.loginButton = createElementWithProperties(
       'button',
       `btn ${styles.loginButton}`,
       { type: 'submit', disabled: 'disabled' },
       [{ innerText: `Login` }]
     );
+
     this.element.append(
       title,
       nameLabel,

@@ -1,6 +1,6 @@
 import { Word } from '../../../components/word/word';
 import { DragStartPlace, ReplacedComponent, ReplacedPlace } from '../../../types/enums';
-import { checkEventTarget, findElementsUnderTouch, isNotNullable } from '../../../utils/utils';
+import { checkElement, checkEventTarget, findElementsUnderTouch, isNotNullable } from '../../../utils/utils';
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { type ButtonsController } from './buttonsController';
 import { ReplaceController } from './replaceController';
@@ -14,7 +14,7 @@ export class TouchController {
   private wordStartPlace: DragStartPlace;
   private wordIndex: number;
   private dragWord: Word;
-  private replacedEl: Element;
+  private replacedEl: HTMLElement;
   private replacedType: ReplacedComponent;
   private replacedPlace: ReplacedPlace;
   private isForbidden: boolean;
@@ -47,6 +47,7 @@ export class TouchController {
 
     if (this.isDraggingStart) {
       this.findStartWordPlace(word);
+
       word.makeWordDraggableByTouch();
       document.body.append(word.getComponent());
       this.isDraggingStart = false;
@@ -66,6 +67,7 @@ export class TouchController {
 
   private findStartWordPlace(word: Word): void {
     this.dragWord = word;
+
     if (this.view.resultWords.includes(word)) {
       this.wordStartPlace = DragStartPlace.results;
       this.wordIndex = this.view.resultWords.findIndex(el => el === word);
@@ -84,22 +86,25 @@ export class TouchController {
     );
 
     if (isPlaceholder) {
-      this.replacedEl = isNotNullable(elementsUnderTouch.find(el => el.classList.contains('placeholder')));
+      this.replacedEl = checkElement(elementsUnderTouch.find(el => el.classList.contains('placeholder')));
       this.replacedType = ReplacedComponent.placeholder;
     } else if (isWord) {
-      this.replacedEl = isNotNullable(
+      this.replacedEl = checkElement(
         elementsUnderTouch.find(el => el.classList.contains('word-container') && el !== this.dragWord.getComponent())
       );
+
       this.replacedType = ReplacedComponent.word;
     } else {
       this.isForbidden = true;
       return;
     }
+
     this.findReplacedElPlace();
   }
 
   private findReplacedElPlace(): void {
     const replacedInResults = isNotNullable(this.replacedEl.parentElement).classList.contains('game-results-row');
+
     if (replacedInResults) {
       this.replacedPlace = ReplacedPlace.results;
     } else {
@@ -108,6 +113,7 @@ export class TouchController {
       if (this.replacedType === ReplacedComponent.word) {
         this.isForbidden = true;
       }
+
       if (this.replacedType === ReplacedComponent.placeholder && this.wordStartPlace === DragStartPlace.source) {
         this.isForbidden = true;
       }
@@ -149,7 +155,7 @@ export class TouchController {
       if (this.wordStartPlace === DragStartPlace.source) {
         this.dragToResult(this.replacedEl, this.dragWord, this.wordIndex);
       } else {
-        this.replaceController.moveWordsInResults(this.dragWord, this.replacedEl as HTMLElement, this.touch);
+        this.replaceController.moveWordsInResults(this.dragWord, this.replacedEl, this.touch);
       }
     }
   }
@@ -159,6 +165,7 @@ export class TouchController {
       const replacedComponent = isNotNullable(
         this.view.resultWords.find(el => el.getComponent() === this.replacedEl)
       ) as Word;
+
       const componentIndex = this.view.resultWords.findIndex(el => el === replacedComponent);
 
       this.replaceController.moveWordWithReplaceLastPlaceholder(
@@ -171,7 +178,7 @@ export class TouchController {
     }
 
     if (this.wordStartPlace === DragStartPlace.results) {
-      this.replaceController.moveWordsInResults(this.dragWord, this.replacedEl as HTMLElement, this.touch);
+      this.replaceController.moveWordsInResults(this.dragWord, this.replacedEl, this.touch);
     }
   }
 

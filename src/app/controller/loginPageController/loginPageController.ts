@@ -1,4 +1,5 @@
 import { UserData } from '../../../types/interfaces';
+import { validationFunctions } from '../../../utils/constants';
 import { isNotNullable } from '../../../utils/utils';
 import { LoginPageView } from '../../view/loginPageView/loginPageView';
 
@@ -18,6 +19,7 @@ export class LoginPageController {
     this.view.loginForm.nameInput.addEventListener('input', () =>
       this.validateLoginInput(this.view.loginForm.nameInput)
     );
+
     this.view.loginForm.surnameInput.addEventListener('input', () =>
       this.validateLoginInput(this.view.loginForm.surnameInput)
     );
@@ -27,17 +29,11 @@ export class LoginPageController {
     const errorSpan = isNotNullable(input.nextSibling);
     const inputName = input.id;
     errorSpan.textContent = '';
-    if (input.validity.tooShort) {
-      errorSpan.textContent = `Your ${inputName} should contain minimum ${inputName === 'name' ? 3 : 4} letters. `;
+
+    for (let i = 0; i < validationFunctions.length; i += 1) {
+      errorSpan.textContent += validationFunctions[i](input, inputName);
     }
-    if (input.validity.patternMismatch) {
-      if (input.value[0].toUpperCase() !== input.value[0]) {
-        errorSpan.textContent += `Your ${inputName} should start with capital letter. `;
-      }
-      if (!input.value.match('^[a-zA-Z\\-]+$')) {
-        errorSpan.textContent += `Only English letters and “-” are allowed.`;
-      }
-    }
+
     this.checkFormValidity();
   }
 

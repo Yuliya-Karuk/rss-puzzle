@@ -46,6 +46,7 @@ export class DragController {
       word.getComponent().addEventListener('dragover', (e: DragEvent) => this.handleDragOver(e));
       word.getComponent().addEventListener('drop', (e: DragEvent) => this.handleDrag(e, ReplacedComponent.word));
     });
+
     this.view.resultWords.forEach(pl => {
       pl.getComponent().addEventListener('dragover', (e: DragEvent) => this.handleDragOver(e));
       pl.getComponent().addEventListener('drop', (e: DragEvent) => this.handleDrag(e, ReplacedComponent.placeholder));
@@ -63,6 +64,7 @@ export class DragController {
     const wordId = isNotNullable(e.dataTransfer).getData('text');
     this.dragWord = isNotNullable(this.view.wordsRightOrder.find(el => el.id === wordId));
     this.replacedEl = checkEventTarget(e.target);
+
     this.findStartWordPlace();
     this.findReplacedElPlace();
 
@@ -86,6 +88,7 @@ export class DragController {
 
   private findReplacedElPlace(): void {
     const replacedInResults = isNotNullable(this.replacedEl.parentElement).classList.contains('game-results-row');
+
     if (replacedInResults) {
       this.replacedPlace = ReplacedPlace.results;
     } else {
@@ -97,9 +100,11 @@ export class DragController {
     if (this.replacedPlace === ReplacedPlace.results && this.wordStartPlace === DragStartPlace.source) {
       this.dragToResult(e);
     }
+
     if (this.replacedPlace === ReplacedPlace.source && this.wordStartPlace === DragStartPlace.results) {
       this.dragToSource();
     }
+
     if (this.replacedPlace === ReplacedPlace.results && this.wordStartPlace === DragStartPlace.results) {
       this.dragInResult(e);
     }

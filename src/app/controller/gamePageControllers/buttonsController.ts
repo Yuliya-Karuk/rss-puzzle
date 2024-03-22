@@ -1,7 +1,7 @@
-import { Word } from '../../../components/word/word';
 import { type DataService } from '../../../services/data.service';
 import { LoaderService } from '../../../services/loader.service';
 import { ButtonCheckStates, ButtonSolutionStates } from '../../../types/enums';
+import { isWord } from '../../../types/typeGuards';
 import { Callback } from '../../../types/types';
 import { type GamePageView } from '../../view/gamePageView/gamePageView';
 import { ButtonsStateController } from './buttonStateController';
@@ -43,6 +43,7 @@ export class ButtonsController {
 
   private handleBtnCheck(callbackNext: Callback, e: Event): void {
     this.view.wordsRightOrder.forEach(word => word.removeState());
+
     if (this.view.btnCheckController.state === ButtonCheckStates.check) {
       this.checkSentence(e);
     } else {
@@ -62,23 +63,29 @@ export class ButtonsController {
     this.view.translationRow.classList.remove('translation-row_info');
     this.view.removeStyleBackground();
     this.view.showRows();
+
     callbackNext();
   }
 
   private async handleResults(callbackResults: Callback): Promise<void> {
     const cutImageUrl = await LoaderService.getImage(this.dataController.roundData.cutSrc);
+
     const data = this.dataController.roundData;
     const imageInfo = `${data.author} - '${data.name}' (${data.year})`;
+
     this.roundDataController.saveImageInfo(cutImageUrl, imageInfo);
+
     const audioContext = this.hintsController.getAudioContext();
+
     this.roundDataController.saveAudioContext(audioContext);
 
     callbackResults();
   }
 
   public setStateCheckButton(): void {
-    const makeButtonActive = this.checkResultIsCompleted();
-    if (makeButtonActive) {
+    const shouldMakeButtonActive = this.checkResultIsCompleted();
+
+    if (shouldMakeButtonActive) {
       this.buttonsStateController.setStateAfterFill();
     } else {
       this.buttonsStateController.setStateBeforeFill();
@@ -86,7 +93,7 @@ export class ButtonsController {
   }
 
   private checkResultIsCompleted(): boolean {
-    return this.view.resultWords.every(el => el instanceof Word);
+    return this.view.resultWords.every(el => isWord(el));
   }
 
   private checkSentence(e: Event): void {
@@ -94,7 +101,8 @@ export class ButtonsController {
 
     for (let i = 0; i < this.dataController.correctSentence.length; i += 1) {
       const wordValue = this.view.resultWords[i];
-      if (wordValue instanceof Word) {
+
+      if (isWord(wordValue)) {
         const isValid = this.dataController.correctSentence[i] === wordValue.value;
 
         if (!isValid) {
@@ -112,8 +120,11 @@ export class ButtonsController {
 
   private async finishSentence(e: Event): Promise<void> {
     this.updateStats(e.isTrusted);
+
     this.view.blockPreviousSentence();
+
     this.buttonsStateController.setStateRightCompletedSentence();
+
     this.hintsController.setTranslationRow(true);
     this.hintsController.setPlayButton(true);
     this.hintsController.setWordsBackground(true);
@@ -129,6 +140,7 @@ export class ButtonsController {
       sentence: this.dataController.sentence,
       audio: this.hintsController.getAudioBuffer(),
     };
+
     this.roundDataController.saveOneSentence(stats, isKnown);
   }
 
@@ -157,6 +169,7 @@ export class ButtonsController {
 
     this.buttonsStateController.setStateAfterFill();
     this.view.blockPreviousSentence();
+
     const pointerEvent = new Event('pointerup');
     this.view.btnCheckController.getComponent().dispatchEvent(pointerEvent);
   }

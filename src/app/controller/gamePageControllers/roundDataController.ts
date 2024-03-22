@@ -1,4 +1,3 @@
-import { cloneDeep } from 'lodash';
 import { SavedRoundSentence, SavedRoundStats } from '../../../types/interfaces';
 import { defaultStats } from '../../../utils/constants';
 
@@ -6,7 +5,7 @@ export class RoundDataController {
   private stats: SavedRoundStats;
 
   constructor() {
-    this.stats = cloneDeep(defaultStats);
+    this.stats = structuredClone(defaultStats);
   }
 
   public saveImageInfo(imageUrl: string, imageInfo: string): void {
@@ -31,6 +30,6 @@ export class RoundDataController {
   }
 
   public clearStats(): void {
-    this.stats = cloneDeep(defaultStats);
+    this.stats = structuredClone(defaultStats);
   }
 }

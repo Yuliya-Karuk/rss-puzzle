@@ -64,14 +64,18 @@ export class GamePageView {
 
   private createHintsAndSelects(): void {
     const hints = createElementWithProperties('div', styles.gameHints);
+
     this.translationHint = new ButtonHint('translationHint');
     this.translationRow = createElementWithProperties('p', styles.translationRow);
+
     this.audioHint = new ButtonHint('audioHint');
     this.playButton = createElementWithProperties('button', styles.buttonSound, { type: 'button' });
+
     this.imageHint = new ButtonHint('imageHint');
 
     this.levelSelect = new CustomSelect('Level');
     this.roundSelect = new CustomSelect('Round');
+
     hints.append(
       this.levelSelect.getComponent(),
       this.roundSelect.getComponent(),
@@ -90,6 +94,7 @@ export class GamePageView {
 
   public renderRows(): void {
     this.resultsElement.replaceChildren();
+
     for (let i = 0; i < SentencesPerRound; i += 1) {
       const row = createElementWithProperties('div', styles.gameResultsRow);
       this.resultsElement.append(row);
@@ -98,6 +103,7 @@ export class GamePageView {
 
   public renderSentence(): void {
     this.resultRow = getDOMElement(HTMLDivElement, this.resultsElement.children[this.dataController.sentenceNumber]);
+
     this.createRoundConst();
 
     for (let i = 0; i < this.dataController.correctSentence.length; i += 1) {
@@ -122,6 +128,7 @@ export class GamePageView {
 
   private createRoundConst(): void {
     this.sourceElement.replaceChildren();
+
     this.wordsRightOrder = [];
     this.words = [];
     this.resultWords = [];
@@ -139,6 +146,7 @@ export class GamePageView {
   public clearRoundConst(): void {
     this.allLevelData = [];
     this.sourceElement.replaceChildren();
+
     for (let i = 0; i < this.resultsElement.children.length; i += 1) {
       this.resultsElement.children[i].replaceChildren();
     }

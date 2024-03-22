@@ -12,13 +12,9 @@
 
 .select-header {
   @include font(1.3vw, 700, 1.2);
-
   cursor: pointer;
-
   display: flex;
-
   padding: 5px 10px;
-
   background: var(--color-primary-light);
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -34,9 +30,7 @@
   top: 100%;
   right: 0;
   left: 0;
-
   display: none;
-
   background: var(--color-primary-light);
   border-top: 0;
   border-radius: 5px;
@@ -74,7 +68,6 @@
       background-color: #f2f2f2;
     }
   }
-
   cursor: pointer;
   padding: 7px 10px;
   opacity: 0.9;
@@ -90,16 +83,12 @@
         width: 15px;
         height: 15px;
       }
-
       content: '';
-
       position: absolute;
       top: 5px;
       right: 5px;
-
       width: 20px;
       height: 20px;
-
       background: center transparent url('../../img/yes.svg');
       background-size: contain;
     }

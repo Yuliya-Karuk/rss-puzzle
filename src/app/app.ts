@@ -25,6 +25,7 @@ export class App {
 
   public createLoginPage(): void {
     const component = this.loginPageController.createLoginPage();
+
     this.bindLoginPageListeners();
     this.parentElement.append(component);
   }
@@ -45,6 +46,7 @@ export class App {
 
   private bindStartPageListeners(): void {
     this.appController.header.logoutButton.addEventListener('pointerup', () => this.logoutUser());
+
     this.appController.startPageController.view.startButton.addEventListener('pointerup', () => this.createGamePage());
   }
 
@@ -54,6 +56,7 @@ export class App {
 
     const userData = this.loginPageController.getInputsValues();
     StorageService.saveData(userData, defaultHintsState, defaultCompletedRounds, defaultLastRound);
+
     this.clearParentElement();
     this.createStartPage();
   }

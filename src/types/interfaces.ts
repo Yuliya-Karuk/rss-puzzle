@@ -1,12 +1,5 @@
 import { Level } from './types';
 
-export interface Props {
-  tag: string;
-  className: string;
-  text?: string;
-  attr?: object;
-}
-
 export interface DomElementAttribute {
   [key: string]: string;
 }

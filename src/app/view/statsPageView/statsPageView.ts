@@ -21,9 +21,13 @@ export class StatsPageView {
 
   private renderContent(): void {
     this.container = createElementWithProperties('div', styles.modalContent);
+
     const title = createElementWithProperties('h2', styles.modalTitle, undefined, [{ innerText: 'Results' }]);
+
     this.imageBlock = createElementWithProperties('div', styles.modalImageBlock);
+
     this.results = createElementWithProperties('div', styles.modalResults);
+
     this.container.append(title, this.imageBlock, this.results);
     this.element.append(this.container);
   }
@@ -35,8 +39,10 @@ export class StatsPageView {
   public renderRoundData(data: SavedRoundStats): void {
     this.data = data;
     this.buttons = [];
+
     this.imageBlock.replaceChildren();
     this.results.replaceChildren();
+
     this.renderImageBlock();
     this.renderKnownSentences();
     this.renderUnknownSentences();
@@ -47,9 +53,11 @@ export class StatsPageView {
       alt: 'round image',
       src: `${this.data.imageUrl}`,
     });
+
     const imgInfo = createElementWithProperties('p', styles.modalImgInfo, undefined, [
       { innerText: this.data.imageInfo },
     ]);
+
     this.imageBlock.append(img, imgInfo);
   }
 
@@ -58,11 +66,14 @@ export class StatsPageView {
     const knownTitle = createElementWithProperties('h2', styles.modalResultsTitle, undefined, [
       { innerHTML: `I know <b>${this.data.known.length}</b>` },
     ]);
+
     knownSentences.append(knownTitle);
+
     for (let i = 0; i < this.data.known.length; i += 1) {
       const item = this.createOneItem(this.data.known[i].sentenceId, this.data.known[i].sentence);
       knownSentences.append(item);
     }
+
     this.results.append(knownSentences);
   }
 
@@ -71,21 +82,26 @@ export class StatsPageView {
     const unknownTitle = createElementWithProperties('h2', styles.modalResultsTitle, undefined, [
       { innerHTML: `I don't know <b>${this.data.unknown.length}</b>` },
     ]);
+
     unknownSentences.append(unknownTitle);
+
     for (let i = 0; i < this.data.unknown.length; i += 1) {
       const item = this.createOneItem(this.data.unknown[i].sentenceId, this.data.unknown[i].sentence);
       unknownSentences.append(item);
     }
+
     this.results.append(unknownSentences);
   }
 
   private createOneItem(buttonId: string, text: string): HTMLDivElement {
     const item = createElementWithProperties('div', styles.modalItem);
+
     const btn = createElementWithProperties('button', styles.modalItemAudio, {
       type: 'button',
       id: buttonId,
     });
     const itemText = createElementWithProperties('p', styles.modalItemText, undefined, [{ innerText: text }]);
+
     item.append(btn, itemText);
     this.buttons.push(btn);
     return item;
